@@ -205,5 +205,5 @@ if __name__ == "__main__":
                 Mock_Drill(cursor)
             
             if selected == "Appointments":
-                Appointment(cursor, st.session_state.accessLevel)
+                Appointment(st.session_state.connection, st.session_state.accessLevel)
 

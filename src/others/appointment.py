@@ -3,14 +3,14 @@ import os
 import pandas as p
 from datetime import datetime
 
-def Appointment(cursor, accessLevel):
+def Appointment(connection, accessLevel):
     st.header("Appointments")
 
     if accessLevel == "doctor":
         st.subheader("Doctor Appointments")
 
-        cursor.execute("SELECT * FROM appointments")
-        data = cursor.fetchall()
+        data = p.read_sql("select * from appointments;")
+
 
         if len(data) > 0:
             st.write(data)
@@ -96,13 +96,11 @@ def Appointment(cursor, accessLevel):
 
                 patient_data = (appoint_date, i['Visit Reason'], i['Name'], dob, i['Age - calculate from DOB'], i['Sex'], i['Aadhar No.'], i['Identification Marks'], i['Blood Group'], i['Height in cm'], i['weight in Kg'], i['Name of Contractor'], i['Temp Emp No.'], doj, i['Employee No'], i['Designation'], i['Department (Latest & previous)'], i['Nature of Job (Latest & previous)'], i['Phone (Personal)'], i['Mail Id (Personal)'], i['Emergency Contact  person '], i['Emergency Contact Relation'], i['Emergency Contact  phone'], i['Address'])
 
+                cursor = connection.cursor()
                 cursor.execute(add_patient, patient_data)
-                cursor.commit()
+                connection.commit()
+                cursor.close()
 
-                # Check if the query was executed successfully
-                if cursor.rowcount == 1:
-                    print("Query executed successfully")
-                else:
-                    print("Query execution failed")
+                st.write("Data Inserted")
 
 
