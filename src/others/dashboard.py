@@ -45,4 +45,4 @@ def Dashboard(cursor,accessLevel):
         with r1c3:
             get_data(st.session_state.total_unhealthy, "Unhealthy")
         with r1c4:
-            get_data(st.session_state.total_appointment, "Appointments")
+            get_data(st.session_state.appointments, "Appointments")
