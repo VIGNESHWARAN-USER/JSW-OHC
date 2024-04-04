@@ -1,7 +1,7 @@
 import streamlit as st
 import os
 import pandas as p
-
+from datetime import datetime
 
 def Appointment(cursor, accessLevel):
     st.header("Appointments")
@@ -20,11 +20,12 @@ def Appointment(cursor, accessLevel):
 
         if file_upload is not None:
             df = p.read_excel(file_upload, dtype={'Phone (Personal)': str, 'Emergency Contact  phone':str})
-            st.write(df)
 
+            st.write(df['Emergency Contact  person '])
             if st.button("Submit"):
                 st.write("Data Submitted")
                 st.write(df.columns)
+                df.fillna("null", inplace=True)
                 # convert the df to json
                 data = df.to_dict(orient='records')
                 for i in data:
@@ -71,16 +72,37 @@ def Appointment(cursor, accessLevel):
                 # 7	Identification Marks
                 # 8	Blood Group
                 # 9	Height in cm
-                # 10 weight in Kg
-                # 11 Name of Contractor
-                # 12 Temp Emp No.
-                # 13 Date of Joining
-                # 14 Employee No
-                # 15 Designation
-                # 16 Department (Latest & previous)
+                # 10	weight in Kg
+                # 11	Name of Contractor
+                # 12	Temp Emp No.
+                # 13	Date of Joining
+                # 14	Employee No
+                # 15	Designation
+                # 16	Department (Latest & previous)
+                # 17	Nature of Job (Latest & previous)
+                # 18	Phone (Personal)
+                # 19	Mail Id (Personal)
+                # 20	Emergency Contact  person 
+                # 21	Emergency Contact Relation
+                # 22	Emergency Contact  phone
+                # 23	Address
 
-                for i in data:
-                    cursor.execute("INSERT INTO appointments (appoint_date, visit_reason, emp_name, dob, age, gender, aadharno, identify_marks, blood_group, height, weight, contractor_name, temp_emp_no, date_of_joining, emp_no, designation, department, nature_of_job, phone_no, mail_id, emer_con_per, emer_con_rel, emer_con_phone, address) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-                                (i['Date for Appointment'], i['Visit Reason'], i['Name'], i['Date of Birth'], i['Age'], i['Sex'], i['Aadhar No.'], i['Identification Marks'], i['Blood Group'], i['Height in cm'], i['weight in Kg'], i['Name of Contractor'], i['Temp Emp No.'], i['Date of Joining'], i['Employee No'], i['Designation'], i['Department (Latest & previous)'], '', i['phone_no'], i['mail_id'], i['emer_con_per'], i['emer_con_rel'], i['emer_con_phone'], i['address']))
-                    cursor.execute("commit")
-                    st.write("Data Inserted")
+                appoint_date = datetime.strptime(i['Date for Appointment'][:10], '%d-%m-%Y').strftime('%Y-%m-%d')
+                dob = datetime.strptime(i['Date of Birth'][:10], '%d-%m-%Y').strftime('%Y-%m-%d')
+                doj = datetime.strptime(i['Date of Joining'][:10], '%d-%m-%Y').strftime('%Y-%m-%d')
+
+                # Insert the data into the database
+                add_patient = ("INSERT INTO appointments (appoint_date, visit_reason, emp_name, dob, age, gender, aadharno, identify_marks, blood_group, height, weight, contractor_name, temp_emp_no, date_of_joining, emp_no, designation, department, nature_of_job, phone_no, mail_id, emer_con_per, emer_con_rel, emer_con_phone, address) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)")
+
+                patient_data = (appoint_date, i['Visit Reason'], i['Name'], dob, i['Age - calculate from DOB'], i['Sex'], i['Aadhar No.'], i['Identification Marks'], i['Blood Group'], i['Height in cm'], i['weight in Kg'], i['Name of Contractor'], i['Temp Emp No.'], doj, i['Employee No'], i['Designation'], i['Department (Latest & previous)'], i['Nature of Job (Latest & previous)'], i['Phone (Personal)'], i['Mail Id (Personal)'], i['Emergency Contact  person '], i['Emergency Contact Relation'], i['Emergency Contact  phone'], i['Address'])
+
+                cursor.execute(add_patient, patient_data)
+                cursor.commit()
+
+                # Check if the query was executed successfully
+                if cursor.rowcount == 1:
+                    print("Query executed successfully")
+                else:
+                    print("Query execution failed")
+
+
