@@ -96,6 +96,7 @@ def Appointment(connection, accessLevel):
 
                 patient_data = (appoint_date, i['Visit Reason'], i['Name'], dob, i['Age - calculate from DOB'], i['Sex'], i['Aadhar No.'], i['Identification Marks'], i['Blood Group'], i['Height in cm'], i['weight in Kg'], i['Name of Contractor'], i['Temp Emp No.'], doj, i['Employee No'], i['Designation'], i['Department (Latest & previous)'], i['Nature of Job (Latest & previous)'], i['Phone (Personal)'], i['Mail Id (Personal)'], i['Emergency Contact  person '], i['Emergency Contact Relation'], i['Emergency Contact  phone'], i['Address'])
 
+                curser = connection.cursor()
                 cursor.execute(add_patient, patient_data)
                 connection.commit()
                 cursor.close()
