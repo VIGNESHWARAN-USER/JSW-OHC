@@ -5,6 +5,22 @@ import pandas as p
 
 def Mock_Drill(cursor):
     st.title("Mock Drill")
+    st.write("""
+        <style>
+            button[kind="primary"]{
+                all: unset;
+                background-color: #22384F;
+                color: white;
+                border-radius: 5px;
+                text-align: center;
+                cursor: pointer;
+                font-size: 20px;
+                width: 95%;
+                padding: 10px ;
+                margin-left:-10px
+            }
+        </style>
+        """,unsafe_allow_html=True)
     # create a session state for mock drill
     if "mockdrill" not in st.session_state:
         st.session_state.mockdrill = {}
@@ -12,7 +28,7 @@ def Mock_Drill(cursor):
     if not isinstance(st.session_state.mockdrill, dict):
         st.session_state.mockdrill = {}
 
-    with st.container(border=1, height=800):
+    with st.container(border=1, height=750):
         r1c1, r1c2 = st.columns(2)
         with r1c1:
             date = st.date_input("Date")
@@ -79,21 +95,4 @@ def Mock_Drill(cursor):
             st.write(st.session_state.mockdrill)
             st.session_state.mockdrill = {}
     with c2:
-        st.write("""
-            <style>
-                button[kind="primary"] {
-                        all: unset;
-                        background-color: #007bff;
-                        color: white;
-                        border-radius: 5px;
-                        text-align: center;
-                        cursor: pointer;
-                        font-size: 20px;
-                        width: 95%;
-                        padding: 10px ;
-                        margin-left:-10px;
-                    }
-            </style>
-        """, unsafe_allow_html=True)
-
         st.button("Submit", type="primary",on_click=submit_mockdrill)   

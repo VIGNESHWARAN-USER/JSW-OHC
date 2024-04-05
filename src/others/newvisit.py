@@ -57,6 +57,11 @@ def Form(visitreason):
 
     if form_name == "Basic Details":
         st.subheader("Basic Details")
+        r0c1,r0c2 = st.columns([1,1])
+        with r0c1:
+            st.session_state.form_data["Visit Date"] = st.text_input("Visit Date", value=st.session_state.form_data.get("Visit Date", ""))
+        with r0c2:
+            st.session_state.form_data["Visit Time"] = st.selectbox('Select the hospital for the referrence range', ["manipal","Dharan","Poornima"], index=0)
         r1c1,r1c2,r1c3 = st.columns(3)
         with r1c1:
             st.session_state.form_data["Employee ID"] = st.text_input("Employee ID",value=st.session_state.form_data.get("Employee ID",""))
@@ -937,11 +942,70 @@ def Form(visitreason):
         
     elif form_name == "Consultation":
         st.header("Consultation")
-        st.write("Form 2")
-    
+        # Complaints         Diagnosis       Remarks
+
+        r1c1, r2c2 = st.columns([6,4])
+        with r1c1:
+            st.session_state.form_data["Complaints"] = st.text_area("Complaints", value=st.session_state.form_data.get("Complaints",""))
+            st.session_state.form_data["Diagnosis"] = st.text_area("Diagnosis", value=st.session_state.form_data.get("Diagnosis",""))
+            st.session_state.form_data["Remarks"] = st.text_area("Remarks", value=st.session_state.form_data.get("Remarks",""))
+        
+        r3c1,r3c2,r3c3 = st.columns([6,4,4])
+        with r3c2:
+            if st.button("Cancel", type="primary"):
+                st.write("Cancelled")
+                st.session_state.form_data = {"visitreason": visitreason}
+                st.rerun()
+        
+        with r3c3:
+            if st.button("Next", type="primary"):
+                st.write("Data Saved")
+                st.session_state.form_data["visitreason"] = visitreason
+                st.rerun()
+        
+        st.write(st.session_state.form_data)
+
     elif form_name == "Medical History":
         st.header("Medical History")
-        st.write("Form 5")
+        # Personal History -> multi select box
+        #     Smoker
+        #     Alcoholic
+        #     Veg
+        #     Mixed Diet
+        # Medical History - multi select box
+        #     BP
+        #     DM
+        #     Others
+        # Surgical History -> header
+        #     Family History -> sub header
+        #         Father    -> text_area
+        #         Mother    -> text_area
+
+        st.session_state.form_data["Personal History"] = st.multiselect("Personal History", ["Smoker", "Alcoholic", "Veg", "Mixed Diet"])
+        st.session_state.form_data["Medical History"] = st.multiselect("Medical History", ["BP", "DM", "Others"])
+
+        st.header("Surgical History")
+        st.markdown("<h3 style='margin-left:30px;'> Family History </h3>", unsafe_allow_html=True)
+        r1c1, r1c2, r1c3 = st.columns([1,6,2])
+
+        with r1c2:
+            st.session_state.form_data["Father"] = st.text_area("Father",value=st.session_state.form_data.get("Father", ""))
+            st.session_state.form_data["Mother"] = st.text_area("Mother",value=st.session_state.form_data.get("Mother", ""))
+
+        r3c1,r3c2,r3c3 = st.columns([6,4,4])
+        with r3c2:
+            if st.button("Cancel", type="primary"):
+                st.write("Cancelled")
+                st.session_state.form_data = {"visitreason": visitreason}
+                st.rerun()
+        
+        with r3c3:
+            if st.button("Next", type="primary"):
+                st.write("Data Saved")
+                st.session_state.form_data["visitreason"] = visitreason
+                st.rerun()
+        
+        st.write(st.session_state.form_data)
 
 
 
