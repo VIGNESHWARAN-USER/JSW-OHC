@@ -61,92 +61,6 @@ def Dashboard(connection,cursor,accessLevel):
                                 i['General Test']['Vitals']['weight'],
                                 None if i['General Test']['Vitals']['BMI']=='null' else i['General Test']['Vitals']['BMI'])
                 cursor.execute(vitals, vital_values)
-                    #  ["HAEMATALOGY"]{
-                    #   "Haemoglobin": {
-                    #     "RESULT": 18.6,
-                    #     "UNIT": "g/dl",
-                    #     "REFERENCE RANGE": "13.0 to 17.0"
-                    #   },
-                    #   "Red Blood Cell (RBC) Count": {
-                    #     "RESULT": 5.73,
-                    #     "UNIT": "ML/10^9",
-                    #     "REFERENCE RANGE": "4.5 to 5.5"
-                    #   },
-                    #   "WBC Count (TC)": {
-                    #     "RESULT": 11520,
-                    #     "UNIT": "g/dl",
-                    #     "REFERENCE RANGE": "4000 to 10000"
-                    #   },
-                    #   "Haemotocrit (PCV)": {
-                    #     "RESULT": 50.9,
-                    #     "UNIT": "%",
-                    #     "REFERENCE RANGE": "40 to 50"
-                    #   },
-                    #   "MCV": {
-                    #     "RESULT": 88.8,
-                    #     "UNIT": "fl",
-                    #     "REFERENCE RANGE": "83.0 to 101.0"
-                    #   },
-                    #   "MCH": {
-                    #     "RESULT": 32.4,
-                    #     "UNIT": "Pg",
-                    #     "REFERENCE RANGE": "27.0 to 32.0"
-                    #   },
-                    #   "MCHC": {
-                    #     "RESULT": 36.5,
-                    #     "UNIT": "g/dl",
-                    #     "REFERENCE RANGE": "31.5 to 34.5"
-                    #   },
-                    #   "Platelet Count": {
-                    #     "RESULT": 2.2,
-                    #     "UNIT": "Lakhs/Cumm",
-                    #     "REFERENCE RANGE": "1.5 to 4.0"
-                    #   },
-                    #   "RDW (CV)": {
-                    #     "RESULT": "null",
-                    #     "UNIT": "Cells/Cumm",
-                    #     "REFERENCE RANGE": "null"
-                    #   },
-                    #   "Neutrophil": {
-                    #     "RESULT": 59,
-                    #     "UNIT": "%",
-                    #     "REFERENCE RANGE": "40 to 80"
-                    #   },
-                    #   "Lymphocyte": {
-                    #     "RESULT": 27,
-                    #     "UNIT": "%",
-                    #     "REFERENCE RANGE": "20 to 40"
-                    #   },
-                    #   "Eosinophil": {
-                    #     "RESULT": 6,
-                    #     "UNIT": "%",
-                    #     "REFERENCE RANGE": "1 to 6"
-                    #   },
-                    #   "Monocyte": {
-                    #     "RESULT": 8,
-                    #     "UNIT": "%",
-                    #     "REFERENCE RANGE": "2 to 10"
-                    #   },
-                    #   "Basophils": {
-                    #     "RESULT": "null",
-                    #     "UNIT": "%",
-                    #     "REFERENCE RANGE": "null"
-                    #   },
-                    #   "Erythrocyte Sedimentation Rate (ESR)": {
-                    #     "RESULT": 20,
-                    #     "UNIT": "mm/Hr",
-                    #     "REFERENCE RANGE": "0 to 15"
-                    #   },
-                    #   "Peripheral Blood Smear - RBC Morphology": {
-                    #     "COMMENTS": "null"
-                    #   },
-                    #   "Peripheral Blood Smear - Parasites": {
-                    #     "COMMENTS": "null"
-                    #   },
-                    #   "Peripheral Blood Smear - Others": {
-                    #     "COMMENTS": "null"
-                    #   }
-                    # }
 
                 hematology = ("INSERT INTO hematology_result( emp_no, heamoglobin, heamoglobin_unit, heamoglobin_range, rbc_count, rbc_count_unit, rbc_count_range, wbc_count, wbc_count_unit, wbc_count_range, haemotocrit, haemotocrit_unit, haemotocrit_range, mcv, mcv_unit, mcv_range, mch, mch_unit, mch_range, mchc, mchc_unit, mchc_range, platelet, platelet_unit, platelet_range, rdw, rdw_unit, rdw_range, neutrophil, neutrophil_unit, neutrophil_range, lymphocyte, lymphocyte_unit, lymphocyte_range, eosinophil, eosinophil_unit, eosinophil_range, monocyte, monocyte_unit, monocyte_range, basophils, basophils_unit, basophils_range, esr, esr_unit, esr_range, pbs_rbc, pbc_parasites, pbc_others)VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)")
 
@@ -201,33 +115,6 @@ def Dashboard(connection,cursor,accessLevel):
                                     i["HAEMATALOGY"]['Peripheral Blood Smear - Others']['COMMENTS'])
                 cursor.execute(hematology, hematology_values) 
 
-                                #  "ROUTINE SUGAR TESTS"{
-                                #   "Glucose (F)": {
-                                #     "RESULT": 113,
-                                #     "UNIT": "mg/dL",
-                                #     "REFERENCE RANGE": "70 to 110"
-                                #   },
-                                #   "Glucose (PP)": {
-                                #     "RESULT": 140,
-                                #     "UNIT": "mg/dL",
-                                #     "REFERENCE RANGE": "< 140"
-                                #   },
-                                #   "Random Blood sugar": {
-                                #     "RESULT": "null",
-                                #     "UNIT": "mg/dL",
-                                #     "REFERENCE RANGE": "null"
-                                #   },
-                                #   "Estimated Average Glucose": {
-                                #     "RESULT": "null",
-                                #     "UNIT": "mg/dL",
-                                #     "REFERENCE RANGE": "null"
-                                #   },
-                                #   "HbA1c": {
-                                #     "RESULT": 4.9,
-                                #     "UNIT": "%",
-                                #     "REFERENCE RANGE": "null"
-                                #   }
-                                # }
 
                 routinesugartest = ("INSERT INTO routine_sugartest"
                 "(emp_no, glucosef, glucosef_unit, glucosef_range, "
@@ -255,59 +142,7 @@ def Dashboard(connection,cursor,accessLevel):
                                         i['ROUTINE SUGAR TESTS']['HbA1c']['REFERENCE RANGE'])
                 cursor.execute(routinesugartest, routinesugartest_values)
 
-                        # ["RENAL FUNCTION TEST & ELECTROLYTES"]{
-                        #   "Urea": {
-                        #     "RESULT": "null",
-                        #     "UNIT": "mg/dL",
-                        #     "REFERENCE RANGE": "null"
-                        #   },
-                        #   "Blood urea nitrogen (BUN)": {
-                        #     "RESULT": 7,
-                        #     "UNIT": "mg/dL",
-                        #     "REFERENCE RANGE": "7 to 18"
-                        #   },
-                        #   "Sr.Creatinine": {
-                        #     "RESULT": "null",
-                        #     "UNIT": "mg/dL",
-                        #     "REFERENCE RANGE": "null"
-                        #   },
-                        #   "Uric acid": {
-                        #     "RESULT": 7.5,
-                        #     "UNIT": "mg/dL",
-                        #     "REFERENCE RANGE": "3.5 to 7.2"
-                        #   },
-                        #   "Sodium": {
-                        #     "RESULT": "null",
-                        #     "UNIT": "meq/L",
-                        #     "REFERENCE RANGE": "null"
-                        #   },
-                        #   "Potassium": {
-                        #     "RESULT": "null",
-                        #     "UNIT": "meq/L",
-                        #     "REFERENCE RANGE": "null"
-                        #   },
-                        #   "Calcium": {
-                        #     "RESULT": "null",
-                        #     "UNIT": "mg/dL",
-                        #     "REFERENCE RANGE": "null"
-                        #   },
-                        #   "Phosphorus": {
-                        #     "RESULT": "null",
-                        #     "UNIT": "mg/dL",
-                        #     "REFERENCE RANGE": "null"
-                        #   },
-                        #   "Chloride": {
-                        #     "RESULT": "null",
-                        #     "UNIT": "mmol/L",
-                        #     "REFERENCE RANGE": "null"
-                        #   },
-                        #   "Bicarbonate": {
-                        #     "RESULT": "null",
-                        #     "UNIT": "mmol/L",
-                        #     "REFERENCE RANGE": "null"
-                        #   }
-                        # }    
-
+                        
                 renalfunctiontest = ("INSERT INTO rft_result "
                                      "( emp_no, urea, urea_unit, urea_range, "
                                         "bun, bun_unit, bun_range, "
@@ -355,45 +190,6 @@ def Dashboard(connection,cursor,accessLevel):
                                             i["RENAL FUNCTION TEST & ELECTROLYTES"]['Bicarbonate']['REFERENCE RANGE'])
                 cursor.execute(renalfunctiontest, renalfunctiontest_values)
 
-
-                                    # ["LIPID PROFILE"]{
-                                    #   "Total Cholesterol": {
-                                    #     "RESULT": 209,
-                                    #     "UNIT": "mg/dL",
-                                    #     "REFERENCE RANGE": "Desirable:<200, Bordderline High : 200 to 239, High : >240"
-                                    #   },
-                                    #   "Triglycerides": {
-                                    #     "RESULT": 75,
-                                    #     "UNIT": "mg/dL",
-                                    #     "REFERENCE RANGE": "null"
-                                    #   },
-                                    #   "HDL - Cholesterol": {
-                                    #     "RESULT": 54,
-                                    #     "UNIT": "mg/dL",
-                                    #     "REFERENCE RANGE": "Low:<40, High:>60"
-                                    #   },
-                                    #   "VLDL -Choleserol": {
-                                    #     "RESULT": "null",
-                                    #     "UNIT": "mg/dL",
-                                    #     "REFERENCE RANGE": "null"
-                                    #   },
-                                    #   "LDL- Cholesterol": {
-                                    #     "RESULT": 132,
-                                    #     "UNIT": "mg/dL",
-                                    #     "REFERENCE RANGE": "null"
-                                    #   },
-                                    #   "CHOL:HDL ratio": {
-                                    #     "RESULT": 3.8,
-                                    #     "UNIT": "mg/dL",
-                                    #     "REFERENCE RANGE": "null"
-                                    #   },
-                                    #   "LDL.CHOL/HDL.CHOL Ratio": {
-                                    #     "RESULT": "null",
-                                    #     "UNIT": "mg/dL",
-                                    #     "REFERENCE RANGE": "null"
-                                    #   }
-                                    # }
-
                 lipidprofile = ("INSERT INTO lipid_profile "
                 "( emp_no, tcholesterol, tcholesterol_unit, tcholesterol_range, "
                 "triglycerides, triglycerides_unit, triglycerides_range, "
@@ -428,64 +224,6 @@ def Dashboard(connection,cursor,accessLevel):
                                     i["LIPID PROFILE"]['LDL.CHOL/HDL.CHOL Ratio']['UNIT'],
                                     i["LIPID PROFILE"]['LDL.CHOL/HDL.CHOL Ratio']['REFERENCE RANGE'])
                 cursor.execute(lipidprofile, lipidprofile_values)
-
-                                        # ["LIVER FUNCTION TEST"]{
-                                        #   "Bilirubin -Total": {
-                                        #     "RESULT": 1,
-                                        #     "UNIT": "mg/dL",
-                                        #     "REFERENCE RANGE": "null"
-                                        #   },
-                                        #   "Bilirubin -Direct": {
-                                        #     "RESULT": 0.2,
-                                        #     "UNIT": "mg/dL",
-                                        #     "REFERENCE RANGE": "0.0 to 0.2"
-                                        #   },
-                                        #   "Bilirubin -indirect": {
-                                        #     "RESULT": 0.7,
-                                        #     "UNIT": "mg/ dl",
-                                        #     "REFERENCE RANGE": "null"
-                                        #   },
-                                        #   "SGOT /AST": {
-                                        #     "RESULT": 35,
-                                        #     "UNIT": "IU /L",
-                                        #     "REFERENCE RANGE": "15 to 37"
-                                        #   },
-                                        #   "SGPT /ALT": {
-                                        #     "RESULT": 57,
-                                        #     "UNIT": "IU /L",
-                                        #     "REFERENCE RANGE": "16 to 63"
-                                        #   },
-                                        #   "Alkaline phosphatase": {
-                                        #     "RESULT": 77,
-                                        #     "UNIT": "u/l",
-                                        #     "REFERENCE RANGE": "46 to 116"
-                                        #   },
-                                        #   "Total Protein": {
-                                        #     "RESULT": 7.4,
-                                        #     "UNIT": "g/ dl",
-                                        #     "REFERENCE RANGE": "6.4 to 8.2"
-                                        #   },
-                                        #   "Albumin (Serum )": {
-                                        #     "RESULT": 3.7,
-                                        #     "UNIT": "g/ dl",
-                                        #     "REFERENCE RANGE": "3.4 to 5.0"
-                                        #   },
-                                        #   " Globulin(Serum)": {
-                                        #     "RESULT": 3.7,
-                                        #     "UNIT": "null",
-                                        #     "REFERENCE RANGE": "2.3 to 3.6"
-                                        #   },
-                                        #   "Alb/Glob Ratio": {
-                                        #     "RESULT": 1,
-                                        #     "UNIT": "IU /L",
-                                        #     "REFERENCE RANGE": "1.5 to 2.5"
-                                        #   },
-                                        #   "Gamma Glutamyl transferase": {
-                                        #     "RESULT": 43,
-                                        #     "UNIT": "u/l",
-                                        #     "REFERENCE RANGE": "15 to 85"
-                                        #   }
-                                        # }
 
                 liverfunctiontest = ("INSERT INTO liver_function "
                 "( emp_no, bilirubin_total, bilirubin_total_unit, bilirubin_total_range, "
@@ -538,24 +276,6 @@ def Dashboard(connection,cursor,accessLevel):
                                             i["LIVER FUNCTION TEST"]['Gamma Glutamyl transferase']['REFERENCE RANGE'])
                 cursor.execute(liverfunctiontest, liverfunctiontest_values)
 
-                                                # ["THYROID FUNCTION TEST"]{
-                                                #   "T3- Triiodothyroine": {
-                                                #     "RESULT": 1.54,
-                                                #     "UNIT": "mg/dl",
-                                                #     "REFERENCE RANGE": "0.6 to 1.6"
-                                                #   },
-                                                #   "T4 - Thyroxine": {
-                                                #     "RESULT": 9.06,
-                                                #     "UNIT": "mg/dl",
-                                                #     "REFERENCE RANGE": "4.6 to 9.3"
-                                                #   },
-                                                #   "TSH- Thyroid Stimulating Hormone": {
-                                                #     "RESULT": 5.84,
-                                                #     "UNIT": "mg/dl",
-                                                #     "REFERENCE RANGE": "0.25 to 5.0",
-                                                #     "NORMAL / ABNORMAL": "null"
-                                                #   }
-                                                # }
                 thyroidfunctiontest = ("INSERT INTO thyroid_function_test "
                                         "(emp_no, t3, t3_unit, t3_range, "
                                         "t4, t4_unit, t4_range, "
@@ -575,30 +295,6 @@ def Dashboard(connection,cursor,accessLevel):
                                             i["THYROID FUNCTION TEST"]['TSH- Thyroid Stimulating Hormone']['REFERENCE RANGE'],
                                             i["THYROID FUNCTION TEST"]['TSH- Thyroid Stimulating Hormone']['NORMAL / ABNORMAL'])
                 cursor.execute(thyroidfunctiontest, thyroidfunctiontest_values)
-
-
-                            # ["AUTOIMMUNE TEST"]:{
-                            #   "ANA (Antinuclear Antibody)": {
-                            #     "RESULT": "null",
-                            #     "UNIT": "null",
-                            #     "REFERENCE RANGE": "null"
-                            #   },
-                            #   "Anti ds DNA": {
-                            #     "RESULT": "null",
-                            #     "UNIT": "null",
-                            #     "REFERENCE RANGE": "null"
-                            #   },
-                            #   "Anticardiolipin Antibodies (IgG & IgM)": {
-                            #     "RESULT": "null",
-                            #     "UNIT": "null",
-                            #     "REFERENCE RANGE": "null"
-                            #   },
-                            #   "Rheumatoid factor": {
-                            #     "RESULT": "null",
-                            #     "UNIT": "null",
-                            #     "REFERENCE RANGE": "null"
-                            #   }
-                            # }
 
                 autoimmunetest = ("INSERT INTO autoimmune_test "
                 "( emp_no, ana, ana_unit, ana_range, "
@@ -622,28 +318,6 @@ def Dashboard(connection,cursor,accessLevel):
                                     i["AUTOIMMUNE TEST"]['Rheumatoid factor']['UNIT'],
                                     i["AUTOIMMUNE TEST"]['Rheumatoid factor']['REFERENCE RANGE'])
                 cursor.execute(autoimmunetest, autoimmunetest_values)
-                            # ["COAGULATION TEST"]{
-                            #   "Prothrombin Time (PT)": {
-                            #     "RESULT": "null",
-                            #     "UNIT": "null",
-                            #     "REFERENCE RANGE": "null"
-                            #   },
-                            #   "PT INR": {
-                            #     "RESULT": "null",
-                            #     "UNIT": "null",
-                            #     "REFERENCE RANGE": "null"
-                            #   },
-                            #   "Bleeding Time (BT)": {
-                            #     "RESULT": "null",
-                            #     "UNIT": "null",
-                            #     "REFERENCE RANGE": "null"
-                            #   },
-                            #   "Clotting Time (CT)": {
-                            #     "RESULT": "null",
-                            #     "UNIT": "null",
-                            #     "REFERENCE RANGE": "null"
-                            #   }
-                            # }
 
                 coagulationtest = ("INSERT INTO coagulation_test "
                 "(emp_no, pt, pt_unit, pt_range, ptinr, ptinr_unit, ptinr_range, "
@@ -666,61 +340,6 @@ def Dashboard(connection,cursor,accessLevel):
                                     i["COAGULATION TEST"]['Clotting Time (CT)']['REFERENCE RANGE'])
                 cursor.execute(coagulationtest, coagulationtest_values)
 
-                                # ["ENZYMES & CARDIAC Profile"]{
-                                #                     {
-                                #   "Acid Phosphatase": {
-                                #     "RESULT": "null",
-                                #     "UNIT": " IU/L ",
-                                #     "REFERENCE RANGE": "null"
-                                #   },
-                                #   "Adenosine Deaminase": {
-                                #     "RESULT": "null",
-                                #     "UNIT": " IU/L ",
-                                #     "REFERENCE RANGE": "null"
-                                #   },
-                                #   "Amylase": {
-                                #     "RESULT": "null",
-                                #     "UNIT": " IU/L ",
-                                #     "REFERENCE RANGE": "null"
-                                #   },
-                                #   "Lipase": {
-                                #     "RESULT": "null",
-                                #     "UNIT": " IU/L ",
-                                #     "REFERENCE RANGE": "null"
-                                #   },
-                                #   "Troponin- T": {
-                                #     "RESULT": "null",
-                                #     "UNIT": "null",
-                                #     "REFERENCE RANGE": "null"
-                                #   },
-                                #   "Troponin- I": {
-                                #     "RESULT": "null",
-                                #     "UNIT": "null",
-                                #     "REFERENCE RANGE": "null"
-                                #   },
-                                #   "CPK - TOTAL": {
-                                #     "RESULT": "null",
-                                #     "UNIT": " IU/L ",
-                                #     "REFERENCE RANGE": "null"
-                                #   },
-                                #   "CPK - MB": {
-                                #     "RESULT": "null",
-                                #     "UNIT": " IU/L ",
-                                #     "REFERENCE RANGE": "null"
-                                #   },
-                                #   "ECG ": {
-                                #     "NORMAL / ABNORMAL": "null",
-                                #     "COMMENTS(If Abnormal)": "null"
-                                #   },
-                                #   "ECHO": {
-                                #     "NORMAL / ABNORMAL": "null",
-                                #     "COMMENTS(If Abnormal)": "null"
-                                #   },
-                                #   "TMT": {
-                                #     "NORMAL / ABNORMAL": "null",
-                                #     "COMMENTS(If Abnormal)": "null"
-                                #   }
-                                # }
                 enzymesandcardiacprofile = ("INSERT INTO enzymes_cardio "
                 "(emp_no, acid_phosphatase, acid_phosphatase_unit, acid_phosphatase_range, "
                 "adenosine, adenosine_unit, adenosine_range, "
@@ -767,88 +386,6 @@ def Dashboard(connection,cursor,accessLevel):
                                                 i["ENZYMES & CARDIAC Profile"]['TMT']['COMMENTS(If Abnormal)'])
                 cursor.execute(enzymesandcardiacprofile, enzymesandcardiacprofile_values)
 
-                                # ["URINE ROUTINE"]{
-                                #   "Colour": {
-                                #     "RESULT": "straw yellow",
-                                #     "UNIT": "null",
-                                #     "REFERENCE RANGE": "pale yellow or straw yellow"
-                                #   },
-                                #   "Appearance": {
-                                #     "RESULT": "clear",
-                                #     "UNIT": "null",
-                                #     "REFERENCE RANGE": "clear"
-                                #   },
-                                #   "Reaction (pH)": {
-                                #     "RESULT": "null",
-                                #     "UNIT": "null",
-                                #     "REFERENCE RANGE": "null"
-                                #   },
-                                #   "Specific gravity": {
-                                #     "RESULT": "null",
-                                #     "UNIT": "null",
-                                #     "REFERENCE RANGE": "null"
-                                #   },
-                                #   "Protein/Albumin": {
-                                #     "RESULT": "negative",
-                                #     "UNIT": "null",
-                                #     "REFERENCE RANGE": "null"
-                                #   },
-                                #   "Glucose (Urine)": {
-                                #     "RESULT": "Nil",
-                                #     "UNIT": "/Hpf",
-                                #     "REFERENCE RANGE": "Nil"
-                                #   },
-                                #   "Ketone Bodies": {
-                                #     "RESULT": "null",
-                                #     "UNIT": "/Hpf",
-                                #     "REFERENCE RANGE": "null"
-                                #   },
-                                #   "Urobilinogen": {
-                                #     "RESULT": "null",
-                                #     "UNIT": "/Hpf",
-                                #     "REFERENCE RANGE": "null"
-                                #   },
-                                #   "Bile Salts": {
-                                #     "RESULT": "null",
-                                #     "UNIT": "/Hpf",
-                                #     "REFERENCE RANGE": "null"
-                                #   },
-                                #   "Bile Pigments": {
-                                #     "RESULT": "null",
-                                #     "UNIT": "/Hpf",
-                                #     "REFERENCE RANGE": "null"
-                                #   },
-                                #   "WBC / Pus cells": {
-                                #     "RESULT": "0 to 2",
-                                #     "UNIT": "/Hpf",
-                                #     "REFERENCE RANGE": "null"
-                                #   },
-                                #   "Red Blood Cells": {
-                                #     "RESULT": "null",
-                                #     "UNIT": "/Hpf",
-                                #     "REFERENCE RANGE": "null"
-                                #   },
-                                #   "Epithelial celss": {
-                                #     "RESULT": "0 to 2",
-                                #     "UNIT": "/Hpf",
-                                #     "REFERENCE RANGE": "0 to 5"
-                                #   },
-                                #   "Casts": {
-                                #     "RESULT": "null",
-                                #     "UNIT": "/Hpf",
-                                #     "REFERENCE RANGE": "null"
-                                #   },
-                                #   "Crystals": {
-                                #     "RESULT": "null",
-                                #     "UNIT": "/Hpf",
-                                #     "REFERENCE RANGE": "null"
-                                #   },
-                                #   "Bacteria": {
-                                #     "RESULT": "null",
-                                #     "UNIT": "null",
-                                #     "REFERENCE RANGE": "null"
-                                #   }
-                                # }
                 urineroutine = ("INSERT INTO urine_routine "
                 "(emp_no, colour, colour_unit, colour_range, "
                 "apperance, apperance_unit, apperance_range, "
@@ -920,50 +457,6 @@ def Dashboard(connection,cursor,accessLevel):
                                     i["URINE ROUTINE"]['Bacteria']['REFERENCE RANGE'])
                 cursor.execute(urineroutine, urineroutine_values)
 
-
-                                # ["SEROLOGY"]:{
-                                #   "Screening For HIV I & II": {
-                                #     "RESULT": "null",
-                                #     "REFERENCE RANGE": "null",
-                                #     "Comment": "null"
-                                #   },
-                                #   "HBsAg": {
-                                #     "RESULT": "Negative",
-                                #     "REFERENCE RANGE": "null",
-                                #     "Comment": "null"
-                                #   },
-                                #   "HCV": {
-                                #     "RESULT": "null",
-                                #     "REFERENCE RANGE": "null",
-                                #     "Comment": "null"
-                                #   },
-                                #   "WIDAL": {
-                                #     "RESULT": "null",
-                                #     "REFERENCE RANGE": "null",
-                                #     "Comment": "null"
-                                #   },
-                                #   "VDRL": {
-                                #     "RESULT": "null",
-                                #     "REFERENCE RANGE": "null",
-                                #     "Comment": "null"
-                                #   },
-                                #   "Dengue NS1Ag": {
-                                #     "RESULT": "null",
-                                #     "REFERENCE RANGE": "null",
-                                #     "Comment": "null"
-                                #   },
-                                #   "Dengue  IgG": {
-                                #     "RESULT": "null",
-                                #     "REFERENCE RANGE": "null",
-                                #     "Comment": "null"
-                                #   },
-                                #   "Dengue IgM": {
-                                #     "RESULT": "null",
-                                #     "REFERENCE RANGE": "null",
-                                #     "Comment": "null"
-                                #   }
-                                # }
-
                 serology = ("INSERT INTO serology_result "
                 "(emp_no, hiv_screening, hiv_screening_range, hiv_screening_comment, "
                 "hbsag, hbsag_range, hbsag_comment, "
@@ -1002,53 +495,6 @@ def Dashboard(connection,cursor,accessLevel):
                                 i["SEROLOGY"]['Dengue IgM']['REFERENCE RANGE'],
                                 i["SEROLOGY"]['Dengue IgM']['Comment'])
                 cursor.execute(serology, serology_values)
-                            #     ["MOTION"]: {
-                            #   "Colour": {
-                            #     "RESULT": "null",
-                            #     "UNIT": "null",
-                            #     "REFERENCE RANGE": "null"
-                            #   },
-                            #   "Appearance": {
-                            #     "RESULT": "null",
-                            #     "UNIT": "null",
-                            #     "REFERENCE RANGE": "null"
-                            #   },
-                            #   "Occult Blood": {
-                            #     "RESULT": "null",
-                            #     "UNIT": "null",
-                            #     "REFERENCE RANGE": "null"
-                            #   },
-                            #   "Ova": {
-                            #     "RESULT": "null",
-                            #     "UNIT": "null",
-                            #     "REFERENCE RANGE": "null"
-                            #   },
-                            #   "Cyst": {
-                            #     "RESULT": "null",
-                            #     "UNIT": "null",
-                            #     "REFERENCE RANGE": "null"
-                            #   },
-                            #   "Mucus": {
-                            #     "RESULT": "null",
-                            #     "UNIT": "null",
-                            #     "REFERENCE RANGE": "null"
-                            #   },
-                            #   "Pus Cells": {
-                            #     "RESULT": "null",
-                            #     "UNIT": "null",
-                            #     "REFERENCE RANGE": "null"
-                            #   },
-                            #   "RBCs": {
-                            #     "RESULT": "null",
-                            #     "UNIT": "null",
-                            #     "REFERENCE RANGE": "null"
-                            #   },
-                            #   "Others": {
-                            #     "RESULT": "null",
-                            #     "UNIT": "null",
-                            #     "REFERENCE RANGE": "null"
-                            #   }
-                            # }
 
                 motion = ("INSERT INTO motion "
                 "(emp_no, colour, colour_unit, colour_range, "
@@ -1092,28 +538,6 @@ def Dashboard(connection,cursor,accessLevel):
                             i["MOTION"]['Others']['UNIT'],
                             i["MOTION"]['Others']['REFERENCE RANGE'])
                 cursor.execute(motion, motion_values)
-                        # ["ROUTINE CULTURE & SENSITIVITY TEST"]:{
-                        #   "Urine": {
-                        #     "RESULT": "null",
-                        #     "UNIT": "null",
-                        #     "REFERENCE RANGE": "null"
-                        #   },
-                        #   "Motion": {
-                        #     "RESULT": "null",
-                        #     "UNIT": "null",
-                        #     "REFERENCE RANGE": "null"
-                        #   },
-                        #   "Sputum": {
-                        #     "RESULT": "null",
-                        #     "UNIT": "null",
-                        #     "REFERENCE RANGE": "null"
-                        #   },
-                        #   "Blood": {
-                        #     "RESULT": "null",
-                        #     "UNIT": "null",
-                        #     "REFERENCE RANGE": "null"
-                        #   }
-                        # }
 
                 routinetest = ("INSERT INTO routine_culture "
                 "(emp_no, urine, urine_unit, urine_range, "
@@ -1138,14 +562,6 @@ def Dashboard(connection,cursor,accessLevel):
                                     i["ROUTINE CULTURE & SENSITIVITY TEST"]['Blood']['REFERENCE RANGE'])
                 cursor.execute(routinetest, routinetest_values)
 
-                        # ["Men's Pack"]:{
-                        #   "PSA (Prostate specific Antigen)": {
-                        #     "RESULT": "null",
-                        #     "UNIT": "null",
-                        #     "REFERENCE RANGE": "null"
-                        #   }
-                        # }
-
                 menspack = ("INSERT INTO mens_pack "
                 "( emp_no, psa, psa_unit, psa_range) "
                 "VALUES "
@@ -1156,17 +572,6 @@ def Dashboard(connection,cursor,accessLevel):
                                     i["Men's Pack"]["PSA (Prostate specific Antigen)"]['UNIT'],
                                     i["Men's Pack"]["PSA (Prostate specific Antigen)"]['REFERENCE RANGE'])
                 cursor.execute(menspack, menspack_values)
-
-                        # ["Women's Pack"]:{
-                        #   "Mammogram": {
-                        #     "NORMAL / ABNORMAL": "null",
-                        #     "COMMENTS": "null"
-                        #   },
-                        #   "PAP Smear": {
-                        #     "NORMAL / ABNORMAL": "null",
-                        #     "COMMENTS": "null"
-                        #   }
-                        # }
 
                 womenspack = ("INSERT INTO womens_pack "
                             "( emp_no, mammogram_nm_ab, mammogram_comment,  pap_nm_ab, pap_comment) "
@@ -1179,17 +584,6 @@ def Dashboard(connection,cursor,accessLevel):
                                     i["Women's Pack"]['PAP Smear']['NORMAL / ABNORMAL'],
                                     i["Women's Pack"]['PAP Smear']['COMMENTS'])
                 cursor.execute(womenspack, womenspack_values)
-
-                            # ["Occupational Profile"]:{
-                            #   "Audiometry ": {
-                            #     "NORMAL / ABNORMAL": "null",
-                            #     "COMMENTS": "null"
-                            #   },
-                            #   "PFT": {
-                            #     "NORMAL / ABNORMAL": "null",
-                            #     "COMMENTS": "null"
-                            #   }
-                            # }
 
                 occupationalprofile = ("INSERT INTO occupational_profile "
                 "( emp_no,  audiometry_nm_ab, audiometry_comment,  pft_nm_ab, pft_comment) "
@@ -1204,13 +598,6 @@ def Dashboard(connection,cursor,accessLevel):
                                             i["Occupational Profile"]['PFT']['COMMENTS'])  
                 cursor.execute(occupationalprofile, occupationalprofile_values)
 
-                            #   ["Others TEST"]{
-                            #   "Pathology ": {
-                            #     "NORMAL / ABNORMAL": "null",
-                            #     "COMMENTS": "null"
-                            #   }
-                            # }
-
                 otherstest = ("INSERT INTO other_tests "
                 "( emp_no, pathology, pathology_comments) "
                 "VALUES "
@@ -1220,18 +607,6 @@ def Dashboard(connection,cursor,accessLevel):
                                     i["Others TEST"]['Pathology ']['NORMAL / ABNORMAL'],
                                     i["Others TEST"]['Pathology ']['COMMENTS'])
                 cursor.execute(otherstest, otherstest_values)
-
-
-                        # ["OPHTHALMIC REPORT"]:{
-                        #   "Vision": {
-                        #     "NORMAL / ABNORMAL": "Normal  ",
-                        #     "COMMENTS": "null"
-                        #   },
-                        #   "Color Vision": {
-                        #     "NORMAL / ABNORMAL": "Noramal  ",
-                        #     "COMMENTS": "null"
-                        #   }
-                        # }
 
                 ophthalmicreport = ("INSERT INTO ophthalmic_report "
                 "( emp_no, vision, vision_comments, colourvision, colourvision_comment) "
@@ -1244,29 +619,6 @@ def Dashboard(connection,cursor,accessLevel):
                                         i["OPHTHALMIC REPORT"]['Color Vision']['NORMAL / ABNORMAL'],
                                         i["OPHTHALMIC REPORT"]['Color Vision']['COMMENTS'])
                 cursor.execute(ophthalmicreport, ophthalmicreport_values)
-
-                            # ["X-RAY"]:{
-                            #   "Chest": {
-                            #     "NORMAL / ABNORMAL": "null",
-                            #     "COMMENTS (If Abnormal)": "null"
-                            #   },
-                            #   "Spine": {
-                            #     "NORMAL / ABNORMAL": "null",
-                            #     "COMMENTS (If Abnormal)": "null"
-                            #   },
-                            #   "Abdomen": {
-                            #     "NORMAL / ABNORMAL": "null",
-                            #     "COMMENTS (If Abnormal)": "null"
-                            #   },
-                            #   "KUB": {
-                            #     "NORMAL / ABNORMAL": "null",
-                            #     "COMMENTS (If Abnormal)": "null"
-                            #   },
-                            #   "Pelvis": {
-                            #     "NORMAL / ABNORMAL": "null",
-                            #     "COMMENTS (If Abnormal)": "null"
-                            #   }
-                            # }
 
                 xray = ("INSERT INTO x_ray "
                 "( emp_no, chest_nm_ab, chest_comment, "
@@ -1290,25 +642,6 @@ def Dashboard(connection,cursor,accessLevel):
                             i["X-RAY"]['Pelvis']['COMMENTS (If Abnormal)'])
 
                 cursor.execute(xray, xray_values)
-                        #[ "USG "]:{
-                        # {
-                        #   "ABDOMEN": {
-                        #     "NORMAL / ABNORMAL": "Abnormal",
-                        #     "COMMENTS (If Abnormal)": "Mild Prostatomegaly, Post void Residual Urine:20ml, Grade 1 Fatty Liver"
-                        #   },
-                        #   "Pelvis": {
-                        #     "NORMAL / ABNORMAL": "null",
-                        #     "COMMENTS (If Abnormal)": "null"
-                        #   },
-                        #   "Neck": {
-                        #     "NORMAL / ABNORMAL": "null",
-                        #     "COMMENTS (If Abnormal)": "null"
-                        #   },
-                        #   "KUB": {
-                        #     "NORMAL / ABNORMAL": "null",
-                        #     "COMMENTS (If Abnormal)": "null"
-                        #   }
-                        # }
 
                 usg = ("INSERT INTO usg "
                 "( emp_no, abdomen, abdomen_comments, "
@@ -1329,30 +662,6 @@ def Dashboard(connection,cursor,accessLevel):
                             i["USG "]['KUB']['COMMENTS (If Abnormal)'])
 
                 cursor.execute(usg, usg_values)
-
-
-                # ["CT"]:{
-                #   "Brain": {
-                #     "NORMAL / ABNORMAL": "null",
-                #     "COMMENTS (If Abnormal)": "null"
-                #   },
-                #   "Abdomen": {
-                #     "NORMAL / ABNORMAL": "null",
-                #     "COMMENTS (If Abnormal)": "null"
-                #   },
-                #   "Pelvis": {
-                #     "NORMAL / ABNORMAL": "null",
-                #     "COMMENTS (If Abnormal)": "null"
-                #   },
-                #   "CT Lungs": {
-                #     "NORMAL / ABNORMAL": "null",
-                #     "COMMENTS (If Abnormal)": "null"
-                #   },
-                #   "Spine": {
-                #     "NORMAL / ABNORMAL": "null",
-                #     "COMMENTS (If Abnormal)": "null"
-                #   }
-                # }
                 
                 ct = ("INSERT INTO ct_report "
                 "( emp_no, brain, brain_comment, "
@@ -1376,29 +685,6 @@ def Dashboard(connection,cursor,accessLevel):
                             i["CT"]['Spine']['COMMENTS (If Abnormal)'])
 
                 cursor.execute(ct, ct_values)
-
-                            # "[MRI"]:{
-                            # "Brain":{
-                            # "NORMAL / ABNORMAL":"null"
-                            # "COMMENTS (If Abnormal)":"null"
-                            # }
-                            # "Abdomen":{
-                            # "NORMAL / ABNORMAL":"null"
-                            # "COMMENTS (If Abnormal)":"null"
-                            # }
-                            # "Pelvis":{
-                            # "NORMAL / ABNORMAL":"null"
-                            # "COMMENTS (If Abnormal)":"null"
-                            # }
-                            # "CT Lungs":{
-                            # "NORMAL / ABNORMAL":"null"
-                            # "COMMENTS (If Abnormal)":"null"
-                            # }
-                            # "Spine":{
-                            # "NORMAL / ABNORMAL":"null"
-                            # "COMMENTS (If Abnormal)":"null"
-                            # }
-                            # }
 
                 mri = ("INSERT INTO mri "
                 "(emp_no, brain, brain_comments, "
@@ -1425,15 +711,6 @@ def Dashboard(connection,cursor,accessLevel):
                 connection.commit()
 
             st.write("Data Inserted Successfully")
-
-
-                
-
-        # Update the counts from the dataframe
-            # st.session_state.total_census = df['census'].sum()
-            # st.session_state.total_healthy = df['healthy'].sum()
-            # st.session_state.total_unhealthy = df['unhealthy'].sum()
-            # st.session_state.appointments = df['appointments'].sum()
 
     def get_data(val, name):
             with st.container(border=1):
