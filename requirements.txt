@@ -8,6 +8,7 @@ charset-normalizer==3.3.2
 click==8.1.7
 contourpy==1.2.1
 cycler==0.12.1
+deprecation==2.1.0
 et-xmlfile==1.1.0
 extra-streamlit-components==0.1.71
 fonttools==4.50.0
@@ -45,9 +46,10 @@ rich==13.7.1
 rpds-py==0.18.0
 six==1.16.0
 smmap==5.0.1
-streamlit==1.32.2
+streamlit==1.33.0
 streamlit-authenticator==0.3.2
 streamlit-datetime-range-picker==0.0.1
+streamlit-modal==0.1.2
 streamlit-option-menu==0.3.12
 tenacity==8.2.3
 toml==0.10.2
