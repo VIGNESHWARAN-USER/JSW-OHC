@@ -149,7 +149,7 @@ if __name__ == "__main__":
                     st.rerun()
             
             if selected == "Dashboard":
-                Dashboard(cursor, "doctor")
+                Dashboard(st.session_state.connection,cursor, "doctor")
             
             if selected == "New Visit":
                 New_Visit(cursor)
@@ -187,7 +187,7 @@ if __name__ == "__main__":
                     st.rerun()
             
             if selected == "Dashboard":
-                Dashboard(cursor, "nurse")
+                Dashboard(st.session_state.connection,cursor, "nurse")
             
             if selected == "New Visit":
                 New_Visit(cursor)
