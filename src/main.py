@@ -15,6 +15,7 @@ from others.eventsandcamps import Events_Camps
 from others.recordsandfilters import Records_Filters
 from others.mockdrill import Mock_Drill
 from others.appointment import Appointment
+from others.admin.main import Admin
 
 icon = Image.open("./src/assets/favicon.png")
 
@@ -129,7 +130,7 @@ if __name__ == "__main__":
         Login()
     else:
         if st.session_state.accessLevel == "admin":
-            st.subheader("Welcome Admin")
+            Admin()# st.session_state.connection, cursor)
         
         if st.session_state.accessLevel == "doctor":
             with st.sidebar:
