@@ -15,7 +15,12 @@ from others.eventsandcamps import Events_Camps
 from others.recordsandfilters import Records_Filters
 from others.mockdrill import Mock_Drill
 from others.appointment import Appointment
-from others.admin.main import Admin
+from others.admin.pages.dashboard import dashboard
+from others.admin.pages.addDoctor import addDoctor
+from others.admin.pages.addNurse import addNurse
+from others.admin.pages.addReferenceRange import addReferenceRange
+from streamlit_option_menu import option_menu
+
 
 icon = Image.open("./src/assets/favicon.png")
 
@@ -130,7 +135,29 @@ if __name__ == "__main__":
         Login()
     else:
         if st.session_state.accessLevel == "admin":
-            Admin()# st.session_state.connection, cursor)
+            with st.sidebar:
+                form = option_menu(
+                    "JSW-OHC Admin",
+                    ["Dashboard", "Add Doctor", "Add Nurse", "Add Reference Range"],
+                    menu_icon='a',
+                    icons=['a', 'b', 'c', 'd']
+                )
+                st.divider()
+                st.header(f"Login as {st.session_state.accessLevel.capitalize()}")
+                st.divider()
+                if st.button("Logout"):
+                    st.session_state.login = False
+                    st.write("Logout Success")
+                    st.rerun()
+
+            if form == "Dashboard":
+                dashboard()
+            elif form == "Add Doctor":
+                addDoctor()
+            elif form == "Add Nurse":
+                addNurse()
+            elif form == "Add Reference Range":
+                addReferenceRange()
         
         if st.session_state.accessLevel == "doctor":
             with st.sidebar:
