@@ -3,6 +3,9 @@ from  streamlit_option_menu import option_menu
 
 def addReferenceRange():
     st.title("Add Reference Range")
+
+    if "form_data" not in st.session_state:
+        st.session_state.form_data = {}
     
     # i wan t ocreation option menu for the investigations(HAEMATALOGY","ROUTINE SUGAR TESTS","RENAL FUNCTION TEST & ELECTROLYTES","LIPID PROFILE","LIVER FUNCTION TEST","THYROID FUNCTION TEST","AUTOIMMUNE TEST","COAGULATION TEST","ENZYMES & CARDIAC Profile","URINE ROUTINE","SEROLOGY","MOTION","ROUTINE CULTURE & SENSITIVITY TEST")
     r0c1,r0c2,r0c3= st.columns([3,2,4])
