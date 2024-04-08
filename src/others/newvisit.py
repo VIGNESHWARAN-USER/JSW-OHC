@@ -50,9 +50,9 @@ def Form(visitreason):
         st.rerun()
     form_name = option_menu(
         None,
-        ["Basic Details", "Vitals", "Investigations", "Consultation", "Medical History"],
+        ["Basic Details", "Vitals", "Investigations", "Fitness", "Consultation", "Medical History"],
         orientation="horizontal",
-        icons=['a','a','a','a','a']
+        icons=['a','a','a','a','a','a']
     )
 
     if form_name == "Basic Details":
@@ -61,7 +61,7 @@ def Form(visitreason):
         with r0c1:
             st.session_state.form_data["Visit Date"] = st.text_input("Visit Date", value=st.session_state.form_data.get("Visit Date", ""))
         with r0c2:
-            st.session_state.form_data["Visit Time"] = st.selectbox('Select the hospital for the referrence range', ["manipal","Dharan","Poornima"], index=0)
+            st.session_state.form_data["Reference Type"] = st.selectbox('Select the hospital for the referrence range', ["manipal","Dharan","Poornima"], index=0)
         r1c1,r1c2,r1c3 = st.columns(3)
         with r1c1:
             st.session_state.form_data["Employee ID"] = st.text_input("Employee ID",value=st.session_state.form_data.get("Employee ID",""))
@@ -94,13 +94,9 @@ def Form(visitreason):
                 }
             </style>
             """,unsafe_allow_html=True)
-        with r2c2:
-            if st.button("Cancel", type="primary"):
-                st.write("Cancelled")
-                st.session_state.form_data = {"visitreason": visitreason}
-                st.rerun()
+        
         with r2c3:
-            if st.button("Next", type="primary"):    
+            if st.button("Add Data", type="primary"):    
                 st.write("Data Saved")
                 st.session_state.form_data["visitreason"] = visitreason
                 st.rerun()
@@ -235,13 +231,9 @@ def Form(visitreason):
                 }
             </style>
             """,unsafe_allow_html=True)
-        with r3c2:
-            if st.button("Cancel", type="primary"):
-                st.write("Cancelled")
-                st.session_state.form_data = {"visitreason": visitreason}
-                st.rerun()
+        
         with r3c3:
-            if st.button("Next", type="primary"):
+            if st.button("Add Data", type="primary"):
                 st.write("Data Saved")
                 st.session_state.form_data["visitreason"] = visitreason
                 st.rerun()
@@ -281,13 +273,9 @@ def Form(visitreason):
 
 
             r3c1,r3c2,r3c3 = st.columns([6,4,4])
-            with r3c2:
-                if st.button("Cancel", type="primary"):
-                    st.write("Cancelled")
-                    st.session_state.form_data = {"visitreason": visitreason}
-                    st.rerun()
+            
             with r3c3:
-                if st.button("Next", type="primary"):
+                if st.button("Add Data", type="primary"):
                     st.write("Data Saved")
                     st.session_state.form_data["visitreason"] = visitreason
                     st.rerun()
@@ -305,13 +293,9 @@ def Form(visitreason):
                 st.session_state.form_data["HbA1c"] = st.text_input("HbA1c", value=st.session_state.form_data.get("HbA1c",""))
             
             r3c1,r3c2,r3c3 = st.columns([6,4,4])
-            with r3c2:
-                if st.button("Cancel", type="primary"):
-                    st.write("Cancelled")
-                    st.session_state.form_data = {"visitreason": visitreason}
-                    st.rerun()
+            
             with r3c3:
-                if st.button("Next", type="primary"):
+                if st.button("Add Data", type="primary"):
                     st.write("Data Saved")
                     st.session_state.form_data["visitreason"] = visitreason
                     st.rerun()
@@ -336,13 +320,9 @@ def Form(visitreason):
                 st.session_state.form_data["Bicarbonate"] = st.text_input("Bicarbonate", value=st.session_state.form_data.get("Bicarbonate",""))
 
             r3c1,r3c2,r3c3 = st.columns([6,4,4])
-            with r3c2:
-                if st.button("Cancel", type="primary"):
-                    st.write("Cancelled")
-                    st.session_state.form_data = {"visitreason": visitreason}
-                    st.rerun()
+            
             with r3c3:
-                if st.button("Next", type="primary"):
+                if st.button("Add Data", type="primary"):
                     st.write("Data Saved")
                     st.session_state.form_data["visitreason"] = visitreason
                     st.rerun()
@@ -364,13 +344,9 @@ def Form(visitreason):
                 st.session_state.form_data["LDL.CHOL/HDL.CHOL Ratio"] = st.text_input("LDL.CHOL/HDL.CHOL Ratio", value=st.session_state.form_data.get("LDL.CHOL/HDL.CHOL Ratio",""))
 
             r3c1,r3c2,r3c3 = st.columns([6,4,4])
-            with r3c2:
-                if st.button("Cancel", type="primary"):
-                    st.write("Cancelled")
-                    st.session_state.form_data = {"visitreason": visitreason}
-                    st.rerun()
+            
             with r3c3:
-                if st.button("Next", type="primary"):
+                if st.button("Add Data", type="primary"):
                     st.write("Data Saved")
                     st.session_state.form_data["visitreason"] = visitreason
                     st.rerun()
@@ -396,13 +372,9 @@ def Form(visitreason):
                 st.session_state.form_data["Gamma Glutamyl transferase"] = st.text_input("Gamma Glutamyl transferase", value=st.session_state.form_data.get("Gamma Glutamyl transferase",""))
 
             r3c1,r3c2,r3c3 = st.columns([6,4,4])
-            with r3c2:
-                if st.button("Cancel", type="primary"):
-                    st.write("Cancelled")
-                    st.session_state.form_data = {"visitreason": visitreason}
-                    st.rerun()
+            
             with r3c3:
-                if st.button("Next", type="primary"):
+                if st.button("Add Data", type="primary"):
                     st.write("Data Saved")
                     st.session_state.form_data["visitreason"] = visitreason
                     st.rerun()
@@ -418,13 +390,9 @@ def Form(visitreason):
                 st.session_state.form_data["TSH- Thyroid Stimulating Hormone"] = st.text_input("TSH- Thyroid Stimulating Hormone", value=st.session_state.form_data.get("TSH- Thyroid Stimulating Hormone",""))
 
             r3c1,r3c2,r3c3 = st.columns([6,4,4])
-            with r3c2:
-                if st.button("Cancel", type="primary"):
-                    st.write("Cancelled")
-                    st.session_state.form_data = {"visitreason": visitreason}
-                    st.rerun()
+            
             with r3c3:
-                if st.button("Next", type="primary"):
+                if st.button("Add Data", type="primary"):
                     st.write("Data Saved")
                     st.session_state.form_data["visitreason"] = visitreason
                     st.rerun()
@@ -442,13 +410,9 @@ def Form(visitreason):
             with r1c3:
                 st.session_state.form_data["Anticardiolipin Antibodies (IgG & IgM)"] = st.text_input("Anticardiolipin Antibodies (IgG & IgM)", value=st.session_state.form_data.get("Anticardiolipin Antibodies (IgG & IgM)",""))
             r3c1,r3c2,r3c3 = st.columns([6,4,4])
-            with r3c2:
-                if st.button("Cancel", type="primary"):
-                    st.write("Cancelled")
-                    st.session_state.form_data = {"visitreason": visitreason}
-                    st.rerun()
+            
             with r3c3:
-                if st.button("Next", type="primary"):
+                if st.button("Add Data", type="primary"):
                     st.write("Data Saved")
                     st.session_state.form_data["visitreason"] = visitreason
                     st.rerun()
@@ -468,13 +432,9 @@ def Form(visitreason):
 
 
             r3c1,r3c2,r3c3 = st.columns([6,4,4])
-            with r3c2:
-                if st.button("Cancel", type="primary"):
-                    st.write("Cancelled")
-                    st.session_state.form_data = {"visitreason": visitreason}
-                    st.rerun()
+            
             with r3c3:
-                if st.button("Next", type="primary"):
+                if st.button("Add Data", type="primary"):
                     st.write("Data Saved")
                     st.session_state.form_data["visitreason"] = visitreason
                     st.rerun()
@@ -507,13 +467,9 @@ def Form(visitreason):
 
 
             r3c1,r3c2,r3c3 = st.columns([6,4,4])
-            with r3c2:
-                if st.button("Cancel", type="primary"):
-                    st.write("Cancelled")
-                    st.session_state.form_data = {"visitreason": visitreason}
-                    st.rerun()
+            
             with r3c3:
-                if st.button("Next", type="primary"):
+                if st.button("Add Data", type="primary"):
                     st.write("Data Saved")
                     st.session_state.form_data["visitreason"] = visitreason
                     st.rerun()
@@ -548,13 +504,9 @@ def Form(visitreason):
 
 
             r3c1,r3c2,r3c3 = st.columns([6,4,4])
-            with r3c2:
-                if st.button("Cancel", type="primary"):
-                    st.write("Cancelled")
-                    st.session_state.form_data = {"visitreason": visitreason}
-                    st.rerun()
+            
             with r3c3:
-                if st.button("Next", type="primary"):
+                if st.button("Add Data", type="primary"):
                     st.write("Data Saved")
                     st.session_state.form_data["visitreason"] = visitreason
                     st.rerun()
@@ -579,13 +531,9 @@ def Form(visitreason):
                 
 
             r3c1,r3c2,r3c3 = st.columns([6,4,4])
-            with r3c2:
-                if st.button("Cancel", type="primary"):
-                    st.write("Cancelled")
-                    st.session_state.form_data = {"visitreason": visitreason}
-                    st.rerun()
+            
             with r3c3:
-                if st.button("Next", type="primary"):
+                if st.button("Add Data", type="primary"):
                     st.write("Data Saved")
                     st.session_state.form_data["visitreason"] = visitreason
                     st.rerun()
@@ -609,13 +557,9 @@ def Form(visitreason):
                 st.session_state.form_data["Others"] = st.text_input("Others", value=st.session_state.form_data.get("Others",""))
 
             r3c1,r3c2,r3c3 = st.columns([6,4,4])
-            with r3c2:
-                if st.button("Cancel", type="primary"):
-                    st.write("Cancelled")
-                    st.session_state.form_data = {"visitreason": visitreason}
-                    st.rerun()
+            
             with r3c3:
-                if st.button("Next", type="primary"):
+                if st.button("Add Data", type="primary"):
                     st.write("Data Saved")
                     st.session_state.form_data["visitreason"] = visitreason
                     st.rerun()
@@ -635,13 +579,9 @@ def Form(visitreason):
 
 
             r3c1,r3c2,r3c3 = st.columns([6,4,4])
-            with r3c2:
-                if st.button("Cancel", type="primary"):
-                    st.write("Cancelled")
-                    st.session_state.form_data = {"visitreason": visitreason}
-                    st.rerun()
+            
             with r3c3:
-                if st.button("Next", type="primary"):
+                if st.button("Add Data", type="primary"):
                     st.write("Data Saved")
                     st.session_state.form_data["visitreason"] = visitreason
                     st.rerun()
@@ -655,13 +595,9 @@ def Form(visitreason):
                 st.session_state.form_data["PSA (Prostate specific Antigen)"] = st.text_input("PSA (Prostate specific Antigen)", value=st.session_state.form_data.get("PSA (Prostate specific Antigen)",""))
             
             r3c1,r3c2,r3c3 = st.columns([6,4,4])
-            with r3c2:
-                if st.button("Cancel", type="primary"):
-                    st.write("Cancelled")
-                    st.session_state.form_data = {"visitreason": visitreason}
-                    st.rerun()
+            
             with r3c3:
-                if st.button("Next", type="primary"):
+                if st.button("Add Data", type="primary"):
                     st.write("Data Saved")
                     st.session_state.form_data["visitreason"] = visitreason
                     st.rerun()
@@ -682,13 +618,9 @@ def Form(visitreason):
                     st.session_state.form_data["PAP Smear-Comments"] = st.text_area("PAP Smear-Comments", value=st.session_state.form_data.get("PAP Smear-Comments",""))
 
             r3c1,r3c2,r3c3 = st.columns([6,4,4])
-            with r3c2:
-                if st.button("Cancel", type="primary"):
-                    st.write("Cancelled")
-                    st.session_state.form_data = {"visitreason": visitreason}
-                    st.rerun()
+            
             with r3c3:
-                if st.button("Next", type="primary"):
+                if st.button("Add Data", type="primary"):
                     st.write("Data Saved")
                     st.session_state.form_data["visitreason"] = visitreason
                     st.rerun()
@@ -710,14 +642,10 @@ def Form(visitreason):
                     st.session_state.form_data["PFT-Comments"] = st.text_area("PFT-Comments", value=st.session_state.form_data.get("PFT-Comments",""))
 
             r3c1,r3c2,r3c3 = st.columns([6,4,4])
-            with r3c2:
-                if st.button("Cancel", type="primary"):
-                    st.write("Cancelled")
-                    st.session_state.form_data = {"visitreason": visitreason}
-                    st.rerun()
+            
 
             with r3c3:
-                if st.button("Next", type="primary"):
+                if st.button("Add Data", type="primary"):
                     st.write("Data Saved")
                     st.session_state.form_data["visitreason"] = visitreason
                     st.rerun()
@@ -735,14 +663,10 @@ def Form(visitreason):
                     st.session_state.form_data["Pathology-Comments"] = st.text_area("Pathology-Comments", value=st.session_state.form_data.get("Pathology-Comments",""))
 
             r3c1,r3c2,r3c3 = st.columns([6,4,4])
-            with r3c2:
-                if st.button("Cancel", type="primary"):
-                    st.write("Cancelled")
-                    st.session_state.form_data = {"visitreason": visitreason}
-                    st.rerun()
+            
 
             with r3c3:
-                if st.button("Next", type="primary"):
+                if st.button("Add Data", type="primary"):
                     st.write("Data Saved")
                     st.session_state.form_data["visitreason"] = visitreason
                     st.rerun()
@@ -764,14 +688,10 @@ def Form(visitreason):
                 if st.session_state.form_data["Color Vision"] == "Abnormal":
                     st.session_state.form_data["Color Vision-Comments"] = st.text_area("Color Vision-Comments", value=st.session_state.form_data.get("Color Vision-Comments",""))
             r3c1,r3c2,r3c3 = st.columns([6,4,4])
-            with r3c2:
-                if st.button("Cancel", type="primary"):
-                    st.write("Cancelled")
-                    st.session_state.form_data = {"visitreason": visitreason}
-                    st.rerun()
+            
 
             with r3c3:
-                if st.button("Next", type="primary"):
+                if st.button("Add Data", type="primary"):
                     st.write("Data Saved")
                     st.session_state.form_data["visitreason"] = visitreason
                     st.rerun()
@@ -802,14 +722,10 @@ def Form(visitreason):
                     st.session_state.form_data["X-RAY Abdomen-Comments"] = st.text_area("X-RAY Abdomen-Comments", value=st.session_state.form_data.get("X-RAY Abdomen-Comments",""))
 
             r3c1,r3c2,r3c3 = st.columns([6,4,4])
-            with r3c2:
-                if st.button("Cancel", type="primary"):
-                    st.write("Cancelled")
-                    st.session_state.form_data = {"visitreason": visitreason}
-                    st.rerun()
+            
 
             with r3c3:
-                if st.button("Next", type="primary"):
+                if st.button("Add Data", type="primary"):
                     st.write("Data Saved")
                     st.session_state.form_data["visitreason"] = visitreason
                     st.rerun()
@@ -841,14 +757,10 @@ def Form(visitreason):
                 
 
             r3c1,r3c2,r3c3 = st.columns([6,4,4])
-            with r3c2:
-                if st.button("Cancel", type="primary"):
-                    st.write("Cancelled")
-                    st.session_state.form_data = {"visitreason": visitreason}
-                    st.rerun()
+            
             
             with r3c3:
-                if st.button("Next", type="primary"):
+                if st.button("Add Data", type="primary"):
                     st.write("Data Saved")
                     st.session_state.form_data["visitreason"] = visitreason
                     st.rerun()
@@ -882,14 +794,10 @@ def Form(visitreason):
                     st.session_state.form_data["CT Pelvis-Comments"] = st.text_area("CT Pelvis-Comments", value=st.session_state.form_data.get("CT Pelvis-Comments",""))
 
             r3c1,r3c2,r3c3 = st.columns([6,4,4])
-            with r3c2:
-                if st.button("Cancel", type="primary"):
-                    st.write("Cancelled")
-                    st.session_state.form_data = {"visitreason": visitreason}
-                    st.rerun()
+            
             
             with r3c3:
-                if st.button("Next", type="primary"):
+                if st.button("Add Data", type="primary"):
                     st.write("Data Saved")
                     st.session_state.form_data["visitreason"] = visitreason
                     st.rerun()
@@ -924,21 +832,47 @@ def Form(visitreason):
 
 
             r3c1,r3c2,r3c3 = st.columns([6,4,4])
-            with r3c2:
-                if st.button("Cancel", type="primary"):
-                    st.write("Cancelled")
-                    st.session_state.form_data = {"visitreason": visitreason}
-                    st.rerun()
+            
             
             with r3c3:
-                if st.button("Next", type="primary"):
+                if st.button("Add Data", type="primary"):
                     st.write("Data Saved")
                     st.session_state.form_data["visitreason"] = visitreason
                     st.rerun()
             
             st.write(st.session_state.form_data)
         
+    elif form_name == "Fitness":
+        st.header("Fitness")
+        # Fit to Join
+        # Unfit
+        # Conditional Fit
+        # Fitness Res. Duty
+        # Fitness with conditional
+        # Height Work
+        # Confined Space
+        # Gasline
+        # SCBA
+        # Fire Rescue
+
+        # i need to create a multi select box for the above options
+        st.session_state.form_data["Fitness"] = st.multiselect("Fitness", ["Fit to Join", "Unfit", "Conditional Fit", "Fitness Res. Duty", "Fitness with conditional", "Height Work", "Confined Space", "Gasline", "SCBA", "Fire Rescue"])
+
+        st.session_state.form_data["Fitness-Comments"] = st.text_area("Fitness-Comments", value=st.session_state.form_data.get("Fitness-Comments",""))
         
+
+
+
+        r3c1,r3c2,r3c3 = st.columns([6,4,4])
+        
+
+        with r3c3:
+            if st.button("Add Data", type="primary"):
+                st.write("Data Saved")
+                st.session_state.form_data["visitreason"] = visitreason
+                st.rerun()
+            
+        st.write(st.session_state.form_data)
         
     elif form_name == "Consultation":
         st.header("Consultation")
@@ -951,14 +885,10 @@ def Form(visitreason):
             st.session_state.form_data["Remarks"] = st.text_area("Remarks", value=st.session_state.form_data.get("Remarks",""))
         
         r3c1,r3c2,r3c3 = st.columns([6,4,4])
-        with r3c2:
-            if st.button("Cancel", type="primary"):
-                st.write("Cancelled")
-                st.session_state.form_data = {"visitreason": visitreason}
-                st.rerun()
+        
         
         with r3c3:
-            if st.button("Next", type="primary"):
+            if st.button("Add Data", type="primary"):
                 st.write("Data Saved")
                 st.session_state.form_data["visitreason"] = visitreason
                 st.rerun()
@@ -993,14 +923,10 @@ def Form(visitreason):
             st.session_state.form_data["Mother"] = st.text_area("Mother",value=st.session_state.form_data.get("Mother", ""))
 
         r3c1,r3c2,r3c3 = st.columns([6,4,4])
-        with r3c2:
-            if st.button("Cancel", type="primary"):
-                st.write("Cancelled")
-                st.session_state.form_data = {"visitreason": visitreason}
-                st.rerun()
+        
         
         with r3c3:
-            if st.button("Next", type="primary"):
+            if st.button("Add Data", type="primary"):
                 st.write("Data Saved")
                 st.session_state.form_data["visitreason"] = visitreason
                 st.rerun()
