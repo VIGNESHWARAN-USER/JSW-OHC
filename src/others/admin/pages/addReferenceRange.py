@@ -22,9 +22,13 @@ def addReferenceRange():
     if form_name == "Basic details":
         r1c1, r1c2,r1c3 = st.columns(3)
         with r1c1:
-            st.session_state.form_data["Year"] = st.text_input("Year")
-            st.session_state.form_data["Batch"] = st.text_input("Batch")
-            st.session_state.form_data["Hospital Name"] = st.text_input("Hospital Name")
+            st.session_state.form_data["Year"] = st.text_input("Year",key="Year")
+            st.session_state.form_data["Batch"] = st.text_input("Batch",key="Batch")
+            st.session_state.form_data["Hospital Name"] = st.text_input("Hospital Name",key="Hospital Name")
+
+        if st.button("Submit"):
+            st.write(st.session_state.form_data)
+
     if form_name == "Investigations":
         r0c1,r0c2= st.columns([3,7])
         with r0c1:
@@ -111,6 +115,10 @@ def addReferenceRange():
                     st.subheader("Preipheral Blood Smear - Others")
                     st.session_state.form_data["Others_Unit"] = st.text_input("Unit", key="Others_Unit")
                     st.session_state.form_data["Others_Referance_Range"] = st.text_input("Referance Range", key="Others_Referance_Range")
+
+                    #need to submit button
+                    if st.button("Submit"):
+                        st.write(st.session_state.form_data)
                 
                 if Investigations == "ROUTINE SUGAR TESTS":
                     #Glucose (F)			Glucose (PP)			Random Blood sugar			Estimated Average Glucose			HbA1c
@@ -133,6 +141,11 @@ def addReferenceRange():
                     st.subheader("HbA1c")
                     st.session_state.form_data["HbA1c_Unit"] = st.text_input("Unit", key="HbA1c_Unit")
                     st.session_state.form_data["HbA1c_Referance_Range"] = st.text_input("Referance Range", key="HbA1c_Referance_Range")
+
+                    if st.button("Submit"):
+                        st.write(st.session_state.form_data)
+
+
 
                 if Investigations == "RENAL FUNCTION TEST & ELECTROLYTES":
                     #Blood urea nitrogen (BUN)			Sr.Creatinine			Uric acid			Sodium			Potassium			Calcium			Phosphorus			Chloride			Bicarbonate
@@ -172,6 +185,9 @@ def addReferenceRange():
                     st.session_state.form_data["Bicarbonate_Unit"] = st.text_input("Unit", key="Bicarbonate_Unit")
                     st.session_state.form_data["Bicarbonate_Referance_Range"] = st.text_input("Referance Range", key="Bicarbonate_Referance_Range")
 
+                    if st.button("Submit"):
+                        st.write(st.session_state.form_data)
+
                 if Investigations == "LIPID PROFILE":
                     #Triglycerides			HDL - Cholesterol			VLDL -Choleserol			LDL- Cholesterol			CHOL:HDL ratio			LDL.CHOL/HDL.CHOL Ratio
                     st.subheader("Triglycerides")
@@ -197,6 +213,9 @@ def addReferenceRange():
                     st.subheader("LDL.CHOL/HDL.CHOL Ratio")
                     st.session_state.form_data["LDL_CHOL_HDL_CHOL_Ratio_Unit"] = st.text_input("Unit", key="LDL_CHOL_HDL_CHOL_Ratio_Unit")
                     st.session_state.form_data["LDL_CHOL_HDL_CHOL_Ratio_Referance_Range"] = st.text_input("Referance Range", key="LDL_CHOL_HDL_CHOL_Ratio_Referance_Range")
+
+                    if st.button("Submit"):
+                        st.write(st.session_state.form_data)
 
                 if Investigations == "LIVER FUNCTION TEST":
                     #Bilirubin -Total			Bilirubin -Direct			Bilirubin -indirect			SGOT /AST			SGPT /ALT			Alkaline phosphatase			Total Protein			Albumin (Serum )			 Globulin(Serum)			Alb/Glob Ratio			Gamma Glutamyl transferase
@@ -244,6 +263,9 @@ def addReferenceRange():
                     st.session_state.form_data["Gamma_Glutamyl_transferase_Unit"] = st.text_input("Unit", key="Gamma_Glutamyl_transferase_Unit")
                     st.session_state.form_data["Gamma_Glutamyl_transferase_Referance_Range"] = st.text_input("Referance Range", key="Gamma_Glutamyl_transferase_Referance_Range")
 
+                    if st.button("Submit"):
+                        st.write(st.session_state.form_data)
+
                 if Investigations == "THYROID FUNCTION TEST":
                     #T3- Triiodothyroine			T4 - Thyroxine			TSH- Thyroid Stimulating Hormone
                     st.subheader("T3- Triiodothyroine")
@@ -257,6 +279,9 @@ def addReferenceRange():
                     st.subheader("TSH- Thyroid Stimulating Hormone")
                     st.session_state.form_data["TSH_Thyroid_Stimulating_Hormone_Unit"] = st.text_input("Unit", key="TSH_Thyroid_Stimulating_Hormone_Unit")
                     st.session_state.form_data["TSH_Thyroid_Stimulating_Hormone_Referance_Range"] = st.text_input("Referance Range", key="TSH_Thyroid_Stimulating_Hormone_Referance_Range")
+
+                    if st.button("Submit"):
+                        st.write(st.session_state.form_data)
 
                 if Investigations == "AUTOIMMUNE TEST":
                     #ANA (Antinuclear Antibody)			Anti ds DNA			Anticardiolipin Antibodies (IgG & IgM)			Rheumatoid factor
@@ -276,6 +301,9 @@ def addReferenceRange():
                     st.session_state.form_data["Rheumatoid_factor_Unit"] = st.text_input("Unit", key="Rheumatoid_factor_Unit")
                     st.session_state.form_data["Rheumatoid_factor_Referance_Range"] = st.text_input("Referance Range", key="Rheumatoid_factor_Referance_Range")
 
+                    if st.button("Submit"):
+                        st.write(st.session_state.form_data)
+
                 if Investigations == "COAGULATION TEST":
                     #Prothrombin Time (PT)			PT INR			Bleeding Time (BT)			Clotting Time (CT)
                     st.subheader("Prothrombin Time (PT)")
@@ -293,6 +321,9 @@ def addReferenceRange():
                     st.subheader("Clotting Time (CT)")
                     st.session_state.form_data["Clotting_Time_Unit"] = st.text_input("Unit", key="Clotting_Time_Unit")
                     st.session_state.form_data["Clotting_Time_Referance_Range"] = st.text_input("Referance Range", key="Clotting_Time_Referance_Range")
+
+                    if st.button("Submit"):
+                        st.write(st.session_state.form_data)
 
                 if Investigations == "ENZYMES & CARDIAC Profile":
                     #Acid Phosphatase			Adenosine Deaminase			Amylase			Lipase			Troponin- T			Troponin- I			CPK - TOTAL			CPK - MB			ECG 		ECHO		TMT
@@ -327,6 +358,9 @@ def addReferenceRange():
                     st.subheader("CPK - MB")
                     st.session_state.form_data["CPK_MB_Unit"] = st.text_input("Unit", key="CPK_MB_Unit")
                     st.session_state.form_data["CPK_MB_Referance_Range"] = st.text_input("Referance Range", key="CPK_MB_Referance_Range")
+
+                    if st.button("Submit"):
+                        st.write(st.session_state.form_data)
 
                 if Investigations == "URINE ROUTINE":
                     #Colour			Appearance			Reaction (pH)			Specific gravity			Protein/Albumin			Glucose (Urine)			Ketone Bodies			Urobilinogen			Bile Salts			Bile Pigments			WBC / Pus cells			Red Blood Cells			Epithelial celss			Casts			Crystals			Bacteria
@@ -394,6 +428,9 @@ def addReferenceRange():
                     st.session_state.form_data["Bacteria_Unit"] = st.text_input("Unit", key="Bacteria_Unit")
                     st.session_state.form_data["Bacteria_Referance_Range"] = st.text_input("Referance Range", key="Bacteria_Referance_Range")
 
+                    if st.button("Submit"):
+                        st.write(st.session_state.form_data)
+
                 if Investigations == "SEROLOGY":
                     #Screening For HIV I & II			HBsAg			HCV			WIDAL			VDRL			Dengue NS1Ag			Dengue  IgG			Dengue IgM   i need only reference for all
                     st.subheader("Screening For HIV I & II")
@@ -419,6 +456,9 @@ def addReferenceRange():
 
                     st.subheader("Dengue IgM")
                     st.session_state.form_data["Dengue_IgM_Referance_Range"] = st.text_input("Referance Range", key="Dengue_IgM_Referance_Range")
+
+                    if st.button("Submit"):
+                        st.write(st.session_state.form_data)
 
                 if Investigations == "MOTION":
                     #Colour			Appearance			Occult Blood			Ova			Cyst			Mucus			Pus Cells			RBCs			Others i need both unit referance range for all
@@ -458,6 +498,9 @@ def addReferenceRange():
                     st.session_state.form_data["Others_Unit"] = st.text_input("Unit", key="Others_Unit")
                     st.session_state.form_data["Others_Referance_Range"] = st.text_input("Referance Range", key="Others_Referance_Range")
 
+                    if st.button("Submit"):
+                        st.write(st.session_state.form_data)
+
                 if Investigations == "ROUTINE CULTURE & SENSITIVITY TEST":
                     #Urine			Motion			Sputum			Blood
                     st.subheader("Urine")
@@ -476,8 +519,14 @@ def addReferenceRange():
                     st.session_state.form_data["Blood_Unit"] = st.text_input("Unit", key="Blood_Unit")
                     st.session_state.form_data["Blood_Referance_Range"] = st.text_input("Referance Range", key="Blood_Referance_Range")
 
+                    if st.button("Submit"):
+                        st.write(st.session_state.form_data)
+
                 if Investigations == "MEN'S PACK":
                     #PSA (Prostate specific Antigen)
                     st.subheader("PSA (Prostate specific Antigen)")
                     st.session_state.form_data["PSA_Unit"] = st.text_input("Unit", key="PSA_Unit")
+
+                    if st.button("Submit"):
+                        st.write(st.session_state.form_data)
                     

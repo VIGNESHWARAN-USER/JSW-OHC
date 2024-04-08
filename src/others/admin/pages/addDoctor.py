@@ -2,7 +2,7 @@ import streamlit as st
 from  streamlit_option_menu import option_menu
 
 def addDoctor():
-    st.title("Add Nurse")
+    st.title("Add Doctor")
     r0c1,r0c2,r0c3= st.columns([3,2,4])
     with r0c1:
         
