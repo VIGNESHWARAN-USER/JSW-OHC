@@ -60,8 +60,7 @@ if "connection" not in st.session_state:
     )
 
 if st.session_state.connection.is_connected():
-    # console log it
-    print("Connected to MySQL Server")
+    pass
 else:
     print("Connection failed")
 
