@@ -461,7 +461,7 @@ def addReferenceRange():
                         st.write(st.session_state.form_data)
 
                 if Investigations == "MOTION":
-                    #Colour			Appearance			Occult Blood			Ova			Cyst			Mucus			Pus Cells			RBCs			Others i need both unit referance range for all
+                    #Colour  Appearance  Occult Blood  Ova  Cyst	 Mucus	Pus Cells	RBCs  Others i need both unit referance range for all
                     st.subheader("Colour")
                     st.session_state.form_data["Colour_Unit"] = st.text_input("Unit", key="Colour_Unit")
                     st.session_state.form_data["Colour_Referance_Range"] = st.text_input("Referance Range", key="Colour_Referance_Range")
@@ -529,4 +529,3 @@ def addReferenceRange():
 
                     if st.button("Submit"):
                         st.write(st.session_state.form_data)
-                    

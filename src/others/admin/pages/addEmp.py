@@ -1,14 +1,14 @@
 import streamlit as st
 from  streamlit_option_menu import option_menu
 
-def addDoctor():
-    st.title("Add Doctor")
+def addEmp():
+    st.title("Add Employees")
     r0c1,r0c2,r0c3= st.columns([3,2,4])
     with r0c1:
         
         form_name = option_menu(
             None,
-            ["Basic details","Register Mail Id"],
+            ["Basic details","others"],
             orientation="horizontal",
             icons=['a','a','a','a','a']
         )
@@ -36,6 +36,7 @@ def addDoctor():
                 phone_office = st.text_input("Phone (Office)")
                 mail_id_personal = st.text_input("Mail Id (Personal)")
                 
+                
             with r1c3:
                 mail_id_office = st.text_input("Mail Id (Office)")
                 emergency_contact_person = st.text_input("Emergency Contact Person")
@@ -47,4 +48,6 @@ def addDoctor():
             # Age is calculated from DOB
             from datetime import date
             age = date.today().year - dob.year - ((date.today().month, date.today().day) < (dob.month, dob.day))
-            st.text(f"Age: {age}")     
+            st.text(f"Age: {age}")
+
+            # Save button        

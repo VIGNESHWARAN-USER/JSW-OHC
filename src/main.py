@@ -20,6 +20,7 @@ from others.admin.pages.addDoctor import addDoctor
 from others.admin.pages.addNurse import addNurse
 from others.admin.pages.addReferenceRange import addReferenceRange
 from streamlit_option_menu import option_menu
+from others.admin.pages.addEmp import addEmp
 
 
 icon = Image.open("./src/assets/favicon.png")
@@ -137,9 +138,9 @@ if __name__ == "__main__":
             with st.sidebar:
                 form = option_menu(
                     "JSW-OHC Admin",
-                    ["Dashboard", "Add Doctor", "Add Nurse", "Add Reference Range"],
+                    ["Dashboard", "Add Doctor", "Add Nurse","Add Employee","Add Reference Range"],
                     menu_icon='a',
-                    icons=['a', 'b', 'c', 'd']
+                    icons=['a', 'b', 'c', 'd','e']
                 )
                 st.divider()
                 st.header(f"Login as {st.session_state.accessLevel.capitalize()}")
@@ -155,8 +156,11 @@ if __name__ == "__main__":
                 addDoctor()
             elif form == "Add Nurse":
                 addNurse()
+            elif form == "Add Employee":
+                addEmp()
             elif form == "Add Reference Range":
                 addReferenceRange()
+
         
         if st.session_state.accessLevel == "doctor":
             with st.sidebar:
