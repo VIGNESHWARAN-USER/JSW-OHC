@@ -2,6 +2,7 @@ import streamlit as st
 import os
 import pandas as pd
 from streamlit_modal import Modal
+from streamlit_option_menu import option_menu
 
 
 def show_data(emp):
@@ -112,7 +113,90 @@ def Search(cursor):
     else:
         st.title("Employee Profile")
         with st.container(border=1):
-            pass
+            with st.container(border=1):
+                r1c1,r1c2 = st.columns([4,6])
+                with r1c1:
+                    st.write(f"Employee ID: {st.session_state.usr_prof['emp_no']}")
+                    st.write(f"Name: {st.session_state.usr_prof['name']}")
+                    st.write(f"DOB: {st.session_state.usr_prof['dob']}")
+            
+            with st.container(border=1):
+                selected_tab = option_menu(
+                    None, 
+                    ["Personal Details", "Contact Details", "Vitals", "Periodical Data", "PreEmployement", "Medical History", "Vaccinations"], 
+                    key="tabs",
+                    orientation="horizontal",
+                    default_index=0,
+                    icons=['a','b','c','d','e','f','g'],
+                )
+            
+                if selected_tab == "Personal Details":
+                    r1c1,r1c2,r1c3,r1c4 = st.columns([4,6,6,4])
+                    with r1c2:
+                        st.write(f"Employee ID: {st.session_state.usr_prof['emp_no']}")
+                        st.write(f"Name: {st.session_state.usr_prof['name']}")
+                        st.write(f"DOB: {st.session_state.usr_prof['dob']}")
+                    with r1c3:
+                        st.write(f"Age: {st.session_state.usr_prof['age']}")
+                        st.write(f"Gender : {st.session_state.usr_prof['gender']}")
+                        st.write(f"Identification Mark : {st.session_state.usr_prof['identification_mark']}")
+                
+                if selected_tab == "Contact Details":
+                    r1c1,r1c2 = st.columns([4,6])
+                    with r1c1:
+                        st.write(f"Employee ID: {st.session_state.usr_prof['emp_no']}")
+                        st.write(f"Name: {st.session_state.usr_prof['name']}")
+                        st.write(f"DOB: {st.session_state.usr_prof['dob']}")
+                    with r1c2:
+                            pass
+                
+                if selected_tab == "Vitals":
+                    r1c1,r1c2 = st.columns([4,6])
+                    with r1c1:
+                        st.write(f"Employee ID: {st.session_state.usr_prof['emp_no']}")
+                        st.write(f"Name: {st.session_state.usr_prof['name']}")
+                        st.write(f"DOB: {st.session_state.usr_prof['dob']}")
+                    with r1c2:
+                        pass
+                
+                if selected_tab == "Periodical Data":
+                        r1c1,r1c2 = st.columns([4,6])
+                        with r1c1:
+                            st.write(f"Employee ID: {st.session_state.usr_prof['emp_no']}")
+                            st.write(f"Name: {st.session_state.usr_prof['name']}")
+                            st.write(f"DOB: {st.session_state.usr_prof['dob']}")
+                        with r1c2:
+                            pass
+                
+                if selected_tab == "PreEmployement":
+                    r1c1,r1c2 = st.columns([4,6])
+                    with r1c1:
+                        st.write(f"Employee ID: {st.session_state.usr_prof['emp_no']}")
+                        st.write(f"Name: {st.session_state.usr_prof['name']}")
+                        st.write(f"DOB: {st.session_state.usr_prof['dob']}")
+                    with r1c2:
+                        pass
+                
+                if selected_tab == "Medical History":
+                    r1c1,r1c2 = st.columns([4,6])
+                    with r1c1:
+                        st.write(f"Employee ID: {st.session_state.usr_prof['emp_no']}")
+                        st.write(f"Name: {st.session_state.usr_prof['name']}")
+                        st.write(f"DOB: {st.session_state.usr_prof['dob']}")
+                    with r1c2:
+                        pass
+                
+                if selected_tab == "Vaccinations":
+                    r1c1,r1c2 = st.columns([4,6])
+                    with r1c1:
+                        st.write(f"Employee ID: {st.session_state.usr_prof['emp_no']}")
+                        st.write(f"Name: {st.session_state.usr_prof['name']}")
+                        st.write(f"DOB: {st.session_state.usr_prof['dob']}")
+                    with r1c2:
+                        pass
+            
+
+                
         st.write(st.session_state.usr_prof)
         if st.button("close"):
             st.session_state.open_modal = False
