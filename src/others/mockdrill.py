@@ -3,7 +3,7 @@ import os
 import pandas as p
 
 
-def Mock_Drill(cursor):
+def Mock_Drill(connection, cursor):
     st.title("Mock Drill")
     st.write("""
         <style>
@@ -44,7 +44,7 @@ def Mock_Drill(cursor):
         with r2c3:
             st.session_state.mockdrill["Scenario"] = st.text_input("Scenario")
         with r2c4:
-            st.session_state.mockdrill["Call Recived"] =st.text_input("Call Recived")
+            st.session_state.mockdrill["Call Recived"] =st.time_input("Call Recived")
         st.subheader("Ambulance Timing :")
         r3c1,r3c2 = st.columns(2)
         with r3c1:
@@ -92,7 +92,26 @@ def Mock_Drill(cursor):
     c1, c2 = st.columns([6,1])
     with c1:
         def submit_mockdrill():
-            st.write(st.session_state.mockdrill)
             st.session_state.mockdrill = {}
     with c2:
-        st.button("Submit", type="primary",on_click=submit_mockdrill)   
+        if st.button("Submit", type="primary"):
+            i = st.session_state.mockdrill
+            st.write(i)
+            mockdrillinsert = ("INSERT INTO mockdrill( Date, Time, Department, Location, "
+            "Scenario, Call_Received, Departure_from_OHC, Return_to_OHC,"
+            " Victim_name, Age, Sex, Emp_No,"
+            " Victim_Department, Job_nature, Phone_No, Vitals,"
+            " Complaints, Treatment, Referral, Amb_Driver,"
+            " Amb_Staff_Nurse, Doctor, Staff_Nurse, Observation,"
+            " Action_completion, Responsible) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)") 
+           
+            mockdrill_values = (i["Date"], i["Time"], i["Department"], i["Location"], 
+            i["Scenario"], i["Call Recived"], i["Depature from OHC"], i["Reeturn to OHC"],
+             i["Victim Name"], i["Age"], i["Gender"], i["EmpID"],
+              i["Victim Department"], i["Nature of Job"], i["Mobile No."], i["Vitals"], 
+              i["Complaints"], i["Treatment"], i["Referal"], i["Ambulance Driver"],
+               i["Staff Name"], i["OHC Doctor"], i["Staff Nurse"], i["Observation"],
+                i["Action / Completion"], i["Responsible"])
+            cursor.execute(mockdrillinsert, mockdrill_values)
+            connection.commit()
+            st.write("Data Inserted")   

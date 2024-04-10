@@ -183,7 +183,7 @@ if __name__ == "__main__":
                 Dashboard(st.session_state.connection,cursor, "doctor")
             
             if selected == "New Visit":
-                New_Visit(cursor)
+                New_Visit(st.session_state.connection,cursor)
 
             if selected == "Search":
                 Search(cursor)
@@ -195,7 +195,7 @@ if __name__ == "__main__":
                 Records_Filters(cursor)
             
             if selected == "Mock Drills":
-                Mock_Drill(cursor)
+                Mock_Drill(st.session_state.connection,cursor)
             
             if selected == "Appointments":
                 Appointment(st.session_state.connection, st.session_state.accessLevel)
@@ -221,7 +221,7 @@ if __name__ == "__main__":
                 Dashboard(st.session_state.connection,cursor, "nurse")
             
             if selected == "New Visit":
-                New_Visit(cursor)
+                New_Visit(st.session_state.connection,cursor)
 
             if selected == "Search":
                 Search(cursor)
@@ -233,7 +233,7 @@ if __name__ == "__main__":
                 Records_Filters(cursor)
             
             if selected == "Mock Drills":
-                Mock_Drill(cursor)
+                Mock_Drill(st.session_state.connection,cursor)
             
             if selected == "Appointments":
                 Appointment(st.session_state.connection, st.session_state.accessLevel)
