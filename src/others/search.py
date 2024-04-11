@@ -121,80 +121,43 @@ def Search(cursor):
                     st.write(f"DOB: {st.session_state.usr_prof['dob']}")
             
             with st.container(border=1):
-                selected_tab = option_menu(
-                    None, 
-                    ["Personal Details", "Contact Details", "Vitals", "Periodical Data", "PreEmployement", "Medical History", "Vaccinations"], 
-                    key="tabs",
-                    orientation="horizontal",
-                    default_index=0,
-                    icons=['a','b','c','d','e','f','g'],
-                )
-            
-                if selected_tab == "Personal Details":
-                    r1c1,r1c2,r1c3,r1c4 = st.columns([4,6,6,4])
-                    with r1c2:
-                        st.write(f"Employee ID: {st.session_state.usr_prof['emp_no']}")
-                        st.write(f"Name: {st.session_state.usr_prof['name']}")
-                        st.write(f"DOB: {st.session_state.usr_prof['dob']}")
-                    with r1c3:
-                        st.write(f"Age: {st.session_state.usr_prof['age']}")
-                        st.write(f"Gender : {st.session_state.usr_prof['gender']}")
-                        st.write(f"Identification Mark : {st.session_state.usr_prof['identification_mark']}")
-                
-                if selected_tab == "Contact Details":
-                    r1c1,r1c2 = st.columns([4,6])
-                    with r1c1:
-                        st.write(f"Employee ID: {st.session_state.usr_prof['emp_no']}")
-                        st.write(f"Name: {st.session_state.usr_prof['name']}")
-                        st.write(f"DOB: {st.session_state.usr_prof['dob']}")
-                    with r1c2:
-                            pass
-                
-                if selected_tab == "Vitals":
-                    r1c1,r1c2 = st.columns([4,6])
-                    with r1c1:
-                        st.write(f"Employee ID: {st.session_state.usr_prof['emp_no']}")
-                        st.write(f"Name: {st.session_state.usr_prof['name']}")
-                        st.write(f"DOB: {st.session_state.usr_prof['dob']}")
-                    with r1c2:
-                        pass
-                
-                if selected_tab == "Periodical Data":
-                        r1c1,r1c2 = st.columns([4,6])
-                        with r1c1:
-                            st.write(f"Employee ID: {st.session_state.usr_prof['emp_no']}")
-                            st.write(f"Name: {st.session_state.usr_prof['name']}")
-                            st.write(f"DOB: {st.session_state.usr_prof['dob']}")
-                        with r1c2:
-                            pass
-                
-                if selected_tab == "PreEmployement":
-                    r1c1,r1c2 = st.columns([4,6])
-                    with r1c1:
-                        st.write(f"Employee ID: {st.session_state.usr_prof['emp_no']}")
-                        st.write(f"Name: {st.session_state.usr_prof['name']}")
-                        st.write(f"DOB: {st.session_state.usr_prof['dob']}")
-                    with r1c2:
-                        pass
-                
-                if selected_tab == "Medical History":
-                    r1c1,r1c2 = st.columns([4,6])
-                    with r1c1:
-                        st.write(f"Employee ID: {st.session_state.usr_prof['emp_no']}")
-                        st.write(f"Name: {st.session_state.usr_prof['name']}")
-                        st.write(f"DOB: {st.session_state.usr_prof['dob']}")
-                    with r1c2:
-                        pass
-                
-                if selected_tab == "Vaccinations":
-                    r1c1,r1c2 = st.columns([4,6])
-                    with r1c1:
-                        st.write(f"Employee ID: {st.session_state.usr_prof['emp_no']}")
-                        st.write(f"Name: {st.session_state.usr_prof['name']}")
-                        st.write(f"DOB: {st.session_state.usr_prof['dob']}")
-                    with r1c2:
-                        pass
-            
+                r0r1,r0r2 = st.columns([6,4])
+                with r0r1:
+                    menu = option_menu(
+                        None,
+                        ["Basic Details","Medical Details","Other Details"],
+                        key="menu",
+                        orientation="horizontal",
+                        icons=['a','b','c']
+                    )
+                if menu == "Basic Details":
+                    r0c1,r0c2 = st.columns([5,6])
+                    with r0c1:
+                        with st.container(border=1):
+                            st.title("Personal Details")
+                            st.write(f"**Employee ID**: {st.session_state.usr_prof['emp_no']}")
+                            st.write(f"**Name**: {st.session_state.usr_prof['name']}")
+                            st.write(f"**DOB**: {st.session_state.usr_prof['dob']}")
+                            st.write(f"**Age**: {st.session_state.usr_prof['age']}")
+                            st.write(f"**Gender**: {st.session_state.usr_prof['gender']}")
+                            st.write(f"**Height**: {st.session_state.usr_prof['height']}")
+                            st.write(f"**Weight**: {st.session_state.usr_prof['weight']}")
+                            st.write("**Identification Mark**:")
+                            st.markdown(f" * {st.session_state.usr_prof['identification_mark']}")
+                    with r0c2:
+                        with st.container(border=1):
+                            st.title("Contact Details")
+                            st.write(f"**Email**: {st.session_state.usr_prof['personal_mail']}")
+                            st.write(f"**Office Email**: {st.session_state.usr_prof['office_mail']}")
+                            st.write(f"**Emergency Contact Person**: {st.session_state.usr_prof['emg_con_person']}")
+                            st.write(f"**Emergency Contact Relation**: {st.session_state.usr_prof['emg_con_relation']}")
+                            st.write(f"**Emergency Contact Number**: {st.session_state.usr_prof['emg_con_number']}")
+                            st.write(f"**Emergency Contact Email**: {st.session_state.usr_prof['emg_con_mail']}")
+                            st.write(f"**Address**: {st.session_state.usr_prof['address']}")
+                            st.write(f"**Personal Phone No.**: {st.session_state.usr_prof['personal_phone_no']}")
+                            st.write(f"**Office Phone No.**: {st.session_state.usr_prof['office_phone_no']}")
+
+
 
                 
         st.write(st.session_state.usr_prof)
