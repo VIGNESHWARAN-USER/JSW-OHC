@@ -3,16 +3,26 @@ from  streamlit_option_menu import option_menu
 
 def addEmp():
     st.title("Add Employees")
-    r0c1,r0c2,r0c3= st.columns([3,2,4])
+
+    r0c1,r0c2,r0c3= st.columns([3,2,2])
     with r0c1:
         
         form_name = option_menu(
             None,
             ["Basic details","others"],
-            orientation="horizontal",
+            orientation="vertical",
             icons=['a','a','a','a','a']
         )
-        
+    with r0c2:
+        uploaded_file = st.file_uploader("Upload Contractor Basic details", type=["csv","xlsx"])
+        if uploaded_file is not None:
+            st.write(uploaded_file)
+    with r0c3:
+        #upload button
+        uploaded_file = st.file_uploader("Upload Employee Basic details", type=["csv","xlsx"])
+        if uploaded_file is not None:
+            st.write(uploaded_file)
+            
     if form_name == "Basic details":
             r1c1,r1c2,r1c3 = st.columns([3,2,4])
 
