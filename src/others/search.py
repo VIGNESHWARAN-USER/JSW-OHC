@@ -6,7 +6,6 @@ from streamlit_option_menu import option_menu
 
 
 def show_data(emp):
-    # show name and id and other details with one view button
     for i in range(len(emp)):
         with st.container(border=1):
             r1c1,r1c2,r1c3,r1c4 = st.columns([4,6,2,0.2])
