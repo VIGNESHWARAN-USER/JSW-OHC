@@ -157,9 +157,9 @@ if __name__ == "__main__":
             elif form == "Add Nurse":
                 addNurse()
             elif form == "Add Employee":
-                addEmp()
+                addEmp(st.session_state.connection,cursor)
             elif form == "Add Reference Range":
-                addReferenceRange()
+                addReferenceRange(st.session_state.connection,cursor)
 
         
         if st.session_state.accessLevel == "doctor":

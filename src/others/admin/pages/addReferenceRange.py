@@ -1,7 +1,7 @@
 import streamlit as st 
 from  streamlit_option_menu import option_menu
 
-def addReferenceRange():
+def addReferenceRange(connection,cursor):
     st.title("Add Reference Range")
 
     if "form_data" not in st.session_state:
@@ -148,7 +148,11 @@ def addReferenceRange():
 
 
                 if Investigations == "RENAL FUNCTION TEST & ELECTROLYTES":
-                    #Blood urea nitrogen (BUN)			Sr.Creatinine			Uric acid			Sodium			Potassium			Calcium			Phosphorus			Chloride			Bicarbonate
+                    #Urea    Blood urea nitrogen (BUN)			Sr.Creatinine			Uric acid			Sodium			Potassium			Calcium			Phosphorus			Chloride			Bicarbonate
+                    st.subheader("Urea")
+                    st.session_state.form_data["Urea_Unit"] = st.text_input("Unit", key="Urea_Unit")
+                    st.session_state.form_data["Urea_Referance_Range"] = st.text_input("Referance Range", key="Urea_Referance_Range")
+
                     st.subheader("Blood urea nitrogen (BUN)")
                     st.session_state.form_data["Blood_urea_nitrogen_Unit"] = st.text_input("Unit", key="Blood_urea_nitrogen_Unit")
                     st.session_state.form_data["Blood_urea_nitrogen_Referance_Range"] = st.text_input("Referance Range", key="Blood_urea_nitrogen_Referance_Range")
@@ -189,7 +193,11 @@ def addReferenceRange():
                         st.write(st.session_state.form_data)
 
                 if Investigations == "LIPID PROFILE":
-                    #Triglycerides			HDL - Cholesterol			VLDL -Choleserol			LDL- Cholesterol			CHOL:HDL ratio			LDL.CHOL/HDL.CHOL Ratio
+                    # Total - Cholesterol Triglycerides			HDL - Cholesterol			VLDL -Choleserol			LDL- Cholesterol			CHOL:HDL ratio			LDL.CHOL/HDL.CHOL Ratio
+                    st.subheader("Total - Cholesterol")
+                    st.session_state.form_data["Total_Cholesterol_Unit"] = st.text_input("Unit", key="Total_Cholesterol_Unit")
+                    st.session_state.form_data["Total_Cholesterol_Referance_Range"] = st.text_input("Referance Range", key="Total_Cholesterol_Referance_Range")
+                    
                     st.subheader("Triglycerides")
                     st.session_state.form_data["Triglycerides_Unit"] = st.text_input("Unit", key="Triglycerides_Unit")
                     st.session_state.form_data["Triglycerides_Referance_Range"] = st.text_input("Referance Range", key="Triglycerides_Referance_Range")
@@ -463,12 +471,12 @@ def addReferenceRange():
                 if Investigations == "MOTION":
                     #Colour  Appearance  Occult Blood  Ova  Cyst	 Mucus	Pus Cells	RBCs  Others i need both unit referance range for all
                     st.subheader("Colour")
-                    st.session_state.form_data["Colour_Unit"] = st.text_input("Unit", key="Colour_Unit")
-                    st.session_state.form_data["Colour_Referance_Range"] = st.text_input("Referance Range", key="Colour_Referance_Range")
+                    st.session_state.form_data["Colour_Motion_Unit"] = st.text_input("Unit", key="Colour_Motion_Unit")
+                    st.session_state.form_data["Colour_Motion_Referance_Range"] = st.text_input("Referance Range", key="Colour_Motion_Referance_Range")
 
                     st.subheader("Appearance")
-                    st.session_state.form_data["Appearance_Unit"] = st.text_input("Unit", key="Appearance_Unit")
-                    st.session_state.form_data["Appearance_Referance_Range"] = st.text_input("Referance Range", key="Appearance_Referance_Range")
+                    st.session_state.form_data["Appearance_Motion_Unit"] = st.text_input("Unit", key="Appearance_Motion_Unit")
+                    st.session_state.form_data["Appearance_Motion_Referance_Range"] = st.text_input("Referance Range", key="Appearance_Motion_Referance_Range")
 
                     st.subheader("Occult Blood")
                     st.session_state.form_data["Occult_Blood_Unit"] = st.text_input("Unit", key="Occult_Blood_Unit")
@@ -526,6 +534,292 @@ def addReferenceRange():
                     #PSA (Prostate specific Antigen)
                     st.subheader("PSA (Prostate specific Antigen)")
                     st.session_state.form_data["PSA_Unit"] = st.text_input("Unit", key="PSA_Unit")
+                    st.session_state.form_data["PSA_Referance_Range"] = st.text_input("Referance Range", key="PSA_Referance_Range")
 
                     if st.button("Submit"):
-                        st.write(st.session_state.form_data)
+                        i = st.session_state.form_data
+                        st.write(i)
+                                                    
+                            #"Year":"2022"
+                            # "Batch":"1"
+                            # "Hospital Name":"manipal"
+                            # "Hemoglobin_Unit":""
+                            # "Hemoglobin_Referance_Range":""
+                            # "Total_RBC_Unit":""
+                            # "Total_RBC_Referance_Range":""
+                            # "Total_WBC_Unit":""
+                            # "Total_WBC_Referance_Range":""
+                            # "Neutrophil_Unit":""
+                            # "Neutrophil_Referance_Range":""
+                            # "Monocyte_Unit":""
+                            # "Monocyte_Referance_Range":""
+                            # "PCV_Unit":""
+                            # "PCV_Referance_Range":""
+                            # "MCV_Unit":""
+                            # "MCV_Referance_Range":""
+                            # "MCH_Unit":""
+                            # "MCH_Referance_Range":""
+                            # "Lymphocyte_Unit":""
+                            # "Lymphocyte_Referance_Range":""
+                            # "ESR_Unit":""
+                            # "ESR_Referance_Range":""
+                            # "MCHC_Unit":""
+                            # "MCHC_Referance_Range":""
+                            # "Platelet_Count_Unit":""
+                            # "Platelet_Count_Referance_Range":""
+                            # "RDW_Unit":""
+                            # "RDW_Referance_Range":""
+                            # "Eosinophil_Unit":""
+                            # "Eosinophil_Referance_Range":""
+                            # "Basophil_Unit":""
+                            # "Basophil_Referance_Range":""
+                        insert_hematology = ("INSERT INTO haematalogy_unit_range(year, batch, hospital, heamoglobin_unit, heamoglobin_range, rbc_count_unit, rbc_count_range, wbc_count_unit, wbc_count_range, haemotocrit_unit, haemotocrit_range, mcv_unit, mcv_range, mch_unit, mch_range, mchc_unit, mchc_range, platelet_unit, platelet_range, rdw_unit, rdw_range, neutrophil_unit, neutrophil_range, lymphocyte_unit, lymphocyte_range, eosinophil_unit, eosinophil_range, monocyte_unit, monocyte_range, basophils_unit, basophils_range, esr_unit, esr_range) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)")
+                        hematology_data = (i["Year"], i["Batch"], i["Hospital Name"], i["Hemoglobin_Unit"], i["Hemoglobin_Referance_Range"], i["Total_RBC_Unit"], i["Total_RBC_Referance_Range"], i["Total_WBC_Unit"], i["Total_WBC_Referance_Range"], i["PCV_Unit"], i["PCV_Referance_Range"], i["MCV_Unit"], i["MCV_Referance_Range"], i["MCH_Unit"], i["MCH_Referance_Range"], i["MCHC_Unit"], i["MCHC_Referance_Range"], i["Platelet_Count_Unit"], i["Platelet_Count_Referance_Range"], i["RDW_Unit"], i["RDW_Referance_Range"], i["Neutrophil_Unit"], i["Neutrophil_Referance_Range"], i["Lymphocyte_Unit"], i["Lymphocyte_Referance_Range"], i["Eosinophil_Unit"], i["Eosinophil_Referance_Range"], i["Monocyte_Unit"], i["Monocyte_Referance_Range"], i["Basophil_Unit"], i["Basophil_Referance_Range"], i["ESR_Unit"], i["ESR_Referance_Range"])
+                        cursor.execute(insert_hematology, hematology_data)
+                        connection.commit()
+
+
+                            # "Glucose_F_Unit":""
+                            # "Glucose_F_Referance_Range":""
+                            # "Glucose_PP_Unit":""
+                            # "Glucose_PP_Referance_Range":""
+                            # "Random_Blood_sugar_Unit":""
+                            # "Random_Blood_sugar_Referance_Range":""
+                            # "Estimated_Average_Glucose_Unit":""
+                            # "Estimated_Average_Glucose_Referance_Range":""
+                            # "HbA1c_Unit":""
+                            # "HbA1c_Referance_Range":""
+                        insert_routine_sugartest = ("INSERT INTO routine_sugar_tests_unit_range(year, batch, hospital, glucosef_unit, glucosef_range, glucosepp_unit, glucosepp_range, rbs_unit, rbs_range, eag_unit, eag_range, hba1c_unit, hba1c_range) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)")
+                        routine_sugar_data = (i["Year"], i["Batch"], i["Hospital Name"], i["Glucose_F_Unit"], i["Glucose_F_Referance_Range"], i["Glucose_PP_Unit"], i["Glucose_PP_Referance_Range"], i["Random_Blood_sugar_Unit"], i["Random_Blood_sugar_Referance_Range"], i["Estimated_Average_Glucose_Unit"], i["Estimated_Average_Glucose_Referance_Range"], i["HbA1c_Unit"], i["HbA1c_Referance_Range"])
+                        cursor.execute(insert_routine_sugartest, routine_sugar_data)
+                        connection.commit()
+
+                            # "Blood_urea_nitrogen_Unit":""
+                            # "Blood_urea_nitrogen_Referance_Range":""
+                            # "Sr_Creatinine_Unit":""
+                            # "Sr_Creatinine_Referance_Range":""
+                            # "Uric_acid_Unit":""
+                            # "Uric_acid_Referance_Range":""
+                            # "Sodium_Unit":""
+                            # "Sodium_Referance_Range":""
+                            # "Potassium_Unit":""
+                            # "Potassium_Referance_Range":""
+                            # "Calcium_Unit":""
+                            # "Calcium_Referance_Range":""
+                            # "Phosphorus_Unit":""
+                            # "Phosphorus_Referance_Range":""
+                            # "Chloride_Unit":""
+                            # "Chloride_Referance_Range":""
+                            # "Bicarbonate_Unit":""
+                            # "Bicarbonate_Referance_Range":""
+
+
+                        insert_rft = ("INSERT INTO rft_unit_range( year, batch, hospital, urea_unit, urea_range, bun_unit, bun_range, sr_creatinine_unit, sr_creatinine_range, uric_acid_unit, uric_acid_range, sodium_unit, sodium_range, potassium_unit, potassium_range, calcium_unit, calcium_range, phosphorus_unit, phosphorus_range, chloride_unit, chloride_range, bicarbonate_unit, bicarbonate_range) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s )")
+                        rft_data = (i["Year"], i["Batch"], i["Hospital Name"],i["Urea_Unit"],i["Urea_Referance_Range"], i["Blood_urea_nitrogen_Unit"], i["Blood_urea_nitrogen_Referance_Range"], i["Sr_Creatinine_Unit"], i["Sr_Creatinine_Referance_Range"], i["Uric_acid_Unit"], i["Uric_acid_Referance_Range"], i["Sodium_Unit"], i["Sodium_Referance_Range"], i["Potassium_Unit"], i["Potassium_Referance_Range"], i["Calcium_Unit"], i["Calcium_Referance_Range"], i["Phosphorus_Unit"], i["Phosphorus_Referance_Range"], i["Chloride_Unit"], i["Chloride_Referance_Range"], i["Bicarbonate_Unit"], i["Bicarbonate_Referance_Range"])
+                        cursor.execute(insert_rft, rft_data)
+                        connection.commit()
+                        # "Total_Cholesterol_Unit":""
+                        # "Total_Cholesterol_Referance_Range":""
+                        # "Triglycerides_Unit":""
+                        # "Triglycerides_Referance_Range":""
+                        # "HDL_Cholesterol_Unit":""
+                        # "HDL_Cholesterol_Referance_Range":""
+                        # "VLDL_Choleserol_Unit":""
+                        # "VLDL_Choleserol_Referance_Range":""
+                        # "LDL_Cholesterol_Unit":""
+                        # "LDL_Cholesterol_Referance_Range":""
+                        # "CHOL_HDL_ratio_Unit":""
+                        # "CHOL_HDL_ratio_Referance_Range":""
+                        # "LDL_CHOL_HDL_CHOL_Ratio_Unit":""
+                        # "LDL_CHOL_HDL_CHOL_Ratio_Referance_Range":""
+
+                        
+                        insert_lipid_profile = ("INSERT INTO lipid_profile_unit_range(year, batch, hospital, tcholesterol_unit, tcholesterol_range, triglycerides_unit, triglycerides_range, hdl_cholesterol_unit, hdl_cholesterol_range, vldl_cholesterol_unit, vldl_cholesterol_range, ldl_cholesterol_unit, ldl_cholesterol_range, chol_hdlratio_unit, chol_hdlratio_range, ldlhdlratio_unit, ldlhdlratio_range) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s )")
+                        lipid_profile_data = (i["Year"], i["Batch"], i["Hospital Name"], i["Total_Cholesterol_Unit"], i["Total_Cholesterol_Referance_Range"], i["Triglycerides_Unit"], i["Triglycerides_Referance_Range"], i["HDL_Cholesterol_Unit"], i["HDL_Cholesterol_Referance_Range"], i["VLDL_Choleserol_Unit"], i["VLDL_Choleserol_Referance_Range"], i["LDL_Cholesterol_Unit"], i["LDL_Cholesterol_Referance_Range"], i["CHOL_HDL_ratio_Unit"], i["CHOL_HDL_ratio_Referance_Range"], i["LDL_CHOL_HDL_CHOL_Ratio_Unit"], i["LDL_CHOL_HDL_CHOL_Ratio_Referance_Range"])
+                        cursor.execute(insert_lipid_profile, lipid_profile_data)
+                        connection.commit()
+
+
+                            # "Bilirubin_Total_Unit":""
+                            # "Bilirubin_Total_Referance_Range":""
+                            # "Bilirubin_Direct_Unit":""
+                            # "Bilirubin_Direct_Referance_Range":""
+                            # "Bilirubin_indirect_Unit":""
+                            # "Bilirubin_indirect_Referance_Range":""
+                            # "SGOT_AST_Unit":""
+                            # "SGOT_AST_Referance_Range":""
+                            # "SGPT_ALT_Unit":""
+                            # "SGPT_ALT_Referance_Range":""
+                            # "Alkaline_phosphatase_Unit":""
+                            # "Alkaline_phosphatase_Referance_Range":""
+                            # "Total_Protein_Unit":""
+                            # "Total_Protein_Referance_Range":""
+                            # "Albumin_Serum_Unit":""
+                            # "Albumin_Serum_Referance_Range":""
+                            # "Globulin_Serum_Unit":""
+                            # "Globulin_Serum_Referance_Range":""
+                            # "Alb_Glob_Ratio_Unit":""
+                            # "Alb_Glob_Ratio_Referance_Range":""
+                            # "Gamma_Glutamyl_transferase_Unit":""
+                            # "Gamma_Glutamyl_transferase_Referance_Range":""
+                        insert_lft = ("INSERT INTO liver_function_unit_range( year, batch, hospital, bilirubin_total_unit, bilirubin_total_range, bilirubin_direct_unit, bilirubin_direct_range, bilirubin_indirect_unit, bilirubin_indirect_range, sgot_alt_unit, sgot_alt_range, sgpt_alt_unit, sgpt_alt_range, alkaline_phosphatase_unit, alkaline_phosphatase_range, total_protein_unit, total_protein_range, albumin_unit, albumin_range, globulin_unit, globulin_range, alb_globratio_unit, alb_globratio_range, gammagt_unit, gammagt_range) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)")
+                        lft_data = (i["Year"], i["Batch"], i["Hospital Name"], i["Bilirubin_Total_Unit"], i["Bilirubin_Total_Referance_Range"], i["Bilirubin_Direct_Unit"], i["Bilirubin_Direct_Referance_Range"], i["Bilirubin_indirect_Unit"], i["Bilirubin_indirect_Referance_Range"], i["SGOT_AST_Unit"], i["SGOT_AST_Referance_Range"], i["SGPT_ALT_Unit"], i["SGPT_ALT_Referance_Range"], i["Alkaline_phosphatase_Unit"], i["Alkaline_phosphatase_Referance_Range"], i["Total_Protein_Unit"], i["Total_Protein_Referance_Range"], i["Albumin_Serum_Unit"], i["Albumin_Serum_Referance_Range"], i["Globulin_Serum_Unit"], i["Globulin_Serum_Referance_Range"], i["Alb_Glob_Ratio_Unit"], i["Alb_Glob_Ratio_Referance_Range"], i["Gamma_Glutamyl_transferase_Unit"], i["Gamma_Glutamyl_transferase_Referance_Range"])
+                        cursor.execute(insert_lft, lft_data)
+                        connection.commit()
+
+                            # "T3_Triiodothyroine_Unit":""
+                            # "T3_Triiodothyroine_Referance_Range":""
+                            # "T4_Thyroxine_Unit":""
+                            # "T4_Thyroxine_Referance_Range":""
+                            # "TSH_Thyroid_Stimulating_Hormone_Unit":""
+                            # "TSH_Thyroid_Stimulating_Hormone_Referance_Range":""
+                        insert_thyroid = ("INSERT INTO thyroid_function_test_unit_range( year, batch, hospital, t3_unit, t3_range, t4_unit, t4_range, tsh_unit, tsh_range) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s)")
+                        thyroid_data = (i["Year"], i["Batch"], i["Hospital Name"], i["T3_Triiodothyroine_Unit"], i["T3_Triiodothyroine_Referance_Range"], i["T4_Thyroxine_Unit"], i["T4_Thyroxine_Referance_Range"], i["TSH_Thyroid_Stimulating_Hormone_Unit"], i["TSH_Thyroid_Stimulating_Hormone_Referance_Range"])
+                        cursor.execute(insert_thyroid, thyroid_data)
+                        connection.commit()
+
+                            # "ANA_Antinuclear_Antibody_Unit":""
+                            # "ANA_Antinuclear_Antibody_Referance_Range":""
+                            # "Anti_ds_DNA_Unit":""
+                            # "Anti_ds_DNA_Referance_Range":""
+                            # "Anticardiolipin_Antibodies_Unit":""
+                            # "Anticardiolipin_Antibodies_Referance_Range":""
+                            # "Rheumatoid_factor_Unit":""
+                            # "Rheumatoid_factor_Referance_Range":""
+                        
+                        insert_autoimmune = ("INSERT INTO autoimmune_test_unit_range( year, batch, hospital, ana_unit, ana_range, adna_unit, adna_range, anticardiolipin_unit, anticardiolipin_range, rheumatoid_unit, rheumatoid_range) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)")
+                        autoimmune_data = (i["Year"], i["Batch"], i["Hospital Name"], i["ANA_Antinuclear_Antibody_Unit"], i["ANA_Antinuclear_Antibody_Referance_Range"], i["Anti_ds_DNA_Unit"], i["Anti_ds_DNA_Referance_Range"], i["Anticardiolipin_Antibodies_Unit"], i["Anticardiolipin_Antibodies_Referance_Range"], i["Rheumatoid_factor_Unit"], i["Rheumatoid_factor_Referance_Range"])
+                        cursor.execute(insert_autoimmune, autoimmune_data)
+                        connection.commit()
+
+                            # "Prothrombin_Time_Unit":""
+                            # "Prothrombin_Time_Referance_Range":""
+                            # "PT_INR_Unit":""
+                            # "PT_INR_Referance_Range":""
+                            # "Bleeding_Time_Unit":""
+                            # "Bleeding_Time_Referance_Range":""
+                            # "Clotting_Time_Unit":""
+                            # "Clotting_Time_Referance_Range":""
+
+                        insert_coagulation = ("INSERT INTO coagulation_test_unit_range(  year, batch, hospital, pt_unit, pt_range, ptinr_unit, ptinr_range, bt_unit, bt_range, ct_unit, ct_range) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)")
+                        coagulation_data = (i["Year"], i["Batch"], i["Hospital Name"], i["Prothrombin_Time_Unit"], i["Prothrombin_Time_Referance_Range"], i["PT_INR_Unit"], i["PT_INR_Referance_Range"], i["Bleeding_Time_Unit"], i["Bleeding_Time_Referance_Range"], i["Clotting_Time_Unit"], i["Clotting_Time_Referance_Range"])
+                        cursor.execute(insert_coagulation, coagulation_data)
+                        connection.commit()
+
+                            # "Acid_Phosphatase_Unit":""
+                            # "Acid_Phosphatase_Referance_Range":""
+                            # "Adenosine_Deaminase_Unit":""
+                            # "Adenosine_Deaminase_Referance_Range":""
+                            # "Amylase_Unit":""
+                            # "Amylase_Referance_Range":""
+                            # "Lipase_Unit":""
+                            # "Lipase_Referance_Range":""
+                            # "Troponin_T_Unit":""
+                            # "Troponin_T_Referance_Range":""
+                            # "Troponin_I_Unit":""
+                            # "Troponin_I_Referance_Range":""
+                            # "CPK_TOTAL_Unit":""
+                            # "CPK_TOTAL_Referance_Range":""
+                            # "CPK_MB_Unit":""
+                            # "CPK_MB_Referance_Range":""
+
+                        insert_enzymes = ("INSERT INTO enzymes_cardio_unit_range( year, batch, hospital, acid_phosphatase_unit, acid_phosphatase_range, adenosine_unit, adenosine_range, amylase_unit, amylase_range, lipase_unit, lipase_range, troponin_t_unit, troponin_t_range, troponin_i_unit, troponin_i_range, cpk_total_unit, cpk_total_range, cpk_mb_unit, cpk_mb_range) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s )")
+                        enzymes_data = (i["Year"], i["Batch"], i["Hospital Name"], i["Acid_Phosphatase_Unit"], i["Acid_Phosphatase_Referance_Range"], i["Adenosine_Deaminase_Unit"], i["Adenosine_Deaminase_Referance_Range"], i["Amylase_Unit"], i["Amylase_Referance_Range"], i["Lipase_Unit"], i["Lipase_Referance_Range"], i["Troponin_T_Unit"], i["Troponin_T_Referance_Range"], i["Troponin_I_Unit"], i["Troponin_I_Referance_Range"], i["CPK_TOTAL_Unit"], i["CPK_TOTAL_Referance_Range"], i["CPK_MB_Unit"], i["CPK_MB_Referance_Range"])
+                        cursor.execute(insert_enzymes, enzymes_data)
+                        connection.commit()
+
+                            # "Colour_Unit":""
+                            # "Colour_Referance_Range":""
+                            # "Appearance_Unit":""
+                            # "Appearance_Referance_Range":""
+                            # "Reaction_pH_Unit":""
+                            # "Reaction_pH_Referance_Range":""
+                            # "Specific_gravity_Unit":""
+                            # "Specific_gravity_Referance_Range":""
+                            # "Protein_Albumin_Unit":""
+                            # "Protein_Albumin_Referance_Range":""
+                            # "Glucose_Urine_Unit":""
+                            # "Glucose_Urine_Referance_Range":""
+                            # "Ketone_Bodies_Unit":""
+                            # "Ketone_Bodies_Referance_Range":""
+                            # "Urobilinogen_Unit":""
+                            # "Urobilinogen_Referance_Range":""
+                            # "Bile_Salts_Unit":""
+                            # "Bile_Salts_Referance_Range":""
+                            # "Bile_Pigments_Unit":""
+                            # "Bile_Pigments_Referance_Range":""
+                            # "WBC_Pus_cells_Unit":""
+                            # "WBC_Pus_cells_Referance_Range":""
+                            # "Red_Blood_Cells_Unit":""
+                            # "Red_Blood_Cells_Referance_Range":""
+                            # "Epithelial_celss_Unit":""
+                            # "Epithelial_celss_Referance_Range":""
+                            # "Casts_Unit":""
+                            # "Casts_Referance_Range":""
+                            # "Crystals_Unit":""
+                            # "Crystals_Referance_Range":""
+                            # "Bacteria_Unit":""
+                            # "Bacteria_Referance_Range":""
+
+                        insert_urine_routine = ("INSERT INTO urine_routine_unit_range( year, batch, hospital, colour_unit, colour_range, apperance_unit, apperance_range, reaction_unit, reaction_range, specific_gravity_unit, specific_gravity_range, protein_albumin_unit, protein_albumin_range, glucose_unit, glucose_range, ketone_unit, ketone_range, urobilinogen_unit, urobilinogen_range, bile_salts_unit, bile_salts_range, bile_pigments_unit, bile_pigments_range, wbc_pluscells_unit, wbc_pluscells_range, rbc_unit, rbc_range, epithelial_cell_unit, epithelial_cell_range, casts_unit, casts_range, crystals_unit, crystals_range, bacteria_unit, bacteria_range) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)")
+                        urine_routine_data = (i["Year"], i["Batch"], i["Hospital Name"], i["Colour_Unit"], i["Colour_Referance_Range"], i["Appearance_Unit"], i["Appearance_Referance_Range"], i["Reaction_pH_Unit"], i["Reaction_pH_Referance_Range"], i["Specific_gravity_Unit"], i["Specific_gravity_Referance_Range"], i["Protein_Albumin_Unit"], i["Protein_Albumin_Referance_Range"], i["Glucose_Urine_Unit"], i["Glucose_Urine_Referance_Range"], i["Ketone_Bodies_Unit"], i["Ketone_Bodies_Referance_Range"], i["Urobilinogen_Unit"], i["Urobilinogen_Referance_Range"], i["Bile_Salts_Unit"], i["Bile_Salts_Referance_Range"], i["Bile_Pigments_Unit"], i["Bile_Pigments_Referance_Range"], i["WBC_Pus_cells_Unit"], i["WBC_Pus_cells_Referance_Range"], i["Red_Blood_Cells_Unit"], i["Red_Blood_Cells_Referance_Range"], i["Epithelial_celss_Unit"], i["Epithelial_celss_Referance_Range"], i["Casts_Unit"], i["Casts_Referance_Range"], i["Crystals_Unit"], i["Crystals_Referance_Range"], i["Bacteria_Unit"], i["Bacteria_Referance_Range"])
+                        cursor.execute(insert_urine_routine, urine_routine_data)
+                        connection.commit()
+
+                            # "Screening_For_HIV_Referance_Range":""
+                            # "HBsAg_Referance_Range":""
+                            # "HCV_Referance_Range":""
+                            # "WIDAL_Referance_Range":""
+                            # "VDRL_Referance_Range":""
+                            # "Dengue_NS1Ag_Referance_Range":""
+                            # "Dengue_IgG_Referance_Range":""
+                            # "Dengue_IgM_Referance_Range":""
+                        insert_serology = ("INSERT INTO serology_result_unit_range(year, batch, hospital, hiv_screening_range, hbsag_range, hcv_range, widal_range, vdrl_range, denguens_range, dengueigg_range, dengueigm_range) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s )")
+                        serology_data = (i["Year"], i["Batch"], i["Hospital Name"], i["Screening_For_HIV_Referance_Range"], i["HBsAg_Referance_Range"], i["HCV_Referance_Range"], i["WIDAL_Referance_Range"], i["VDRL_Referance_Range"], i["Dengue_NS1Ag_Referance_Range"], i["Dengue_IgG_Referance_Range"], i["Dengue_IgM_Referance_Range"])
+                        cursor.execute(insert_serology, serology_data)
+                        connection.commit()
+
+                            # "Colour_Motion_Unit":"Colour"
+                            # "Colour_Motion_Referance_Range":"yellow"
+                            # "Appearance_Motion_Unit":"density"
+                            # "Appearance_Motion_Referance_Range":"solid"
+                            # "Occult_Blood_Unit":""
+                            # "Occult_Blood_Referance_Range":""
+                            # "Ova_Unit":""
+                            # "Ova_Referance_Range":""
+                            # "Cyst_Unit":""
+                            # "Cyst_Referance_Range":""
+                            # "Mucus_Unit":""
+                            # "Mucus_Referance_Range":""
+                            # "Pus_Cells_Unit":""
+                            # "Pus_Cells_Referance_Range":""
+                            # "RBCs_Unit":""
+                            # "RBCs_Referance_Range":""
+                            # "Others_Unit":""
+                            # "Others_Referance_Range":""
+
+                        insert_motion = ("INSERT INTO motion_unit_range( year, batch, hospital, motion_colour_unit, motion_colour_range, motion_appearance_unit, motion_appearance_range, occult_blood_unit, occult_blood_range, ova_unit, ova_range, cyst_unit, cyst_range, mucus_unit, mucus_range, pus_cells_unit, pus_cells_range, rbcs_unit, rbcs_range, others_t_unit, others_t_range) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)")
+                        motion_data = (i["Year"], i["Batch"], i["Hospital Name"], i["Colour_Motion_Unit"], i["Colour_Motion_Referance_Range"], i["Appearance_Motion_Unit"], i["Appearance_Motion_Referance_Range"], i["Occult_Blood_Unit"], i["Occult_Blood_Referance_Range"], i["Ova_Unit"], i["Ova_Referance_Range"], i["Cyst_Unit"], i["Cyst_Referance_Range"], i["Mucus_Unit"], i["Mucus_Referance_Range"], i["Pus_Cells_Unit"], i["Pus_Cells_Referance_Range"], i["RBCs_Unit"], i["RBCs_Referance_Range"], i["Others_Unit"], i["Others_Referance_Range"])
+                        cursor.execute(insert_motion, motion_data)
+                        connection.commit()
+
+                            # "Urine_Unit":""
+                            # "Urine_Referance_Range":""
+                            # "Motion_Unit":""
+                            # "Motion_Referance_Range":""
+                            # "Sputum_Unit":""
+                            # "Sputum_Referance_Range":""
+                            # "Blood_Unit":""
+                            # "Blood_Referance_Range":""
+                        insert_routine_culture = ("INSERT INTO routine_culture_unit_range( year, batch, hospital, urine_unit, urine_range, motion_unit, motion_range, sputum_unit, sputum_range, blood_unit, blood_range) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)")
+                        routine_culture_data = (i["Year"], i["Batch"], i["Hospital Name"], i["Urine_Unit"], i["Urine_Referance_Range"], i["Motion_Unit"], i["Motion_Referance_Range"], i["Sputum_Unit"], i["Sputum_Referance_Range"], i["Blood_Unit"], i["Blood_Referance_Range"])
+                        cursor.execute(insert_routine_culture, routine_culture_data)
+                        connection.commit()
+
+                            # "PSA_Unit":""
+                            # "PSA_Referance_Range":""
+
+                        insert_menpack = ("INSERT INTO mens_pack_unit_range( year, batch, hospital, psa_unit, psa_range) VALUES(%s, %s, %s, %s, %s)")
+                        menpack_data = (i["Year"], i["Batch"], i["Hospital Name"], i["PSA_Unit"], i["PSA_Referance_Range"])
+                        cursor.execute(insert_menpack, menpack_data)
+                        connection.commit()
