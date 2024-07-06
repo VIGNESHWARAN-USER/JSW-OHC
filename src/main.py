@@ -15,6 +15,13 @@ from others.eventsandcamps import Events_Camps
 from others.recordsandfilters import Records_Filters
 from others.mockdrill import Mock_Drill
 from others.appointment import Appointment
+from others.admin.pages.dashboard import dashboard
+from others.admin.pages.addDoctor import addDoctor
+from others.admin.pages.addNurse import addNurse
+from others.admin.pages.addReferenceRange import addReferenceRange
+from streamlit_option_menu import option_menu
+from others.admin.pages.addEmp import addEmp
+
 
 icon = Image.open("./src/assets/favicon.png")
 
@@ -54,8 +61,7 @@ if "connection" not in st.session_state:
     )
 
 if st.session_state.connection.is_connected():
-    # console log it
-    print("Connected to MySQL Server")
+    pass
 else:
     print("Connection failed")
 
@@ -129,7 +135,32 @@ if __name__ == "__main__":
         Login()
     else:
         if st.session_state.accessLevel == "admin":
-            st.subheader("Welcome Admin")
+            with st.sidebar:
+                form = option_menu(
+                    "JSW-OHC Admin",
+                    ["Dashboard", "Add Doctor", "Add Nurse","Add Employee","Add Reference Range"],
+                    menu_icon='a',
+                    icons=['a', 'b', 'c', 'd','e']
+                )
+                st.divider()
+                st.header(f"Login as {st.session_state.accessLevel.capitalize()}")
+                st.divider()
+                if st.button("Logout"):
+                    st.session_state.login = False
+                    st.write("Logout Success")
+                    st.rerun()
+
+            if form == "Dashboard":
+                dashboard()
+            elif form == "Add Doctor":
+                addDoctor()
+            elif form == "Add Nurse":
+                addNurse()
+            elif form == "Add Employee":
+                addEmp(st.session_state.connection,cursor)
+            elif form == "Add Reference Range":
+                addReferenceRange(st.session_state.connection,cursor)
+
         
         if st.session_state.accessLevel == "doctor":
             with st.sidebar:
@@ -152,7 +183,7 @@ if __name__ == "__main__":
                 Dashboard(st.session_state.connection,cursor, "doctor")
             
             if selected == "New Visit":
-                New_Visit(cursor)
+                New_Visit(st.session_state.connection,cursor)
 
             if selected == "Search":
                 Search(cursor)
@@ -164,7 +195,7 @@ if __name__ == "__main__":
                 Records_Filters(cursor)
             
             if selected == "Mock Drills":
-                Mock_Drill(cursor)
+                Mock_Drill(st.session_state.connection,cursor)
             
             if selected == "Appointments":
                 Appointment(st.session_state.connection, st.session_state.accessLevel)
@@ -190,7 +221,7 @@ if __name__ == "__main__":
                 Dashboard(st.session_state.connection,cursor, "nurse")
             
             if selected == "New Visit":
-                New_Visit(cursor)
+                New_Visit(st.session_state.connection,cursor)
 
             if selected == "Search":
                 Search(cursor)
@@ -202,7 +233,7 @@ if __name__ == "__main__":
                 Records_Filters(cursor)
             
             if selected == "Mock Drills":
-                Mock_Drill(cursor)
+                Mock_Drill(st.session_state.connection,cursor)
             
             if selected == "Appointments":
                 Appointment(st.session_state.connection, st.session_state.accessLevel)
