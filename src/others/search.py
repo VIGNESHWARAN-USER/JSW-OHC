@@ -183,7 +183,7 @@ def Search(cursor):
                                 st.write(f"**Temperature**: {vitals['Temperature'][0]} °F")
                                 st.write(f"**Weight**: {vitals['Weight'][0]} kg")
                                 st.write(f"**Height**: {vitals['Height'][0]} cm")
-                                st.write(f"**BMI**: {(float(vitals["Weight"][0]) / (float(vitals["Height"][0])/100)**2):.2f}")
+                                st.write(f"**BMI**: {(float(vitals['Weight'][0]) / (float(vitals['Height'][0])/100)**2):.2f}")
                     with r0c2:
                         with st.container(border=1,height=580):
                             # MARK: Investigation
