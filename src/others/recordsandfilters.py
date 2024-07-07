@@ -81,7 +81,20 @@ def Records_Filters(cursor):
                     
                 
                 if form_name == "Basic Details":
-                    st.write("Basic Details")
+                    with st.form(key="Basic Details"):
+                        r1c1,r1c2,r1c3,r1c4 = st.columns([2,2,2,2])
+                        with r1c1:
+                            st.write("First Name")
+                            fname = st.text_input("First Name")
+                        with r1c2:
+                            st.write("Last Name")
+                            lname = st.text_input("Last Name")
+                        with r1c3:
+                            st.write("Employee ID")
+                            emp_id = st.text_input("Employee ID")
+                        with r1c4:
+                            st.write("Department")
+                            dept = st.text_input("Department")
                 
                 if form_name == "Vitals":
                     st.write("Vitals")
