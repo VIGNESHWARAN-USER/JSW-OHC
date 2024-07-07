@@ -4,6 +4,7 @@ import pandas as p
 from  streamlit_option_menu import option_menu
 import numpy as np
 import json
+import datetime
 
 
 
@@ -95,13 +96,30 @@ def Form(visitreason, connection, cursor):
                 }
             </style>
             """,unsafe_allow_html=True)
+        with r2c2:
+            if st.button("Get Info", type="primary"): # MARK: Get Info
+                cursor.execute(f"SELECT * FROM Employee_det WHERE emp_no = '{st.session_state.form_data['Employee ID']}'")
+                data = cursor.fetchone()
+                if data is not None:
+                    st.session_state.form_data["Visit Date"] = datetime.datetime.now().strftime("%d-%m-%Y")
+                    st.session_state.form_data["Employee Name"] = data[1]
+                    st.session_state.form_data["Employee Age"] = data[3]
+                    st.session_state.form_data['Gender'] = data[4]
+                    st.session_state.form_data['Mobile No.'] = data[14][1:]
+                    st.session_state.form_data['Address'] = data[22]
+                    st.session_state.form_data['Department'] = data[12]
+                    st.session_state.form_data['Work'] = data[11]
+                    st.session_state.form_data['Blood Group'] = data[7]
+                    st.session_state.form_data['Vaccination Status'] = data[9]
+                    st.rerun()  
+                else:
+                    st.write(":red-background[:red[No data found]]")
         
         with r2c3:
             if st.button("Add Data", type="primary"):    
                 st.write("Data Saved")
                 st.session_state.form_data["visitreason"] = visitreason
                 st.rerun()
-        st.write(st.session_state.form_data)
     
     elif form_name == "Vitals":
         st.header("Vitals")
@@ -935,7 +953,7 @@ def Form(visitreason, connection, cursor):
                 st.session_state.form_data["visitreason"] = visitreason
                 st.rerun()
             if st.button("Submit", type = "primary"):
-                i = st.session_state.form_data
+                i = st.session_state.form_data # MARK: Data Insert
                 try:
                     insert_basicdetails = ("INSERT INTO basic_details (emp_no, entry_date, PatientAge, PatientName, Gender, Department, Work, MobileNo, BloodGroup, Vaccinated, Address) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)")
                     basicdetails_data = (i.get("Employee ID"), i.get("Visit Date"), i.get("Employee Age"), i.get("Employee Name"), i.get("Gender"), i.get("Department"), i.get("Work"),i.get("Mobile No."), i.get("Blood Group"), i.get("Vaccination Status"), i.get("Address"))
