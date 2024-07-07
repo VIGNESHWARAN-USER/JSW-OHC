@@ -27,7 +27,6 @@ icon = Image.open("./src/assets/favicon.png")
 
 st.set_page_config(page_title="JSW", page_icon=icon, layout="wide", initial_sidebar_state="expanded")
 
-
 #MainMenu, header, footer {visibility: hidden;}
 
 st.markdown("""
