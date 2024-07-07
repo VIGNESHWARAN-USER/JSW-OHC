@@ -37,6 +37,7 @@ st.markdown("""
         padding-bottom:10px;
         padding-left:20px;
     }
+MainMenu, header, footer {visibility: hidden;}
 </style>
 """,unsafe_allow_html=True)
 # mysql connection from env
