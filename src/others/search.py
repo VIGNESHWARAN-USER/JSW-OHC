@@ -185,7 +185,7 @@ def Search(cursor):
                                 st.write(f"**Height**: {vitals['Height'][0]} cm")
                                 st.write(f"**BMI**: {(float(vitals['Weight'][0]) / (float(vitals['Height'][0])/100)**2):.2f}")
                     with r0c2:
-                        with st.container(border=1,height=580):
+                        with st.container(border=1,height=580): # type: ignore
                             # MARK: Investigation
                             st.subheader("Investigations")
                             inve = st.selectbox("Select Investigation",["Hematology","RST","RFT","LFT","Thyroid","Autoimmune","Coagulation","CT","Enzymes","Lipid","Mens","Motion","MRI","Occupational","Ophthalmic","Other","Routine","Serology","Urine","USG"])

@@ -54,9 +54,9 @@ def Records_Filters(cursor):
         with r0c1:
             form_name = option_menu(
                 None,
-                ["Recent","General","Basic Details","Vitals","Investigations","Fitness","Medical History"],
+                ["Recent","Basic Details","Vitals","Investigations","Fitness","Medical History"],
                 orientation="horizontal",
-                icons=['a','a','a','a','a','a','a']
+                icons=['a','a','a','a','a','a']
             )
         
         
@@ -72,17 +72,6 @@ def Records_Filters(cursor):
 
         if form_name != "Recent" and form_name != "Investigations":
             with st.container(height=250):
-                if form_name == "General":
-                    r0c1,r0c2,r0c3= st.columns([2,2,4])
-                    with r0c1:
-                        start_date = st.date_input('Select a start date')
-                        start_date_str = start_date.strftime('%Y-%m-%d')
-                    with r0c2:
-                        end_date = st.date_input('Select an end date')
-                        end_date_str = end_date.strftime('%Y-%m-%d')
-                    
-                    
-                
                 if form_name == "Basic Details":
                     with st.form(key="Basic Details"):
                         r1c1,r1c2,r1c3,r1c4 = st.columns([2,2,2,2])
@@ -119,7 +108,16 @@ def Records_Filters(cursor):
 
                 if form_name == "Vitals":
                     st.write("Vitals")
-                
+                    r1c1,r1c2,r1c3,r1c4 = st.columns([2,2,2,2])
+                    with r1c1:
+                        height = st.number_input("Height")
+                    with r1c2:
+                        weight = st.number_input("Weight")
+                    with r1c3:
+                        systolic = st.number_input("Systolic")
+                    with r1c4:
+                        diastolic = st.number_input("Diastolic")
+
                 if form_name == "Fitness":
                     st.write("Fitness")
                 
