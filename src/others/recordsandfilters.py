@@ -1,15 +1,13 @@
 import streamlit as st
 import os
-import pandas as p
+import pandas as pd
 from  streamlit_option_menu import option_menu
+
 
 def get_data(cursor, table_name, filters=None,inv = None):
     # Execute the first query
     if "col" not in st.session_state:
         st.session_state.col = []
-
-    if "filter_data" not in st.session_state:
-        st.session_state.filter_data = {}
 
     if table_name == "Investigations":
         table_name = inv
@@ -18,7 +16,7 @@ def get_data(cursor, table_name, filters=None,inv = None):
     # Fetch all rows from the query
     st.session_state.data = cursor.fetchall()
     st.session_state.col = cursor.description
-    st.session_state.df = p.DataFrame(st.session_state.data, columns=[desc[0] for desc in st.session_state.col])
+    st.session_state.df = pd.DataFrame(st.session_state.data, columns=[desc[0] for desc in st.session_state.col])
     # apply the condition in the filter and return
 
     if filters:
@@ -26,9 +24,33 @@ def get_data(cursor, table_name, filters=None,inv = None):
             return st.session_state.df[st.session_state.df[key] == value]
     return st.session_state.df
 
+
+
 def Records_Filters(cursor):
     st.header("Records and Filters")
     
+    # form_to_table = {
+    #         "Recent":"Employee_det",
+    #         "General":"Employee_det",
+    #         "Basic Details":"Employee_det",
+    #         "Vitals":"vitals",
+    #         "Investigations":"Employee_det",
+    #         "Fitness":"fitness",
+    #         "Medical History":"medicalpersonalhist"
+    #     }
+    
+    if "data" not in st.session_state:
+        st.session_state.data = get_data(cursor=cursor,table_name="Employee_det")
+
+    if "col_name" not in st.session_state:
+        st.session_state.col_name = cursor.column_names
+        
+        
+    if "filter_data" not in st.session_state:
+        st.session_state.filter_data = {}
+
+
+
     with st.container(border=1):
         st.write("""
             <style>
@@ -103,20 +125,43 @@ def Records_Filters(cursor):
                                     "Blood Group":blood_group,
                                     "Vaccination":vaccination
                                 }
+                            # formate the data based on the filter data 
+                            # and display the data
+                            
                 if st.session_state.filter_data:
                     st.write(st.session_state.filter_data)
 
                 if form_name == "Vitals":
-                    st.write("Vitals")
-                    r1c1,r1c2,r1c3,r1c4 = st.columns([2,2,2,2])
-                    with r1c1:
-                        height = st.number_input("Height")
-                    with r1c2:
-                        weight = st.number_input("Weight")
-                    with r1c3:
-                        systolic = st.number_input("Systolic")
-                    with r1c4:
-                        diastolic = st.number_input("Diastolic")
+                    with st.form(key="Vitals"):
+                        st.write("Vitals")
+                        r1c1,r1c2,r1c3,r1c4 = st.columns([2,2,2,2])
+                        with r1c1:
+                            height = st.number_input("Height")
+                        with r1c2:
+                            weight = st.number_input("Weight")
+                        with r1c3:
+                            systolic = st.number_input("Systolic")
+                        with r1c4:
+                            diastolic = st.number_input("Diastolic")
+                        
+                        r2c1,r2c2,r2c3,r2c4 = st.columns([2,2,2,2],vertical_alignment="bottom")
+                        with r2c1:
+                            pulse = st.number_input("Pulse")
+                        with r2c2:
+                            temp = st.number_input("Temperature")
+                        with r2c3:
+                            resp = st.number_input("Respiration")
+                        with r2c4:
+                            if st.form_submit_button("Submit",):
+                                st.session_state.filter_data = {
+                                    "Height":height,
+                                    "Weight":weight,
+                                    "Systolic":systolic,
+                                    "Diastolic":diastolic,
+                                    "Pulse":pulse,
+                                    "Temperature":temp,
+                                    "Respiration":resp
+                                }
 
                 if form_name == "Fitness":
                     st.write("Fitness")
@@ -124,15 +169,4 @@ def Records_Filters(cursor):
                 if form_name == "Medical History": 
                     st.write("Medical History")
         
-        form_to_table = {
-            "Recent":"Employee_det",
-            "General":"Employee_det",
-            "Basic Details":"Employee_det",
-            "Vitals":"vitals",
-            "Investigations":"Employee_det",
-            "Fitness":"fitness",
-            "Medical History":"medicalpersonalhist"
-        }
-        
-
-        st.write(get_data(cursor=cursor, table_name=form_to_table[form_name]))
+        st.dataframe(pd.DataFrame(st.session_state.data, columns=[desc[0] for desc in st.session_state.col]))
