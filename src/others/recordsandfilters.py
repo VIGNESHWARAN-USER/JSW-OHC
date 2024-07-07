@@ -8,6 +8,9 @@ def get_data(cursor, table_name, filters=None,inv = None):
     if "col" not in st.session_state:
         st.session_state.col = []
 
+    if "filter_data" not in st.session_state:
+        st.session_state.filter_data = {}
+
     if table_name == "Investigations":
         table_name = inv
     cursor.execute(f"SELECT * FROM {table_name}")
@@ -68,7 +71,7 @@ def Records_Filters(cursor):
                 )
 
         if form_name != "Recent" and form_name != "Investigations":
-            with st.container(height=150):
+            with st.container(height=250):
                 if form_name == "General":
                     r0c1,r0c2,r0c3= st.columns([2,2,4])
                     with r0c1:
@@ -84,7 +87,7 @@ def Records_Filters(cursor):
                     with st.form(key="Basic Details"):
                         r1c1,r1c2,r1c3,r1c4 = st.columns([2,2,2,2])
                         with r1c1:
-                            fname = st.text_input("First Name")
+                            vaccination = st.selectbox("Vaccination",["Yes","No"])
                         with r1c2:
                             dept = st.text_input("Department")
                         with r1c3:
@@ -92,7 +95,28 @@ def Records_Filters(cursor):
                         with r1c4:
                             age = st.number_input("Age",min_value=0)
                         
-                
+                        r2c1,r2c2,r2c3,r2c4 = st.columns([2,2,2,2],vertical_alignment="bottom")
+                        with r2c1:
+                            gender = st.selectbox("Gender",["All","Male", "Female"])
+
+                        with r2c2:
+                            work = st.text_input("Work")
+                        with r2c3:
+                            blood_group = st.multiselect("Blood Group",["All","A+","A-","B+","B-","AB+","AB-","O+","O-"])
+                        with r2c4:
+                            if st.form_submit_button("Submit",):
+                                st.session_state.filter_data = {
+                                    "Department":dept,
+                                    "Designation":desig,
+                                    "Age":age,
+                                    "Gender": gender,
+                                    "Work":work,
+                                    "Blood Group":blood_group,
+                                    "Vaccination":vaccination
+                                }
+                if st.session_state.filter_data:
+                    st.write(st.session_state.filter_data)
+
                 if form_name == "Vitals":
                     st.write("Vitals")
                 
