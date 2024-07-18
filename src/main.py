@@ -81,7 +81,7 @@ def Login():
         buffered = io.BytesIO()
         bg.save(buffered, format="PNG")
         img_str = base64.b64encode(buffered.getvalue()).decode()
-        st.write("<img src='data:image/png;base64,{}' style='width: 1000px;position: absolute; margin-left:-100px;margin-top:-100px'>".format(img_str), unsafe_allow_html=True)
+        st.write("<img src='data:image/png;base64,{}' style='width: 1000px;position: absolute; margin-left:-100px;margin-top:-50px; overflow: hidden;'>".format(img_str), unsafe_allow_html=True)
         logo = Image.open("./src/assets/logo.png")
         st.write("<div style='text-align: center;margin-top:530px; color: #333;'></div>", unsafe_allow_html=True)
         Login11,Login12,Login13 = st.columns([1,2,1])
