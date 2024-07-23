@@ -3,6 +3,7 @@ import os
 import pandas as pd
 from streamlit_modal import Modal
 from streamlit_option_menu import option_menu
+from zmq import NULL
 
 
 def show_data(emp):
@@ -169,107 +170,122 @@ def Search(cursor):
                             st.write(f"**Office Phone No.**: {st.session_state.usr_prof['office_phone_no']}")
                 if menu == "Medical Details":
                     r0c1,r0c2 = st.columns([4,7])
-                    with r0c1:
-                        with st.container(border=1, height=300):
-                            # MARK: Vitals
-                            st.title("Vitals")
-                            r01c1,r02c2 = st.columns([4,6])
-                            with r01c1:
-                                st.write(f"**Systolic**: {vitals['Systolic'][0]}")
-                                st.write(f"**Diastolic**: {vitals['Diastolic'][0]}")
-                                st.write(f"**Pulse**: {vitals['PulseRate'][0]}")
-                                st.write(f"**SpO2**: {vitals['SpO2'][0]}")
-                            with r02c2:
-                                st.write(f"**Temperature**: {vitals['Temperature'][0]} °F")
-                                st.write(f"**Weight**: {vitals['Weight'][0]} kg")
-                                st.write(f"**Height**: {vitals['Height'][0]} cm")
-                                st.write(f"**BMI**: {(float(vitals['Weight'][0]) / (float(vitals['Height'][0])/100)**2):.2f}")
+                    if not vitals.empty:
+                        with r0c1:
+                            with st.container(border=1, height=300):
+                                # MARK: Vitals
+                                st.title("Vitals")
+                                r01c1,r02c2 = st.columns([4,6])
+                                with r01c1:
+                                    st.write(f"**Systolic**: {vitals['Systolic'][0]}")
+                                    st.write(f"**Diastolic**: {vitals['Diastolic'][0]}")
+                                    st.write(f"**Pulse**: {vitals['PulseRate'][0]}")
+                                    st.write(f"**SpO2**: {vitals['SpO2'][0]}")
+                                with r02c2:
+                                    st.write(f"**Temperature**: {vitals['Temperature'][0]} °F")
+                                    st.write(f"**Weight**: {vitals['Weight'][0]} kg")
+                                    st.write(f"**Height**: {vitals['Height'][0]} cm")
+                                    st.write(f"**BMI**: {(float(vitals['Weight'][0]) / (float(vitals['Height'][0])/100)**2):.2f}")
+                    else:
+                        with r0c1:
+                            st.warning("No records found")
                     with r0c2:
                         with st.container(border=1,height=580): # type: ignore
                             # MARK: Investigation
                             st.subheader("Investigations")
                             inve = st.selectbox("Select Investigation",["Hematology","RST","RFT","LFT","Thyroid","Autoimmune","Coagulation","CT","Enzymes","Lipid","Mens","Motion","MRI","Occupational","Ophthalmic","Other","Routine","Serology","Urine","USG"])
                             if inve == "Hematology":
-                                # MARK: Hematology
-                                st.subheader("Hematology")
                                 cursor.execute(f"SELECT * FROM hematology_result WHERE emp_no = '{st.session_state.usr_prof['emp_no']}'")
                                 hematology = pd.DataFrame(cursor.fetchall(), columns=[desc[0] for desc in cursor.description])
+                                st.subheader("Hematology")
                                 r2c0,r2c1 = st.columns([4,6])
-                                with r2c0:
-                                    st.write("**Hemoglobin**: ",hematology['heamoglobin'][0])
-                                    st.write("**RBC**: ",hematology['rbc_count'][0])
-                                    st.write("**WBC**: ",hematology['wbc_count'][0])
-                                    st.write("**Haemotocrit**: ",hematology['haemotocrit'][0])
-                                    st.write("**MCV**: ",hematology['mcv'][0])
-                                    st.write("**MCH**: ",hematology['mch'][0])
-                                    st.write("**Eosinophil**: ",hematology['eosinophil'][0])
-                                    st.write("**Basophils**: ",hematology['basophils'][0])
-                                    st.write("**PBS_RBC**: ",hematology['pbs_rbc'][0])
-                                with r2c1:
-                                    st.write("**MCHC**: ",hematology['mchc'][0])
-                                    st.write("**RDW**: ",hematology['rdw'][0])
-                                    st.write("**Platelet Count**: ",hematology['platelet'][0])
-                                    st.write("**RDW**: ",hematology['rdw'][0])
-                                    st.write("**Neutrophil**: ",hematology['neutrophil'][0])
-                                    st.write("**Lymphocyte**: ",hematology['lymphocyte'][0])
-                                    st.write("**Monocyte**: ",hematology['monocyte'][0])
-                                    st.write("**ESR**: ",hematology['esr'][0])
+                                if not hematology.empty:
+                                    # MARK: Hematology
+                                    with r2c0:
+                                        st.write("**Hemoglobin**: ",hematology['heamoglobin'][0])
+                                        st.write("**RBC**: ",hematology['rbc_count'][0])
+                                        st.write("**WBC**: ",hematology['wbc_count'][0])
+                                        st.write("**Haemotocrit**: ",hematology['haemotocrit'][0])
+                                        st.write("**MCV**: ",hematology['mcv'][0])
+                                        st.write("**MCH**: ",hematology['mch'][0])
+                                        st.write("**Eosinophil**: ",hematology['eosinophil'][0])
+                                        st.write("**Basophils**: ",hematology['basophils'][0])
+                                        st.write("**PBS_RBC**: ",hematology['pbs_rbc'][0])
+                                    with r2c1:
+                                        st.write("**MCHC**: ",hematology['mchc'][0])
+                                        st.write("**RDW**: ",hematology['rdw'][0])
+                                        st.write("**Platelet Count**: ",hematology['platelet'][0])
+                                        st.write("**RDW**: ",hematology['rdw'][0])
+                                        st.write("**Neutrophil**: ",hematology['neutrophil'][0])
+                                        st.write("**Lymphocyte**: ",hematology['lymphocyte'][0])
+                                        st.write("**Monocyte**: ",hematology['monocyte'][0])
+                                        st.write("**ESR**: ",hematology['esr'][0])
+                                else:
+                                    st.warning("No records found")
 
                             if inve == "RST":
                                 # MARK: RST
                                 cursor.execute(f"SELECT * FROM routine_sugartest WHERE emp_no = '{st.session_state.usr_prof['emp_no']}'")
-                                sugar = pd.DataFrame(cursor.fetchall(), columns=[desc[0] for desc in cursor.description])
                                 st.subheader("Routine Sugar Test")
-                                r2c0,r2c1 = st.columns([4,6])
-                                with r2c0:
-                                    st.write("**Fasting Glucose**: ",sugar['glucosef'][0])
-                                    st.write("**Post Prandial Glucose**: ",sugar['glucosepp'][0])
-                                    st.write("**Random Blood Sugar**: ",sugar['rbs'][0])
-                                    st.write("**EAG**: ",sugar['eag'][0])
-                                    st.write("**HbA1c**: ",sugar['hba1c'][0])
+                                sugar = pd.DataFrame(cursor.fetchall(), columns=[desc[0] for desc in cursor.description])
+                                if not sugar.empty:
+                                    r2c0,r2c1 = st.columns([4,6])
+                                    with r2c0:
+                                        st.write("**Fasting Glucose**: ",sugar['glucosef'][0])
+                                        st.write("**Post Prandial Glucose**: ",sugar['glucosepp'][0])
+                                        st.write("**Random Blood Sugar**: ",sugar['rbs'][0])
+                                        st.write("**EAG**: ",sugar['eag'][0])
+                                        st.write("**HbA1c**: ",sugar['hba1c'][0])
+                                else:
+                                    st.warning("No records found")
                             if inve == "RFT":
                                 # MARK: RFT
                                 st.subheader("Renal Function Test")
                                 cursor.execute(f"SELECT * FROM rft_result WHERE emp_no = '{st.session_state.usr_prof['emp_no']}'")
                                 rft = pd.DataFrame(cursor.fetchall(), columns=[desc[0] for desc in cursor.description])
-                                r2c0,r2c1 = st.columns([4,6])
-                                with r2c0:
-                                    st.write("**Urea**: ",rft['urea'][0])
-                                    st.write("**BUN**: ",rft['bun'][0])
-                                    st.write("**Serum Creatinine**: ",rft['sr_creatinine'][0])
-                                    st.write("**Uric Acid**: ",rft['uric_acid'][0])
-                                    st.write("**Sodium**: ",rft['sodium'][0])
-                                    st.write("**Potassium**: ",rft['potassium'][0])
-                                with r2c1:
-                                    st.write("**Calcium**: ",rft['calcium'][0])
-                                    st.write("**Phosphorus**: ",rft['phosphorus'][0])
-                                    st.write("**Chloride**: ",rft['chloride'][0])
-                                    st.write("**Bicarbonate**: ",rft['bicarbonate'][0])
+                                if not rft.empty:
+                                    r2c0,r2c1 = st.columns([4,6])
+                                    with r2c0:
+                                        st.write("**Urea**: ",rft['urea'][0])
+                                        st.write("**BUN**: ",rft['bun'][0])
+                                        st.write("**Serum Creatinine**: ",rft['sr_creatinine'][0])
+                                        st.write("**Uric Acid**: ",rft['uric_acid'][0])
+                                        st.write("**Sodium**: ",rft['sodium'][0])
+                                        st.write("**Potassium**: ",rft['potassium'][0])
+                                    with r2c1:
+                                        st.write("**Calcium**: ",rft['calcium'][0])
+                                        st.write("**Phosphorus**: ",rft['phosphorus'][0])
+                                        st.write("**Chloride**: ",rft['chloride'][0])
+                                        st.write("**Bicarbonate**: ",rft['bicarbonate'][0])
+                                else:
+                                    st.warning("No records found")
                             if inve == "LFT":
                                 # MARK: LFT
                                 cursor.execute(f"SELECT * FROM liver_function WHERE emp_no = '{st.session_state.usr_prof['emp_no']}'")
                                 liver = pd.DataFrame(cursor.fetchall(), columns=[desc[0] for desc in cursor.description])
                                 st.subheader("Liver Function Test")
-                                r2c0,r2c1 = st.columns([4,6])
-                                with r2c0:
-                                    st.write("**Total Bilirubin**: ",liver['bilirubin_total'][0])
-                                    st.write("**Direct Bilirubin**: ",liver['bilirubin_direct'][0])
-                                    st.write("**Indirect Bilirubin**: ",liver['bilirubin_indirect'][0])
-                                    st.write("**SGOT/ALT**: ",liver['sgot_alt'][0])
-                                    st.write("**Alkaline Phosphatase**: ",liver['alkaline_phosphatase'][0])
-                                    st.write("**Total Protein**: ",liver['total_protein'][0])
-                                with r2c1:
-                                    st.write("**Globulin**: ",liver['globulin'][0])
-                                    st.write("**Alb/Glob Ratio**: ",liver['alb_globratio'][0])
-                                    st.write("**Gamma GT**: ",liver['gammagt'][0])
-                                    st.write("**SGPT/ALT**: ",liver['sgpt_alt'][0])
-                                    st.write("**Albumin**: ",liver['albumin'][0])
+                                if not liver.empty:
+                                    r2c0,r2c1 = st.columns([4,6])
+                                    with r2c0:
+                                        st.write("**Total Bilirubin**: ",liver['bilirubin_total'][0])
+                                        st.write("**Direct Bilirubin**: ",liver['bilirubin_direct'][0])
+                                        st.write("**Indirect Bilirubin**: ",liver['bilirubin_indirect'][0])
+                                        st.write("**SGOT/ALT**: ",liver['sgot_alt'][0])
+                                        st.write("**Alkaline Phosphatase**: ",liver['alkaline_phosphatase'][0])
+                                        st.write("**Total Protein**: ",liver['total_protein'][0])
+                                    with r2c1:
+                                        st.write("**Globulin**: ",liver['globulin'][0])
+                                        st.write("**Alb/Glob Ratio**: ",liver['alb_globratio'][0])
+                                        st.write("**Gamma GT**: ",liver['gammagt'][0])
+                                        st.write("**SGPT/ALT**: ",liver['sgpt_alt'][0])
+                                        st.write("**Albumin**: ",liver['albumin'][0])
+                                else:
+                                    st.warning("No records found")
 
                             if inve == "Thyroid":
                                 # MARK: Thyroid
                                 thyroid = pd.DataFrame(cursor.fetchall(), columns=[desc[0] for desc in cursor.description])
                                 cursor.execute(f"SELECT * FROM autoimmune_test WHERE emp_no = '{st.session_state.usr_prof['emp_no']}'")
-
                                 st.subheader("Thyroid Function Test")
                                 if thyroid.empty:
                                     st.warning("No records found")
