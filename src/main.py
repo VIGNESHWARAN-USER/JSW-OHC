@@ -46,7 +46,7 @@ MYSQL_HOST = os.getenv("mysql-5893c62-jsw-test.a.aivencloud.com")
 MYSQL_USER = os.getenv("avnadmin")
 MYSQL_PASSWORD = os.getenv("AVNS_uVkEh0awpxi9I4bEOCq")
 MYSQL_DATABASE = os.getenv("defaultdb")
-MYSQL_PORT = os.getenv(19129)
+MYSQL_PORT = os.getenv("19129")
 
 # create a connection
 # create a session state
