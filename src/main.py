@@ -39,25 +39,14 @@ st.markdown("""
 MainMenu, header, footer {visibility: hidden;}
 </style>
 """,unsafe_allow_html=True)
-# mysql connection from env
-
-load_dotenv()
-MYSQL_HOST = os.getenv("mysql-5893c62-jsw-test.a.aivencloud.com")
-MYSQL_USER = os.getenv("avnadmin")
-MYSQL_PASSWORD = os.getenv("AVNS_uVkEh0awpxi9I4bEOCq")
-MYSQL_DATABASE = os.getenv("defaultdb")
-MYSQL_PORT = os.getenv("19129")
-
-# create a connection
-# create a session state
 
 if "connection" not in st.session_state:
     st.session_state.connection =  mysql.connector.connect(
-        host=MYSQL_HOST,
-        user=MYSQL_USER,
-        password=MYSQL_PASSWORD,
-        database=MYSQL_DATABASE,
-        port=MYSQL_PORT
+        host="mysql-5893c62-jsw-test.a.aivencloud.com",
+        user="avnadmin",
+        password="AVNS_uVkEh0awpxi9I4bEOCq",
+        database="defaultdb",
+        port=19129
     )
 
 if st.session_state.connection.is_connected():
