@@ -42,11 +42,11 @@ MainMenu, header, footer {visibility: hidden;}
 # mysql connection from env
 
 load_dotenv()
-MYSQL_HOST = os.getenv("DB_HOST")
-MYSQL_USER = os.getenv("DB_USER")
-MYSQL_PASSWORD = os.getenv("DB_PASSWORD")
-MYSQL_DATABASE = os.getenv("DB_NAME")
-MYSQL_PORT = os.getenv("DB_PORT")
+MYSQL_HOST = os.getenv("mysql-5893c62-jsw-test.a.aivencloud.com")
+MYSQL_USER = os.getenv("avnadmin")
+MYSQL_PASSWORD = os.getenv("AVNS_uVkEh0awpxi9I4bEOCq")
+MYSQL_DATABASE = os.getenv("defaultdb")
+MYSQL_PORT = os.getenv(19129)
 
 # create a connection
 # create a session state
