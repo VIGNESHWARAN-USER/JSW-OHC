@@ -31,19 +31,24 @@ def systolic_diastolic_chart(systolic, diastolic):
 
 def Form(visitreason, connection, cursor):
 
+    
+
     st.write("""
         <style>
             button[kind="primary"]{
                 all: unset;
                 background-color: #22384F;
                 color: white;
-                border-radius: 5px;
+                border-radius: 6px;
                 text-align: center;
                 cursor: pointer;
-                font-size: 20px;
-                width: 95%;
-                padding: 10px ;
-                margin-left:-10px
+                font-size: 16px;
+                width: 12%;
+                padding: 5px 10px ;
+                margin: 0;
+                margin-left:-10px;
+                margin-top:10px;
+                float: right
             }
         </style>
         """,unsafe_allow_html=True)
@@ -52,7 +57,7 @@ def Form(visitreason, connection, cursor):
         st.rerun()
     form_name = option_menu(
         None,
-        ["Basic Details", "Vitals", "Investigations", "Fitness", "Consultation", "Medical History"],
+        ["Basic Details", "Vitals","Medical History", "Investigations", "Fitness", "Consultation"],
         orientation="horizontal",
         icons=['a','a','a','a','a','a']
     )
@@ -900,22 +905,40 @@ def Form(visitreason, connection, cursor):
         st.header("Consultation")
         # Complaints         Diagnosis       Remarks
 
-        r1c1, r2c2 = st.columns([6,4])
-        with r1c1:
-            st.session_state.form_data["Complaints"] = st.text_area("Complaints", value=st.session_state.form_data.get("Complaints",""))
-            st.session_state.form_data["Diagnosis"] = st.text_area("Diagnosis", value=st.session_state.form_data.get("Diagnosis",""))
-            st.session_state.form_data["Remarks"] = st.text_area("Remarks", value=st.session_state.form_data.get("Remarks",""))
+       
+        st.session_state.form_data["Remarks"] = st.text_area("Remarks", value=st.session_state.form_data.get("Remarks",""))
+        if(visitreason=="Annual / Periodic" or visitreason=="Periodic (FH)"):
+            st.file_uploader("Upload Self Declaration", type=['xlsx'],key="Self-declaration")
+            #st.file_uploader("Upload FC External", type=['xlsx'],key="FC-external")
+            st.file_uploader("Upload Reports", type=['xlsx'],key="Reports")
+        elif(visitreason=="Camps (Mandatory)" or visitreason=="Camps (Optional)"):
+            st.file_uploader("Upload Reports", type=['xlsx'],key="Reports")
+        else:
+            st.file_uploader("Upload Self Declaration", type=['xlsx'],key="Self-declaration")
+            st.file_uploader("Upload FC External", type=['xlsx'],key="FC-external")
+            st.file_uploader("Upload Reports", type=['xlsx'],key="Reports")
+            
         
-        r3c1,r3c2,r3c3 = st.columns([6,4,4])
+        #r3c1,r3c2,r3c3 = st.columns([3,3,3])
+        st.write("""
+                 <div style='float:right;marin-right:100px;margin-top:25px'>
+                 <label for="doctor">Submitted By</label>
+                    <select style='height:35px;width:100px;text-align:center;background-color:rgb(240,242,246);border-radius:5px;margin-right:20px;margin-left:10px' name="doctor" id="doctor">
+                        <option value="SK">SK</option>
+                        <option value="Nurse">Nurse</option>
+                    </select>
+                 <label for="doctor">Assign Doctor </label>
+                    <select style='height:35px;width:100px;text-align:center;background-color:rgb(240,242,246);border-radius:5px;margin-left:10px' name="doctor" id="doctor">
+                        <option value="SK">SK</option>
+                        <option value="Nurse">Nurse</option>
+                    </select>
+                 </div>""",unsafe_allow_html=True)
+        if st.button("Submit", type="primary"):
+            st.write("Data Saved")
+            st.session_state.form_data["visitreason"] = visitreason
+            st.rerun()
         
         
-        with r3c3:
-            if st.button("Add Data", type="primary"):
-                st.write("Data Saved")
-                st.session_state.form_data["visitreason"] = visitreason
-                st.rerun()
-        
-        st.write(st.session_state.form_data)
 
     elif form_name == "Medical History":
         st.header("Medical History")
@@ -937,7 +960,12 @@ def Form(visitreason, connection, cursor):
         st.session_state.form_data["Medical History"] = st.multiselect("Medical History", ["BP", "DM", "Others"])
 
         st.header("Surgical History")
+
+        st.text_area("comments")
+        
         st.markdown("<h3 style='margin-left:30px;'> Family History </h3>", unsafe_allow_html=True)
+
+
         r1c1, r1c2, r1c3 = st.columns([1,6,2])
 
         with r1c2:
@@ -1218,92 +1246,463 @@ def Form(visitreason, connection, cursor):
                     st.write(e)
                     st.write("Error in medical history")
 
-                                    
-
-
+                    
         st.write(st.session_state.form_data)
 
+def Form1(visitreason, connection, cursor):
 
-
-def New_Visit(connection,cursor):
-    st.header("NewVisit")
-
-    r1c1,r1c2 = st.columns([4,6])
-    with r1c1:
-        select = option_menu(
-            None, 
-            ["Healthy", "Unhealthy"], 
-            orientation="horizontal",
-            icons=['a','a']
+    st.write("""
+        <style>
+            button[kind="primary"]{
+                all: unset;
+                background-color: #22384F;
+                color: white;
+                border-radius: 5px;
+                text-align: center;
+                cursor: pointer;
+                font-size: 20px;
+                width: 95%;
+                padding: 10px ;
+                margin-left:-10px
+            }
+        </style>
+        """,unsafe_allow_html=True)
+    if "form_data" not in st.session_state:
+        st.session_state.form_data = {"visitreason": visitreason} 
+        st.rerun()
+    form_name = option_menu(
+        None,
+        ["Basic Details", "Vitals","Consultation","Prescription","Referral" ],
+        orientation="horizontal",
+        icons=['a','a','a','a','a','a']
     )
 
-    n1c1, n1c2 = st.columns([2,7])
+    if form_name == "Basic Details":
+        st.subheader("Basic Details")
+        r0c1,r0c2 = st.columns([1,1])
+        with r0c1:
+            st.session_state.form_data["Visit Date"] = st.text_input("Visit Date", value=st.session_state.form_data.get("Visit Date", ""))
+        with r0c2:
+            st.session_state.form_data["Reference Type"] = st.selectbox('Select the hospital for the referrence range', ["manipal","Dharan","Poornima"], index=0)
+        r1c1,r1c2,r1c3 = st.columns(3)
+        with r1c1:
+            st.session_state.form_data["Employee ID"] = st.text_input("Employee ID",value=st.session_state.form_data.get("Employee ID",""))
+            st.session_state.form_data["Gender"] = st.text_input("Gender", value=st.session_state.form_data.get("Gender",""))
+            st.session_state.form_data["Mobile No."] = st.text_input("Mobile No.",value=st.session_state.form_data.get("Mobile No.",""))
+
+        with r1c2:
+            st.session_state.form_data["Employee Name"] = st.text_input("Employee Name", value=st.session_state.form_data.get("Employee Name",""))
+            st.session_state.form_data["Department"] = st.text_input("Department",value=st.session_state.form_data.get("Department",""))
+            st.session_state.form_data["Blood Group"] = st.text_input("Blood Group",value=st.session_state.form_data.get("Blood Group",""))
+        with r1c3:
+            st.session_state.form_data["Employee Age"] = st.text_input("Employee Age",value=st.session_state.form_data.get("Employee Age",""))
+            st.session_state.form_data["Work"] = st.text_input("Work",value=st.session_state.form_data.get("Work",""))
+            st.session_state.form_data["Vaccination Status"] = st.text_input("Vaccination Status",value=st.session_state.form_data.get("Vaccination Status",""))
+        st.session_state.form_data["Address"] = st.text_area("Address",value=st.session_state.form_data.get("Address",""))
+
+        r2c1,r2c2,r2c3 = st.columns([6,4,4])
+        st.write("""
+            <style>
+                button[kind="primary"]{
+                    background-color: #22384F;
+                    color: white;
+                    border-radius: 5px;
+                    text-align: center;
+                    cursor: pointer;
+                    font-size: 20px;
+                    width: 95%;
+                    padding: 10px ;
+                    margin-left:-10px
+                }
+            </style>
+            """,unsafe_allow_html=True)
+        with r2c2:
+            if st.button("Get Info", type="primary"): # MARK: Get Info
+                cursor.execute(f"SELECT * FROM Employee_det WHERE emp_no = '{st.session_state.form_data['Employee ID']}'")
+                data = cursor.fetchone()
+                if data is not None:
+                    st.session_state.form_data["Visit Date"] = datetime.datetime.now().strftime("%d-%m-%Y")
+                    st.session_state.form_data["Employee Name"] = data[1]
+                    st.session_state.form_data["Employee Age"] = data[3]
+                    st.session_state.form_data['Gender'] = data[4]
+                    st.session_state.form_data['Mobile No.'] = data[14][1:]
+                    st.session_state.form_data['Address'] = data[22]
+                    st.session_state.form_data['Department'] = data[12]
+                    st.session_state.form_data['Work'] = data[11]
+                    st.session_state.form_data['Blood Group'] = data[7]
+                    st.session_state.form_data['Vaccination Status'] = data[9]
+                    st.rerun()  
+                else:
+                    st.write(":red-background[:red[No data found]]")
+        
+        with r2c3:
+            if st.button("Add Data", type="primary"):    
+                st.write("Data Saved")
+                st.session_state.form_data["visitreason"] = visitreason
+                st.rerun()
+
+    elif form_name == "Vitals":
+        st.header("Vitals")
+        r1c1,r1c2,r1c3 = st.columns([5,3,9])
+        with r1c1:
+            systolic = st.session_state.form_data.get("Systolic", "0")
+            diastolic = st.session_state.form_data.get("Diastolic", "0")
+
+            st.session_state.form_data["Systolic"] = st.text_input("Systolic", value=systolic,)
+            st.session_state.form_data["Diastolic"] = st.text_input("Diastolic", value=diastolic)
+
+        with r1c2:
+            # show the charts for the systolic and diastolic based on the data input
+            st.write("""
+                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 300px; height: 50px; border-radius: 10px; margin-left: 50px;"></div>
+            """, unsafe_allow_html=True)
+            st.write("""
+            <style>
+                button[kind="secondary"]{
+                    all: unset;
+                    background-color: #22384F;
+                    color: white;
+                    border-radius: 5px;
+                    text-align: center;
+                    cursor: pointer;
+                    font-size: 20px;
+                    padding: 10px;
+                }
+            </style>
+            """,unsafe_allow_html=True)
+            val = st.button("🧮", type="secondary")
+        with r1c3:
+            if val:
+                val,color = systolic_diastolic_chart(systolic, diastolic)
+                st.write(f"""
+                    <style>
+                        .chart_container {{
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                            justify-content: center;
+                            width: 300px;
+                            height: 80px;
+                            border-radius: 10px;
+                            margin-left: 50px;
+                        }}
+                        .chart-value h1{{
+                            margin-top: 50px;
+                            margin-left: 50px;
+                            color: {color}
+                        }}
+                        .bar-values {{
+                            display: flex;
+                            align-items: center;
+                            justify-content: space-between;
+                            width: 300px;
+                            height: 200px;
+                        }}
+                        .Normal {{
+                            width: 19.5%;
+                            height: 10px;
+                            background-color: #00ff00af;
+                            border-top-left-radius: 10px;
+                            border-bottom-left-radius: 10px;
+                        }}
+                        .Elevated {{
+                            width: 19.5%;
+                            height: 10px;
+                            background-color: #ffff00af;
+                        }}
+                        .HT-Stage-1 {{
+                            width: 19.5%;
+                            height: 10px;
+                            background-color: #ff9900af;
+                        }}
+                        .HT-Stage-2 {{
+                            width: 19.5%;
+                            height: 10px;
+                            background-color: #ff0000af;
+                        }}
+                        .HT-crisis {{
+                            width: 19.5%;
+                            height: 10px;
+                            background-color: #990000af;
+                            border-top-right-radius: 10px;
+                            border-bottom-right-radius: 10px;
+                        }}
+                    </style>
+                    <div class="chart_container">
+                        <div class="chart-value"><h1>{val}</h1></div>
+                        <div class="bar-values">
+                            <div class="Normal"></div>
+                            <div class="Elevated"></div>
+                            <div class="HT-Stage-1"></div>
+                            <div class="HT-Stage-2"></div>
+                            <div class="HT-crisis"></div>
+                        </div>
+                    </div>
+                """,unsafe_allow_html=True)
+        
+        r2c1,r2c2,r2c3 = st.columns(3)
+        with r2c1:
+            st.session_state.form_data["Pulse"] = st.text_input("Pulse", value=st.session_state.form_data.get("Pulse",""))
+            st.session_state.form_data["spo2"] = st.text_input("SpO2", value=st.session_state.form_data.get("spo2",""))
+            st.session_state.form_data["BMI"] = st.text_input("BMI", value=st.session_state.form_data.get("BMI",""))
+        with r2c2:
+            st.session_state.form_data["Respiratory Rate"] = st.text_input("Respiratory Rate", value=st.session_state.form_data.get("Respiratory Rate",""))
+            st.session_state.form_data["Weight"] = st.text_input("Weight", value=st.session_state.form_data.get("Weight",""))
+            
+        with r2c3:
+            st.session_state.form_data["Temperature"] = st.text_input("Temperature", value=st.session_state.form_data.get("Temperature",""))
+            st.session_state.form_data["Height"] = st.text_input("Height", value=st.session_state.form_data.get("Height",""))
+
+        r3c1,r3c2,r3c3 = st.columns([6,4,4])
+        st.write("""
+            <style>
+                button[kind="primary"]{
+                    all: unset;
+                    background-color: #22384F;
+                    color: white;
+                    border-radius: 5px;
+                    text-align: center;
+                    cursor: pointer;
+                    font-size: 20px;
+                    width: 95%;
+                    padding: 10px ;
+                    margin-left:-10px
+                }
+            </style>
+            """,unsafe_allow_html=True)
+        
+        with r3c3:
+            if st.button("Add Data", type="primary"):
+                st.write("Data Saved")
+                st.session_state.form_data["visitreason"] = visitreason
+                st.rerun()
+        st.write(st.session_state.form_data)
+
+    elif form_name == "Consultation":
+        st.header("Consultation")
+        # Complaints         Diagnosis       Remarks
+
+        r1c1, r2c2 = st.columns([6,4])
+        with r1c1:
+            st.session_state.form_data["Complaints"] = st.text_area("Complaints", value=st.session_state.form_data.get("Comints",""))
+            st.session_state.form_data["Diagnosis"] = st.text_area("Diagnosis", value=st.session_state.form_data.get("Diagnosis",""))
+            st.session_state.form_data["Remarks"] = st.text_area("Remarks", value=st.session_state.form_data.get("Remarks",""))
+        
+        r3c1,r3c2,r3c3 = st.columns([6,4,4])
+        
+        
+        with r3c3:
+            if st.button("Add Data", type="primary"):
+                st.write("Data Saved")
+                st.session_state.form_data["visitreason"] = visitreason
+                st.rerun()
+        
+        st.write(st.session_state.form_data)
+
+    elif form_name=="Prescription":
+        st.header("Prescription")
+        st.write("""
+            <style>
+                button[kind="primary"]{
+                    all: unset;
+                    background-color: #22384F;
+                    color: white;
+                    border-radius: 5px;
+                    text-align: center;
+                    cursor: pointer;
+                    font-size: 20px;
+                    width: 10%;
+                    padding: 10px ;
+                    margin-left:1000px;
+                    
+                }
+            </style>
+            """,unsafe_allow_html=True)
+        st.subheader("Tablets")
+        c1,c2,c3,c4,c5=st.columns([3,2,2,2,2])
+        with c1:
+            st.selectbox("Name of the Drug",["Drug1","Drug2","Drug3"],index=None)
+            st.selectbox("Name of the Drug",["Drug_1","Drug2","Drug3"],index=None)
+        with c2:
+            st.text_input("Qty")
+            st.text_input("Qtys")
+        with c3:
+            st.selectbox("Timing",["M","AN","N","Stat"],index=None)
+            st.selectbox("Timing",["M","AN","N_","Stat"],index=None)
+        with c4:
+            st.selectbox("Food",["BF","AF_","WF"],index=None)
+            st.selectbox("Food",["BF","AF","WF"],index=None)
+        with c5:
+            st.text_input("Day", placeholder="Comments...")
+            st.text_input("Days", placeholder="Comments...")
+        st.button("Add",type='primary')
+        
+        st.subheader("Injection")
+        c1,c2,c3,c4,c5=st.columns([3,2,2,2,2])
+
+        with c1:            
+            st.selectbox("Name of the Drug",["Drug1","Drug2","Drug3"],index=None,key="d1")
+            st.selectbox("Name of the Drug",["Drug_1","Drug2","Drug3"],index=None,key="d2")
+        with c2:
+            st.text_input("Qty",key="q1")
+            st.text_input("Qtys",key="q2")
+            
+        st.button("Add",key="a1",type="primary")
+
+        st.subheader("Creams")
+        c1,c2,c3,c4,c5=st.columns([3,2,2,2,2])
+        with c1:            
+            st.selectbox("Name of the Drug",["Drug1","Drug2","Drug3"],index=None,key="d3")
+            st.selectbox("Name of the Drug",["Drug_1","Drug2","Drug3"],index=None,key="d4")
+        with c2:
+            st.text_input("Qty",key="q3")
+            st.text_input("Qtys",key="q4")
+        st.button("Add",key="a2",type="primary")
+        
+        st.subheader("Others")
+        c1,c2,c3,c4,c5=st.columns([3,2,2,2,2])      
+        with c1:            
+            st.selectbox("Name of the Drug",["Drug1","Drug2","Drug3"],index=None,key="d5")
+            st.selectbox("Name of the Drug",["Drug_1","Drug2","Drug3"],index=None,key="d6")
+        with c2:
+            st.text_input("Qty",key="q5")
+            st.text_input("Qtys",key="q6")
+        st.button("Add",key="a3",type="primary")
+
+
+        st.markdown("""
+            <div id="custom-button-container" style='margin-top:20px;'>
+                <button id="custom-button">Submit</button>
+                <select id="opt">
+                    <option >SK</option>
+                    <option >DR</option>
+                    <option >AD</option>
+                </select>
+                <h4 id="let">Submited By</h4>
+            </div>
+            """, unsafe_allow_html=True)
+        
+        st.markdown("""
+            <style>
+            #let{
+                float:right;
+                margin-left:80px;
+                    position:absolute;
+            }
+            </style>
+            """, unsafe_allow_html=True)
+        
+        st.markdown("""
+            <style>
+            #opt {
+                background-color: #22384F;
+                color: white;
+                border-radius: 5px;
+                padding: 10px 20px;
+                font-size: 16px;
+                    width:10%;
+                cursor: pointer;
+                float:right;
+                margin-right:60px;
+            }
+            </style>
+            """, unsafe_allow_html=True)
+        
+        st.markdown("""
+            <style>
+            #custom-button {
+                background-color: #22384F;
+                color: white;
+                border-radius: 5px;
+                padding: 10px 20px;
+                font-size: 16px;
+                cursor: pointer;
+                float:right;
+                margin-right:30px;
+            }
+            </style>
+            """, unsafe_allow_html=True)
+        
+        st.markdown("""
+            <div id="custom-button-container">
+                <button id="custom-button">Generate Prescription</button>
+            </div>
+            """, unsafe_allow_html=True)
+            
+
+    elif form_name=="Referral":
+        st.header("Referral")
+        referral = st.radio("Referral", ("Yes", "No"))
+        hospital_name = st.text_input("Name of the Hospital", placeholder="Comments...")
+        doctor_name = st.text_input("Doctor name", placeholder="Comments...")
+        condition_type = st.radio("Condition Type", ("Occupational", "Non-occupational", "Domestic"))
+        col1, col2 = st.columns(2)
+        with col1:
+            if st.button("Clear"):
+                referral = None
+                hospital_name = ""
+                doctor_name = ""
+                condition_type = None
+        with col2:
+            if st.button("Submit"):
+                st.success("Form submitted successfully!")
+                st.write("Referral:", referral)
+                st.write("Hospital Name:", hospital_name)
+                st.write("Doctor Name:", doctor_name)
+                st.write("Condition Type:", condition_type)
+
+def New_Visit(connection, cursor):
+    st.header("New Visit")
+
+    n1c1, n1c2 = st.columns([2, 7])
+
+    # Initialize selected
+    selected = None
 
     with n1c1:
-        global selected
-        if select == "Healthy":
+        select = option_menu(
+            None,
+            ["Employee", "Contractor", "Visitor"],
+            orientation="vertical",
+            icons=['a', 'a', 'a'],
+        )
+
+        health_status = option_menu(
+            None,
+            ["Healthy", "Unhealthy"],
+            orientation="horizontal",
+            icons=['a', 'a']
+        )
+
+        visit_reason_options = {
+            "Healthy": [
+                "Pre Employment", "Pre Employment(FH)", "Pre Employment(CC)",
+                "Pre Placement", "Annual / Periodic", "Periodic (FH)", 
+                "Camps (Mandatory)", "Camps (Optional)"
+            ],
+            "Unhealthy": [
+                "Illness", "Over counter Illness", "Injury", 
+                "Over counter Injury", "Follow up Visits", 
+                "BP Sugar (Abnormal)", "Injury Outside the premises"
+            ]
+        }
+
+        if health_status in visit_reason_options:
             selected = option_menu(
-                "Healthy", 
-                ["Pre Employment", "Pre Employment(FH)", "Pre Employment(CC)","Pre Placement", "Annual / Periodic", "Periodic (FH)","Camps (Mandatory)", "Camps (Optional)"],
+                health_status,
+                visit_reason_options[health_status],
                 menu_icon='building-fill-add',
-                icons=['a','a','a','a','a','a','a','a','a','a','a',],
+                icons=['a'] * len(visit_reason_options[health_status]),
                 default_index=0
             )
-        if select == "Unhealthy":
-            selected = option_menu(
-                "Unhealthy",
-                ["Illness", "Over counter Illness", "Injury", "Over counter Injury", "Follow up Visits", "BP Sugar (Abnormal)","Injury Outside the premises"],
-                menu_icon='building-fill-add',
-                icons=['a','a','a','a','a','a','a','a','a','a','a',],
-                default_index=0
-            )
-    
+
     with n1c2:
         with st.container(border=1, height=700):
-            if selected == "Pre Employment":
-                Form("Pre Employment",connection,cursor)
-            
-            elif selected == "Pre Employment(FH)":
-                Form("Pre Employment(FH)",connection,cursor)
-            
-            elif selected == "Pre Employment(CC)":
-                Form("Pre Employment(CC)",connection,cursor)
-            
-            elif selected == "Pre Placement":
-                Form("Pre Placement",connection,cursor)
-            
-            elif selected == "Annual / Periodic":
-                Form("Annual / Periodic",connection,cursor)
-            
-            elif selected == "Periodic (FH)":
-                Form("Periodic (FH)",connection,cursor)
-            
-            elif selected == "Camps (Mandatory)":
-                Form("Camps (Mandatory)",connection,cursor)
-            
-            elif selected == "Camps (Optional)":
-                Form("Camps (Optional)",connection,cursor)
-            
-            elif selected == "Illness":
-                Form("Illness",connection,cursor)
-            
-            elif selected == "Over counter Illness":
-                Form("Over counter Illness",connection,cursor)                    
-            
-            elif selected == "Injury":
-                Form("Injury",connection,cursor)
-            
-            elif selected == "Over counter Injury":
-                Form("Over counter Injury",connection,cursor)
-            
-            elif selected == "Follow up Visits":
-                Form("Follow up Visits",connection,cursor)
-            
-            elif selected == "BP Sugar (Abnormal)":
-                Form("BP Sugar (Abnormal)",connection,cursor)
-            
-            elif selected == "Injury Outside the premises":
-                Form("Injury Outside the premises",connection,cursor)
-            
+            if selected:
+                # Call the appropriate Form based on selected
+                if selected in visit_reason_options["Healthy"]:
+                    Form(selected, connection, cursor)
+                elif selected in visit_reason_options["Unhealthy"]:
+                    Form1(selected, connection, cursor)
             else:
-                st.write("Select a visit reason", selected)
+                st.write("Select a visit reason")

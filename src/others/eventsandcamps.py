@@ -1,6 +1,6 @@
 import streamlit as st
 import os
-import pandas as p
+import pandas as pd
 
 def Events_Camps(cursor):
 
