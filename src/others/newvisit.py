@@ -103,23 +103,16 @@ def Form(visitreason,select, select1, connection, cursor):
         if select=="Contractor" and visitreason=="Over counter Injury Outside the premises":
             form_name = option_menu(
             None,
-            ["Basic Details","Complaints","Diagnosis","Prescription","Referral" ],
+            ["Basic Details","Consultation","Prescription","Referral" ],
             orientation="horizontal",
             icons=['a','a','a','a','a']
             )
         elif visitreason=="Illness" or visitreason=="BP Sugar (Abnormal)" or visitreason=="Injury Outside the premises" or visitreason=="Over counter Injury Outside the premises":
             form_name = option_menu(
             None,
-            ["Basic Details", "Vitals","Medical History","Consultation","Complaints","Diagnosis","Prescription","Referral" ],
+            ["Basic Details", "Vitals","Medical History","Consultation","Prescription","Referral" ],
             orientation="horizontal",
             icons=['a','a','a','a','a','a','a','a']
-            )
-        elif visitreason=="Over counter Illness":
-            form_name = option_menu(
-            None,
-            ["Basic Details", "Vitals","Complaints","Diagnosis","Prescription","Referral"],
-            orientation="horizontal",
-            icons=['a','a','a','a','a','a']
             )
         elif visitreason=="Injury":
             form_name = option_menu(
@@ -131,23 +124,16 @@ def Form(visitreason,select, select1, connection, cursor):
         elif visitreason=="Over counter Injury":
             form_name = option_menu(
             None,
-            ["Basic Details","Complaints","Diagnosis","Prescription","Referral"],
+            ["Basic Details","Consultation","Prescription","Referral"],
             orientation="horizontal",
             icons=['a','a','a','a','a']
             )
-        elif select=="Contractor" and visitreason=="Follow up Visits":
-            form_name = option_menu(
-                None,
-                ["Basic Details","Vitals","Complaints","Diagnosis","Prescription","Consultation","Referral"],
-                orientation="horizontal",
-                icons=['a','a','a','a','a','a','a']
-                )
-        elif visitreason=="Follow up Visits":
+        elif select!="Contractor"and visitreason=="Follow up Visits":
             form_name = option_menu(
             None,
-            ["Basic Details","Vitals","Investigations","Complaints","Diagnosis","Prescription","Consultation","Referral"],
+            ["Basic Details","Vitals","Investigations","Consultation","Prescription","Referral"],
             orientation="horizontal",
-            icons=['a','a','a','a','a','a','a','a']
+            icons=['a','a','a','a','a','a',]
             )
         else:
             form_name = option_menu(
@@ -1010,6 +996,12 @@ def Form(visitreason,select, select1, connection, cursor):
         elif(visitreason=="Camps (Mandatory)" or visitreason=="Camps (Optional)"or visitreason=="Illness") or visitreason=="Follow up Visits" or visitreason=="BP Sugar (Abnormal)" or visitreason=="Injury Outside the premises":
             st.session_state.form_data["Remarks"] = st.text_area("Remarks", value=st.session_state.form_data.get("Remarks",""))
             st.file_uploader("Upload Reports", type=['xlsx'],key="Reports")
+            if(select1=="Unhealthy" and (visitreason=="Illness" or visitreason=="Follow up Visits" or visitreason=="BP Sugar (Abnormal)" or visitreason=="Injury Outside the premises")):
+                st.session_state.form_data["Diagnosis"] = st.text_area("Diagnosis", value=st.session_state.form_data.get("Diagnosis",""))
+                st.session_state.form_data["Complaints"] = st.text_area("Complaints", value=st.session_state.form_data.get("Complaints",""))
+        elif(select1=="Unhealthy" and (visitreason=="Over counter Illness" or visitreason=="Over counter Injury")):
+                st.session_state.form_data["Diagnosis"] = st.text_area("Diagnosis", value=st.session_state.form_data.get("Diagnosis",""))
+                st.session_state.form_data["Complaints"] = st.text_area("Complaints", value=st.session_state.form_data.get("Complaints",""))        
         elif(visitreason=="Special Work Fitness" or visitreason=="Special Work Fitness (Renewal)"):
             st.file_uploader("Upload Self Declaration", type=['xlsx'],key="Self-declaration")
         elif(visitreason=="Fitness After Medical Leave"):
@@ -1018,11 +1010,15 @@ def Form(visitreason,select, select1, connection, cursor):
             st.file_uploader("Upload Reports", type=['xlsx'],key="Reports")
         elif(visitreason=="Over counter Injury Outside the premises" or (visitreason==None and select1=="Unhealthy")):
             st.session_state.form_data["Remarks"] = st.text_area("Remarks", value=st.session_state.form_data.get("Remarks",""))
+            st.session_state.form_data["Diagnosis"] = st.text_area("Diagnosis", value=st.session_state.form_data.get("Diagnosis",""))
+            st.session_state.form_data["Complaints"] = st.text_area("Complaints", value=st.session_state.form_data.get("Complaints",""))
+            
         else:
             st.session_state.form_data["Remarks"] = st.text_area("Remarks", value=st.session_state.form_data.get("Remarks",""))
             st.file_uploader("Upload Self Declaration", type=['xlsx'],key="Self-declaration")
             st.file_uploader("Upload FC External", type=['xlsx'],key="FC-external")
             st.file_uploader("Upload Reports", type=['xlsx'],key="Reports")
+        
 
         
         #r3c1,r3c2,r3c3 = st.columns([3,3,3])
@@ -1592,7 +1588,7 @@ def New_Visit(connection,cursor):
                     )
         
         with n1c2:
-            with st.container(border=1, height=700):
+            with st.container(border=1, height=900): #initially height was 700
                 if select=="Visitor" and select1=="Healthy":
                     Form(None,select,select1,connection,cursor)
                 elif select=="Visitor" and select1=="Unhealthy":

@@ -125,8 +125,9 @@ if __name__ == "__main__":
     else:
         if st.session_state.accessLevel == "admin":
             with st.sidebar:
+                st.image("./src/assets/logo.png")
                 form = option_menu(
-                    "JSW-OHC Admin",
+                    None,
                     ["Dashboard", "Add Doctor", "Add Nurse","Add Employee","Add Reference Range"],
                     menu_icon='a',
                     icons=['a', 'b', 'c', 'd','e']
@@ -153,7 +154,8 @@ if __name__ == "__main__":
         
         if st.session_state.accessLevel == "doctor":
             with st.sidebar:
-                selected = option_menu("JSW OHC", ['Search',"Dashboard", 'New Visit', 'Events & Camps', 'Records & Filters','Mock Drills', 'Appointments'], 
+                st.image("./src/assets/logo.png")
+                selected = option_menu(None, ['Search',"Dashboard", 'New Visit', 'Events & Camps', 'Records & Filters','Mock Drills', 'Appointments'], 
                     icons=['search', 'house','gear', 'calendar', 'filter', 'shield', 'calendar-check'],
                     menu_icon="building-fill-add", 
                     default_index=1)
@@ -190,8 +192,10 @@ if __name__ == "__main__":
                 Appointment(st.session_state.connection, st.session_state.accessLevel)
         
         if st.session_state.accessLevel == "nurse":
+            
             with st.sidebar:
-                selected = option_menu("JSW OHC", ['Search',"Dashboard", 'New Visit', 'Events & Camps', 'Records & Filters','Mock Drills', 'Appointments'], 
+                st.image("./src/assets/logo.png")
+                selected = option_menu(None,options=['Search',"Dashboard", 'New Visit', 'Events & Camps', 'Records & Filters','Mock Drills', 'Appointments'], 
                     icons=['search', 'house','gear', 'calendar', 'filter', 'shield', 'calendar-check'],
                     menu_icon="building-fill-add", 
                     default_index=1)
