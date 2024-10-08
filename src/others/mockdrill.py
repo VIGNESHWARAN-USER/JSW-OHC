@@ -1,7 +1,10 @@
+from pickle import FALSE
 import streamlit as st
 import os
 import pandas as p
 
+if "success" not in st.session_state:
+    st.session_state.success = False
 
 def Mock_Drill(connection, cursor):
     st.title("Mock Drill")
@@ -91,27 +94,33 @@ def Mock_Drill(connection, cursor):
 
     c1, c2 = st.columns([6,1])
     with c1:
-        def submit_mockdrill():
-            st.session_state.mockdrill = {}
+        if st.session_state.success:
+            st.success("Data Inserted") 
     with c2:
-        if st.button("Submit", type="primary"):
-            i = st.session_state.mockdrill
-            st.write(i)
-            mockdrillinsert = ("INSERT INTO mockdrill( Date, Time, Department, Location, "
-            "Scenario, Call_Received, Departure_from_OHC, Return_to_OHC,"
-            " Victim_name, Age, Sex, Emp_No,"
-            " Victim_Department, Job_nature, Phone_No, Vitals,"
-            " Complaints, Treatment, Referral, Amb_Driver,"
-            " Amb_Staff_Nurse, Doctor, Staff_Nurse, Observation,"
-            " Action_completion, Responsible) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)") 
-           
-            mockdrill_values = (i["Date"], i["Time"], i["Department"], i["Location"], 
-            i["Scenario"], i["Call Recived"], i["Depature from OHC"], i["Reeturn to OHC"],
-             i["Victim Name"], i["Age"], i["Gender"], i["EmpID"],
-              i["Victim Department"], i["Nature of Job"], i["Mobile No."], i["Vitals"], 
-              i["Complaints"], i["Treatment"], i["Referal"], i["Ambulance Driver"],
-               i["Staff Name"], i["OHC Doctor"], i["Staff Nurse"], i["Observation"],
-                i["Action / Completion"], i["Responsible"])
-            cursor.execute(mockdrillinsert, mockdrill_values)
-            connection.commit()
-            st.write("Data Inserted")   
+        if st.session_state.success:
+            if st.button("Continue", type = "primary"):
+                st.session_state.success = False
+                st.rerun()
+        if not st.session_state.success:
+            if st.button("Submit", type="primary"):
+                i = st.session_state.mockdrill
+                mockdrillinsert = ("INSERT INTO mockdrill( Date, Time, Department, Location, "
+                "Scenario, Call_Received, Departure_from_OHC, Return_to_OHC,"
+                " Victim_name, Age, Sex, Emp_No,"
+                " Victim_Department, Job_nature, Phone_No, Vitals,"
+                " Complaints, Treatment, Referral, Amb_Driver,"
+                " Amb_Staff_Nurse, Doctor, Staff_Nurse, Observation,"
+                " Action_completion, Responsible) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)") 
+            
+                mockdrill_values = (i["Date"], i["Time"], i["Department"], i["Location"], 
+                i["Scenario"], i["Call Recived"], i["Depature from OHC"], i["Reeturn to OHC"],
+                i["Victim Name"], i["Age"], i["Gender"], i["EmpID"],
+                i["Victim Department"], i["Nature of Job"], i["Mobile No."], i["Vitals"], 
+                i["Complaints"], i["Treatment"], i["Referal"], i["Ambulance Driver"],
+                i["Staff Name"], i["OHC Doctor"], i["Staff Nurse"], i["Observation"],
+                    i["Action / Completion"], i["Responsible"])
+                cursor.execute(mockdrillinsert, mockdrill_values)
+                connection.commit()
+                st.session_state.success = True
+                st.rerun()
+      

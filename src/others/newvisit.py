@@ -1,3 +1,4 @@
+from altair import Column
 import streamlit as st
 import os
 import pandas as p
@@ -200,7 +201,7 @@ def Form(visitreason,select, select1, connection, cursor):
                     st.session_state.form_data['Vaccination Status'] = data[9]
                     st.rerun()  
                 else:
-                    st.write(":red-background[:red[No data found]]")
+                    st.warning("No data found")
         
         with r2c3:
             if st.button("Add Data", type="primary"):    
@@ -1508,153 +1509,158 @@ def Form(visitreason,select, select1, connection, cursor):
 def New_Visit(connection,cursor):
     st.header("NewVisit")
 
-    n1c1, n1c2 = st.columns([2,7])
+    global selected, select
 
-    with n1c1:
-        global selected,select
-        with n1c1:
-            select = option_menu(
-                None, 
-                ["Employee", "Contractor","Visitor"], 
-                orientation="vertical",
-                icons=['a','a','a'],
+    with st.container(border=1):
+        r0c1, r0c2 = st.columns([5, 5])
+
+        with r0c1:
+            # First selectbox for Employee, Contractor, Visitor
+            select = st.selectbox(
+                "Select Type", 
+                options=["Employee", "Contractor", "Visitor"]
             )
-            
-            select1 = option_menu(
-                select, 
-                ["Healthy", "Unhealthy"], 
-                orientation="horizontal",
-                icons=['a','a']
+
+        with r0c2:
+            # Second selectbox for Healthy, Unhealthy
+            select1 = st.selectbox(
+                "Select Health Status",
+                options=["Healthy", "Unhealthy"]
             )
-            if select!="Visitor" and select1=="Healthy":
-                select2 = option_menu(
-                "Healthy", 
-                ["Medical Examination", "Periodic Work Fitness","Fitness After Medical Leave","Mock Drill","BP Sugar Check"], 
-                orientation="vertical",
-                icons=['a','a','a','a','a']
+
+        # If select is not Visitor and health status is Healthy
+        if select != "Visitor" and select1 == "Healthy":
+            with r0c1:
+                # Third selectbox for various healthy options
+                select2 = st.selectbox(
+                    "Healthy Options", 
+                    options=["Medical Examination", "Periodic Work Fitness", "Fitness After Medical Leave", "Mock Drill", "BP Sugar Check"]
                 )
-                if select=="Contractor" and select2 == "Medical Examination":
-                    selected = option_menu(
-                        "Medical Examination", 
-                        ["Pre Employment", "Pre Employment(FH)","Pre Employment(CC)","Pre Placement", "Annual / Periodic", "Camps (Mandatory)", "Camps (Optional)"],
-                        menu_icon='building-fill-add',
-                        icons=['a','a','a','a','a','a','a','a','a','a','a',],
-                        default_index=0
+
+            if select == "Contractor" and select2 == "Medical Examination":
+                with r0c2:
+                    # Selectbox for Medical Examination for Contractor
+                    selected = st.selectbox(
+                        "Medical Examination (Contractor)",
+                        options=["Pre Employment", "Pre Employment(FH)", "Pre Employment(CC)", "Pre Placement", "Annual / Periodic", "Camps (Mandatory)", "Camps (Optional)"]
                     )
-                elif select2 == "Medical Examination":
-                    selected = option_menu(
-                        "Medical Examination", 
-                        ["Pre Employment", "Pre Employment(FH)","Pre Placement", "Annual / Periodic", "Periodic (FH)","Camps (Mandatory)", "Camps (Optional)"],
-                        menu_icon='building-fill-add',
-                        icons=['a','a','a','a','a','a','a','a','a','a','a',],
-                        default_index=0
+
+            elif select2 == "Medical Examination":
+                with r0c2:
+                    # Selectbox for Medical Examination for Employee
+                    selected = st.selectbox(
+                        "Medical Examination (Employee)",
+                        options=["Pre Employment", "Pre Employment(FH)", "Pre Placement", "Annual / Periodic", "Periodic (FH)", "Camps (Mandatory)", "Camps (Optional)"]
                     )
-                elif select2 == "Periodic Work Fitness":
-                    selected = option_menu(
+
+            elif select2 == "Periodic Work Fitness":
+                with r0c2:
+                    # Selectbox for Periodic Work Fitness
+                    selected = st.selectbox(
                         "Periodic Work Fitness",
-                        ["Special Work Fitness","Special Work Fitness (Renewal)"],
-                        menu_icon='building-fill-add',
-                        icons=['a','a',]
+                        options=["Special Work Fitness", "Special Work Fitness (Renewal)"]
                     )
-                elif select2=="Fitness After Medical Leave":
-                    selected = option_menu(
+
+            elif select2 == "Fitness After Medical Leave":
+                with r0c2:
+                    # Selectbox for Fitness After Medical Leave
+                    selected = st.selectbox(
                         "Fitness After Medical Leave",
-                        ["Fitness After Medical Leave"],
-                        menu_icon='building-fill-add',
-                        icons=['a',]
+                        options=["Fitness After Medical Leave"]
                     )
-                elif select2=="Mock Drill" or select2=="BP Sugar Check":
-                    selected = option_menu(
+
+            elif select2 == "Mock Drill" or select2 == "BP Sugar Check":
+                with r0c2:
+                    # Selectbox for Mock Drill or BP Sugar Check
+                    selected = st.selectbox(
                         select2,
-                        [select2],
-                        menu_icon='building-fill-add',
-                        icons=['a',]
+                        options=[select2]
                     )
-            
-            if select!="Visitor" and select1 == "Unhealthy":
-                select2 = option_menu(
-                "Unhealthy", 
-                ["Out Patient"], 
-                orientation="vertical",
-                icons=['a']
+
+        # If select is not Visitor and health status is Unhealthy
+        if select != "Visitor" and select1 == "Unhealthy":
+            with r0c1:
+                # Selectbox for Unhealthy options
+                select2 = st.selectbox(
+                    "Unhealthy Options", 
+                    options=["Out Patient"]
                 )
-                if select2=="Out Patient":
-                    selected = option_menu(
+
+            if select2 == "Out Patient":
+                with r0c2:
+                    # Selectbox for Out Patient options
+                    selected = st.selectbox(
                         "Out Patient",
-                        ["Illness", "Over counter Illness", "Injury", "Over counter Injury", "Follow up Visits", "BP Sugar (Abnormal)","Injury Outside the premises","Over counter Injury Outside the premises"],
-                        menu_icon='building-fill-add',
-                        icons=['a','a','a','a','a','a','a','a','a','a','a',],
-                        default_index=0,
+                        options=["Illness", "Over counter Illness", "Injury", "Over counter Injury", "Follow up Visits", "BP Sugar (Abnormal)", "Injury Outside the premises", "Over counter Injury Outside the premises"]
                     )
+
+    with st.container(border=1): #initially height was 700
+        if select=="Visitor" and select1=="Healthy":
+            Form(None,select,select1,connection,cursor)
+        elif select=="Visitor" and select1=="Unhealthy":
+            Form(None,select,select1,connection,cursor)
+        elif selected == "Pre Employment":
+            Form("Pre Employment",select,select1,connection,cursor)
         
-        with n1c2:
-            with st.container(border=1, height=900): #initially height was 700
-                if select=="Visitor" and select1=="Healthy":
-                    Form(None,select,select1,connection,cursor)
-                elif select=="Visitor" and select1=="Unhealthy":
-                    Form(None,select,select1,connection,cursor)
-                elif selected == "Pre Employment":
-                    Form("Pre Employment",select,select1,connection,cursor)
-                
-                elif selected == "Pre Employment(FH)":
-                    Form("Pre Employment(FH)",select,select1,connection,cursor)
-                
-                elif selected == "Pre Employment(CC)":
-                    Form("Pre Employment(CC)",select,select1,connection,cursor)
-                
-                elif selected == "Pre Placement":
-                    Form("Pre Placement",select,select1,connection,cursor)
-                
-                elif selected == "Annual / Periodic":
-                    Form("Annual / Periodic",select,select1,connection,cursor)
-                
-                elif selected == "Periodic (FH)":
-                    Form("Periodic (FH)",select,select1,connection,cursor)
-                
-                elif selected == "Camps (Mandatory)":
-                    Form("Camps (Mandatory)",select,select1,connection,cursor)
-                
-                elif selected == "Camps (Optional)":
-                    Form("Camps (Optional)",select,select1,connection,cursor)
+        elif selected == "Pre Employment(FH)":
+            Form("Pre Employment(FH)",select,select1,connection,cursor)
+        
+        elif selected == "Pre Employment(CC)":
+            Form("Pre Employment(CC)",select,select1,connection,cursor)
+        
+        elif selected == "Pre Placement":
+            Form("Pre Placement",select,select1,connection,cursor)
+        
+        elif selected == "Annual / Periodic":
+            Form("Annual / Periodic",select,select1,connection,cursor)
+        
+        elif selected == "Periodic (FH)":
+            Form("Periodic (FH)",select,select1,connection,cursor)
+        
+        elif selected == "Camps (Mandatory)":
+            Form("Camps (Mandatory)",select,select1,connection,cursor)
+        
+        elif selected == "Camps (Optional)":
+            Form("Camps (Optional)",select,select1,connection,cursor)
 
 
 
-                elif selected=="Special Work Fitness":
-                    Form("Special Work Fitness",select,select1,connection,cursor)
+        elif selected=="Special Work Fitness":
+            Form("Special Work Fitness",select,select1,connection,cursor)
 
-                elif selected=="Special Work Fitness (Renewal)":
-                    Form("Special Work Fitness (Renewal)",select,select1,connection,cursor)
+        elif selected=="Special Work Fitness (Renewal)":
+            Form("Special Work Fitness (Renewal)",select,select1,connection,cursor)
 
-                elif selected=="Fitness After Medical Leave":
-                    Form("Fitness After Medical Leave",select,select1,connection,cursor)
-                elif selected=="Mock Drill" or selected=="BP Sugar Check":
-                    Form(selected,select,select1,connection,cursor)
+        elif selected=="Fitness After Medical Leave":
+            Form("Fitness After Medical Leave",select,select1,connection,cursor)
+        elif selected=="Mock Drill" or selected=="BP Sugar Check":
+            Form(selected,select,select1,connection,cursor)
 
 
-                    
-                
-                elif selected == "Illness":
-                    Form("Illness",select,select1,connection,cursor)
-                
-                elif selected == "Over counter Illness":
-                    Form("Over counter Illness",select,select1,connection,cursor)                    
-                
-                elif selected == "Injury":
-                    Form("Injury",select,select1,connection,cursor)
-                
-                elif selected == "Over counter Injury":
-                    Form("Over counter Injury",select,select1,connection,cursor)
-                
-                elif selected == "Follow up Visits":
-                    Form("Follow up Visits",select,select1,connection,cursor)
-                
-                elif selected == "BP Sugar (Abnormal)":
-                    Form("BP Sugar (Abnormal)",select,select1,connection,cursor)
-                
-                elif selected == "Injury Outside the premises":
-                    Form("Injury Outside the premises",select,select1,connection,cursor)
+            
+        
+        elif selected == "Illness":
+            Form("Illness",select,select1,connection,cursor)
+        
+        elif selected == "Over counter Illness":
+            Form("Over counter Illness",select,select1,connection,cursor)                    
+        
+        elif selected == "Injury":
+            Form("Injury",select,select1,connection,cursor)
+        
+        elif selected == "Over counter Injury":
+            Form("Over counter Injury",select,select1,connection,cursor)
+        
+        elif selected == "Follow up Visits":
+            Form("Follow up Visits",select,select1,connection,cursor)
+        
+        elif selected == "BP Sugar (Abnormal)":
+            Form("BP Sugar (Abnormal)",select,select1,connection,cursor)
+        
+        elif selected == "Injury Outside the premises":
+            Form("Injury Outside the premises",select,select1,connection,cursor)
 
-                elif selected == "Over counter Injury Outside the premises":
-                    Form("Over counter Injury Outside the premises",select,select1,connection,cursor)
-                else:
-                    st.write("Select a visit reason", selected)
+        elif selected == "Over counter Injury Outside the premises":
+            Form("Over counter Injury Outside the premises",select,select1,connection,cursor)
+        else:
+            st.write("Select a visit reason", selected)
