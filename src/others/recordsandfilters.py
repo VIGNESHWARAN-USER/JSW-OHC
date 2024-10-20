@@ -1724,152 +1724,165 @@ def Records_Filters(cursor):
                                 }
 
                     # Retrieve and filter the data
-                    if "filter_data" in st.session_state:
-                        fdata = st.session_state.filter_data  # Access the dictionary directly
-                        filter_data = st.session_state.filtered_data
-                        # Apply filters based on the form inputs
-                        if fdata["Department"]:
-                            filter_data = filter_data.loc[filter_data["department"].str.contains(fdata["Department"], case=False)]
-                        if fdata["Designation"]:
-                            filter_data = filter_data.loc[filter_data["designation"].str.contains(fdata["Designation"], case=False)]
-                        if fdata["Gender"] != "All":
-                            filter_data = filter_data.loc[filter_data["gender"] == fdata["Gender"]]
-                        if fdata["Blood Group"] and fdata["Blood Group"] != ["All"]:
-                            filter_data = filter_data.loc[filter_data["blood_group"].isin(fdata["Blood Group"])]
-                        if fdata["Name of Contractor"]:
-                            filter_data = filter_data.loc[filter_data["contractor"].str.contains(fdata["Name of Contractor"], case=False)]
-                        if fdata["Age"] != 0:
-                            filter_data = filter_data.loc[filter_data["age"] == fdata["Age"]]
-                        # Display the filtered data
-                        st.write(f"**Filtered Count: {len(filter_data)}**")
-                        st.dataframe(filter_data)
-                    
-                if form_name == "Vitals":
-                    with st.form(key="Vitals"):
-                        st.write("Vitals")
-                        r1c1, r1c2, r1c3, r1c4 = st.columns([2, 2, 2, 2])
-                        with r1c1:
-                            height = st.number_input("Height")
-                        with r1c2:
-                            weight = st.number_input("Weight")
-                        with r1c3:
-                            systolic = st.number_input("Systolic")
-                        with r1c4:
-                            diastolic = st.number_input("Diastolic")
+                   # Retrieve and filter the data
+            if "filter_data" in st.session_state:
+                fdata = st.session_state.filter_data  # Access the dictionary directly
+                filter_data = st.session_state.filtered_data
+                
+                # Check if the form_name is 'Personal & Emp Details' before applying filters
+                if form_name == "Personal & Emp Details":
+                    # Apply filters based on the form inputs
+                    if fdata.get("Department"):  # Use .get() to safely access the value
+                        filter_data = filter_data.loc[filter_data["department"].str.contains(fdata["Department"], case=False)]
+                    if fdata.get("Designation"):
+                        filter_data = filter_data.loc[filter_data["designation"].str.contains(fdata["Designation"], case=False)]
+                    if fdata.get("Gender") and fdata["Gender"] != "All":
+                        filter_data = filter_data.loc[filter_data["gender"] == fdata["Gender"]]
+                    if fdata.get("Blood Group") and fdata["Blood Group"] != ["All"]:
+                        filter_data = filter_data.loc[filter_data["blood_group"].isin(fdata["Blood Group"])]
+                    if fdata.get("Name of Contractor"):
+                        filter_data = filter_data.loc[filter_data["contractor"].str.contains(fdata["Name of Contractor"], case=False)]
+                    if fdata.get("Age") and fdata["Age"] != 0:
+                        filter_data = filter_data.loc[filter_data["age"] == fdata["Age"]]
 
-                        r2c1, r2c2, r2c3, r2c4 = st.columns([2, 2, 2, 2], vertical_alignment="bottom")
-                        with r2c1:
-                            pulse = st.number_input("Pulse")
-                        with r2c2:
-                            temp = st.number_input("Temperature")
-                        with r2c3:
-                            resp = st.number_input("Respiration")
-                        with r2c4:
-                            bmi = st.multiselect("BMI", ["Thin", "Under Weight", "Normal", "Over Weight", "Obese"])
-                        
-                        if st.form_submit_button("Submit"):
-                            st.session_state.filter_data = {
-                                "Height": str(height),
-                                "Weight": str(weight),
-                                "Systolic": str(systolic),
-                                "Diastolic": str(diastolic),
-                                "Pulse": str(pulse),
-                                "Temperature": str(temp),
-                                "Respiration": str(resp),
-                                "BMI": bmi
-                            }
+                    # Display the filtered data and count only for 'Personal & Emp Details'
+                    st.write(f"**Filtered Count: {len(filter_data)}**")
+                    st.dataframe(filter_data)
+        if form_name == "Vitals":
+            with st.form(key="Vitals"):
+                st.write("Vitals")
+                r1c1, r1c2, r1c3, r1c4 = st.columns([2, 2, 2, 2])
+                with r1c1:
+                    height = st.number_input("Height")
+                with r1c2:
+                    weight = st.number_input("Weight")
+                with r1c3:
+                    systolic = st.number_input("Systolic")
+                with r1c4:
+                    diastolic = st.number_input("Diastolic")
 
-                    # Retrieve and filter the data
-                    if "filter_data" in st.session_state:
-                        cursor.execute(f"SELECT * FROM vitals")
-                        # Fetch all rows from the query
-                        vitals = cursor.fetchall()
-                        vitalcol = cursor.description
-                        vitaldf = pd.DataFrame(vitals, columns=[desc[0] for desc in vitalcol])
-                        filtered_data = vitaldf
-                        fdata = st.session_state.filter_data  # Access the dictionary directly
-                        filter_data = filtered_data
+                r2c1, r2c2, r2c3, r2c4 = st.columns([2, 2, 2, 2], vertical_alignment="bottom")
+                with r2c1:
+                    pulse = st.number_input("Pulse")
+                with r2c2:
+                    temp = st.number_input("Temperature")
+                with r2c3:
+                    resp = st.number_input("Respiration")
+                with r2c4:
+                    bmi = st.multiselect("BMI", ["Thin", "Under Weight", "Normal", "Over Weight", "Obese"])
 
-                        # Apply filters using startswith for tolerance with floats and integers
-                        if fdata["Height"] != "0.0":
-                            filter_data = filter_data.loc[filter_data["Height"].astype(str).str.startswith(fdata["Height"].split('.')[0])]
-                        if fdata["Weight"] != "0.0":
-                            filter_data = filter_data.loc[filter_data["Weight"].astype(str).str.startswith(fdata["Weight"].split('.')[0])]
-                        if fdata["Systolic"] != "0.0":
-                            filter_data = filter_data.loc[filter_data["Systolic"].astype(str).str.startswith(fdata["Systolic"].split('.')[0])]
-                        if fdata["Diastolic"] != "0.0":
-                            filter_data = filter_data.loc[filter_data["Diastolic"].astype(str).str.startswith(fdata["Diastolic"].split('.')[0])]
-                        if fdata["Pulse"] != "0.0":
-                            filter_data = filter_data.loc[filter_data["PulseRate"].astype(str).str.startswith(fdata["Pulse"].split('.')[0])]
-                        if fdata["Temperature"] != "0.0":
-                            filter_data = filter_data.loc[filter_data["Temperature"].astype(str).str.startswith(fdata["Temperature"].split('.')[0])]
-                        if fdata["Respiration"] != "0.0":
-                            filter_data = filter_data.loc[filter_data["RespiratoryRate"].astype(str).str.startswith(fdata["Respiration"].split('.')[0])]
-                        if fdata["BMI"]:
-                            filter_data = filter_data.loc[filter_data["BMI"] == fdata["BMI"]]
+                if st.form_submit_button("Submit"):
+                    st.session_state.vitals_filter_data = {
+                        "Height": str(height),
+                        "Weight": str(weight),
+                        "Systolic": str(systolic),
+                        "Diastolic": str(diastolic),
+                        "Pulse": str(pulse),
+                        "Temperature": str(temp),
+                        "Respiration": str(resp),
+                        "BMI": bmi
+                    }
 
-                        # Display the filtered data
-                        st.write(f"**Filtered Count: {len(filter_data)}**")
-                        st.dataframe(filter_data)
-                    
-                if form_name == "Fitness":
-                    cursor.execute("Select * from fitness")
-                    hematology_res = cursor.fetchall()
-                    hemcol = cursor.description
-                    hemdf = pd.DataFrame(hematology_res, columns=[desc[0] for desc in hemcol])
-                    filteredhem = hemdf
-                    # Create a filter for the "status" column
-                    r1c1, r1c2 = st.columns(2)
-                    with r1c1:
-                        r2c1, r2c2 = st.columns([4,6])
-                        with r2c1:
-                            st.write("Select Multiple:")
-                        with r2c2:
-                            selected_status = st.multiselect(
-                                "select", 
-                                ["Fit to Join", "Unfit", "Conditional Fit"], 
-                                label_visibility='collapsed'
-                            )
-                    with r1c2:
-                        if st.button("Submit"):
-                            # Apply filter if any status is selected
-                            if selected_status:
-                                filteredhem = hemdf[hemdf['Status'].isin(selected_status)]
-                            else:
-                                filteredhem = hemdf  # No filter applied if nothing is selected
+                    # Retrieve and filter the data only when the form is submitted
+                    cursor.execute(f"SELECT * FROM vitals")
+                    vitals = cursor.fetchall()
+                    vitalcol = cursor.description
+                    vitaldf = pd.DataFrame(vitals, columns=[desc[0] for desc in vitalcol])
 
-                    # Display the filtered dataframe
-                    st.dataframe(filteredhem)
+                    # Get the filter data from session state
+                    fdata = st.session_state.vitals_filter_data
+
+                    # Filter the data based on input
+                    filtered_data = vitaldf
+
+                    if fdata.get("Height") != "0.0":
+                        filtered_data = filtered_data.loc[filtered_data["Height"].astype(str).str.startswith(fdata["Height"].split('.')[0])]
+
+                    if fdata.get("Weight") != "0.0":
+                        filtered_data = filtered_data.loc[filtered_data["Weight"].astype(str).str.startswith(fdata["Weight"].split('.')[0])]
+
+                    if fdata.get("Systolic") != "0.0":
+                        filtered_data = filtered_data.loc[filtered_data["Systolic"].astype(str).str.startswith(fdata["Systolic"].split('.')[0])]
+
+                    if fdata.get("Diastolic") != "0.0":
+                        filtered_data = filtered_data.loc[filtered_data["Diastolic"].astype(str).str.startswith(fdata["Diastolic"].split('.')[0])]
+
+                    if fdata.get("Pulse") != "0.0":
+                        filtered_data = filtered_data.loc[filtered_data["PulseRate"].astype(str).str.startswith(fdata["Pulse"].split('.')[0])]
+
+                    if fdata.get("Temperature") != "0.0":
+                        filtered_data = filtered_data.loc[filtered_data["Temperature"].astype(str).str.startswith(fdata["Temperature"].split('.')[0])]
+
+                    if fdata.get("Respiration") != "0.0":
+                        filtered_data = filtered_data.loc[filtered_data["RespiratoryRate"].astype(str).str.startswith(fdata["Respiration"].split('.')[0])]
+
+                    if fdata.get("BMI"):
+                        filtered_data = filtered_data.loc[filtered_data["BMI"].isin(fdata["BMI"])]
+
+                    # Display the filtered data only in the Vitals section
+                    st.write(f"**Filtered Count (Vitals): {len(filtered_data)}**")
+                    st.dataframe(filtered_data)
+
+
+
+        if form_name == "Fitness":
+            cursor.execute("Select * from fitness")
+            hematology_res = cursor.fetchall()
+            hemcol = cursor.description
+            hemdf = pd.DataFrame(hematology_res, columns=[desc[0] for desc in hemcol])
+            filteredhem = hemdf
+            # Create a filter for the "status" column
+            r1c1, r1c2 = st.columns(2)
+            with r1c1:
+                r2c1, r2c2 = st.columns([4,6])
+                with r2c1:
+                    st.write("Select Multiple:")
+                with r2c2:
+                    selected_status = st.multiselect(
+                        "select", 
+                        ["Fit to Join", "Unfit", "Conditional Fit"], 
+                        label_visibility='collapsed'
+                    )
+            with r1c2:
+                if st.button("Submit"):
+                    # Apply filter if any status is selected
+                    if selected_status:
+                        filteredhem = hemdf[hemdf['Status'].isin(selected_status)]
+                    else:
+                        filteredhem = hemdf  # No filter applied if nothing is selected
+
+            # Display the filtered dataframe
+            st.dataframe(filteredhem)
 
                 
-                if form_name == "Medical History": 
-                    st.warning("Empty Dataset")
+    if form_name == "Medical History": 
+        st.warning("Empty Dataset")
 
-                if form_name == 'Select Purpose':
-                    with st.form(key = "purpose"):
-                        col1, col2 = st.columns(2)
-                        with col1:
-                            pov = st.text_input("Purpose of visit:")
-                            hosName = st.text_input("Hospital Name:")
-                            SelFor = st.text_input("Select Forms:")
-                        with col2:
-                            opt = option_menu(None,options=["Employee", "Contractor", "Visitor"], orientation="horizontal", icons = ['a', 'a', 'a'])
-                            rc2, rc3 = st.columns(2)
-                            with rc2:
-                                datefrom = st.date_input("From")
-                                batch = st.text_input("Batch")
-                            with rc3:
-                                dateto = st.date_input("To:")
-                                year = st.text_input("Year")
-                        if st.form_submit_button("Submit",):
-                                st.session_state.filter_data = {
-                                    "Purpose":pov,
-                                    "hosName":hosName,
-                                    "Forms":SelFor,
-                                    "Type":opt,
-                                    "from":datefrom,
-                                    "to":dateto,
-                                    "Year":year
-                                }
-                
+    if form_name == 'Select Purpose':
+        with st.form(key = "purpose"):
+            col1, col2 = st.columns(2)
+            with col1:
+                pov = st.text_input("Purpose of visit:")
+                hosName = st.text_input("Hospital Name:")
+                SelFor = st.text_input("Select Forms:")
+            with col2:
+                opt = option_menu(None,options=["Employee", "Contractor", "Visitor"], orientation="horizontal", icons = ['a', 'a', 'a'])
+                rc2, rc3 = st.columns(2)
+                with rc2:
+                    datefrom = st.date_input("From")
+                    batch = st.text_input("Batch")
+                with rc3:
+                    dateto = st.date_input("To:")
+                    year = st.text_input("Year")
+            if st.form_submit_button("Submit",):
+                    st.session_state.filter_data = {
+                        "Purpose":pov,
+                        "hosName":hosName,
+                        "Forms":SelFor,
+                        "Type":opt,
+                        "from":datefrom,
+                        "to":dateto,
+                        "Year":year
+                    }
+
         

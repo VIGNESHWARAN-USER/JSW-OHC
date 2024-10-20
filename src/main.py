@@ -15,13 +15,18 @@ from others.eventsandcamps import Events_Camps
 from others.recordsandfilters import Records_Filters
 from others.mockdrill import Mock_Drill
 from others.appointment import Appointment
+from others.reviewpeople import Review_People
 from others.admin.pages.dashboard import dashboard
 from others.admin.pages.addDoctor import addDoctor
 from others.admin.pages.addNurse import addNurse
 from others.admin.pages.addReferenceRange import addReferenceRange
 from streamlit_option_menu import option_menu
 from others.admin.pages.addEmp import addEmp
-
+from others.addStock import addStock
+from others.consumption import consumption
+from others.currentStock import currStock
+from others.Expiry import expiry
+from others.minStock import minStock
 
 icon = Image.open("./src/assets/favicon.png")
 
@@ -46,13 +51,16 @@ if "connection" not in st.session_state:
         user="avnadmin",
         password="AVNS_uVkEh0awpxi9I4bEOCq",
         database="defaultdb",
-        port=19129
+        port=19129,
+        connection_timeout=600
     )
 
 if st.session_state.connection.is_connected():
-    pass
+    cursor = st.session_state.connection.cursor()
 else:
-    print("Connection failed")
+    st.session_state.connection.reconnect()
+    cursor = st.session_state.connection.cursor()
+
 
 if "accessLevel" not in st.session_state:
     st.session_state.accessLevel = None
@@ -155,8 +163,8 @@ if __name__ == "__main__":
         if st.session_state.accessLevel == "doctor":
             with st.sidebar:
                 st.image("./src/assets/logo.png")
-                selected = option_menu(None, ['Search',"Dashboard", 'New Visit', 'Events & Camps', 'Records & Filters','Mock Drills', 'Appointments'], 
-                    icons=['search', 'house','gear', 'calendar', 'filter', 'shield', 'calendar-check'],
+                selected = option_menu(None, ['Search',"Dashboard", 'New Visit', 'Events & Camps', 'Records & Filters','Mock Drills', 'Appointments','Review People'], 
+                    icons=['search', 'house','gear', 'calendar', 'filter', 'shield', 'calendar-check','person-vcard'],
                     menu_icon="building-fill-add", 
                     default_index=1)
                 
@@ -190,6 +198,10 @@ if __name__ == "__main__":
             
             if selected == "Appointments":
                 Appointment(st.session_state.connection, st.session_state.accessLevel)
+            
+            if selected == "Review People":
+                Review_People(st.session_state.connection, st.session_state.accessLevel)
+
         
         if st.session_state.accessLevel == "nurse":
             
@@ -231,3 +243,34 @@ if __name__ == "__main__":
             if selected == "Appointments":
                 Appointment(st.session_state.connection, st.session_state.accessLevel)
 
+            
+        if st.session_state.accessLevel == "pharmacy":
+            with st.sidebar:
+                st.image("./src/assets/logo.png")
+                selected = option_menu(
+                    None,
+                    options=['Add Stock', 'Consumption', 'Current Stock', 'Expiry', 'Minimum Stock'],
+                    icons=['plus-square', 'cart', 'box', 'clock', 'exclamation-triangle'],  # Updated icons
+                    menu_icon="box-seam",
+                    default_index=0
+                )
+                st.divider()
+                st.header(f"Login as {st.session_state.accessLevel.capitalize()}")
+                st.divider()
+
+                if st.button("Logout"):
+                    st.session_state.login = False
+                    st.write("Logout Success")
+                    st.rerun()
+
+            # Define functionality for each pharmacy operation
+            if selected == "Add Stock":
+                addStock(st.session_state.connection)
+            elif selected == "Consumption":
+                consumption(st.session_state.connection)
+            elif selected == "Current Stock":
+                currStock(st.session_state.connection)
+            elif selected == "Expiry":
+                expiry(st.session_state.connection)
+            elif selected == "Minimum Stock":
+                minStock(st.session_state.connection)

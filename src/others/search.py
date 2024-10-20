@@ -80,12 +80,11 @@ def Search(cursor):
         st.session_state.search = False
     if "searchinp" not in st.session_state:
         st.session_state.searchinp = ""
-
     if "data" not in st.session_state:
         st.session_state.data = {}
     if "open_modal" not in st.session_state:
         st.session_state.open_modal = False
-
+    
     if st.session_state.open_modal == False:
         st.title("Search")
         search1, search2,search3 = st.columns([7,1,3])
@@ -211,6 +210,74 @@ def Search(cursor):
                         st.text_input(label = "age", label_visibility='collapsed', value=st.session_state.usr_prof.get('personal_mail', 'N/A'))
                         st.text_input(label = "dob", label_visibility='collapsed', value=st.session_state.usr_prof.get('identification_mark', 'N/A'))
                         
+            
+            
+            if menu == "Medical/Surgical History":
+                # Personal History Section (Smoker, Alcoholic, Diet)
+                st.subheader("Personal History")
+                col1, col2 = st.columns(2)
+                
+                with col1:
+                    # Fetching and displaying Smoker status
+                    smoker = st.radio("Smoker", options=["Yes", "No"], index=0 if st.session_state.usr_prof.get('personal_history', {}).get('smoker', 'No') == "Yes" else 1)
+                    
+                    # Fetching and displaying Alcoholic status
+                    alcoholic = st.radio("Alcoholic", options=["Yes", "No"], index=0 if st.session_state.usr_prof.get('personal_history', {}).get('alcoholic', 'No') == "Yes" else 1)
+                
+                with col2:
+                    # Fetching and displaying Diet preference
+                    diet = st.radio("Diet", options=["Veg", "Non-Veg", "Mixed"], index=["Veg", "Non-Veg", "Mixed"].index(st.session_state.usr_prof.get('personal_history', {}).get('diet', 'Mixed')))
+
+                # Medical History Section (HTN, DM, Epileptic, Thyroid, Rheumatoid, Others)
+                st.subheader("Medical History")
+                col1, col2 = st.columns(2)
+
+                with col1:
+                    # Fetching and displaying checkboxes for medical conditions
+                    htn = st.checkbox("HTN (Hypertension)", value=st.session_state.usr_prof.get('usr_prof', {}).get('htn', False))
+                    dm = st.checkbox("DM (Diabetes)", value=st.session_state.usr_prof.get('usr_prof', {}).get('dm', False))
+                    epileptic = st.checkbox("Epileptic", value=st.session_state.usr_prof.get('usr_prof', {}).get('epileptic', False))
+
+                with col2:
+                    thyroid = st.checkbox("Thyroid", value=st.session_state.usr_prof.get('usr_prof', {}).get('thyroid', False))
+                    rheumatoid = st.checkbox("Rheumatoid", value=st.session_state.usr_prof.get('usr_prof', {}).get('rheumatoid', False))
+                    others = st.text_area("Other Medical Conditions (Comments)", value=st.session_state.usr_prof.get('usr_prof', {}).get('others', ''))
+
+                # Surgical History Section (Not-null options)
+                st.subheader("Surgical History")
+                surgical_history = st.text_input("Surgical History Details (Not null)", placeholder="Enter surgical history...", value=st.session_state.usr_prof.get('surgical_history', ''))
+
+                # Allergy History Section (Drug, Food, Others)
+                st.subheader("Allergy History")
+                col1, col2 = st.columns(2)
+
+                with col1:
+                    drug_allergy = st.text_area("Drug Allergy (Comments)", value=st.session_state.usr_prof.get('allergy_history', {}).get('drug', ''))
+                    food_allergy = st.text_area("Food Allergy (Comments)", value=st.session_state.usr_prof.get('allergy_history', {}).get('food', ''))
+
+                with col2:
+                    other_allergy = st.text_area("Other Allergies (Comments)", value=st.session_state.usr_prof.get('allergy_history', {}).get('others', ''))
+
+                # Family History Section (Father, Mother)
+                st.subheader("Family History")
+                father_col, mother_col = st.columns(2)
+
+                with father_col:
+                    st.write("**Father's Medical History**")
+                    father_smoker = st.radio("Father Smoker", options=["Yes", "No"], index=0 if st.session_state.usr_prof.get('family_history', {}).get('father', {}).get('smoker', 'No') == "Yes" else 1)
+                    father_htn = st.checkbox("Father - HTN", value=st.session_state.usr_prof.get('family_history', {}).get('father', {}).get('htn', False))
+                    father_dm = st.checkbox("Father - DM", value=st.session_state.usr_prof.get('family_history', {}).get('father', {}).get('dm', False))
+
+                with mother_col:
+                    st.write("**Mother's Medical History**")
+                    mother_smoker = st.radio("Mother Smoker", options=["Yes", "No"], index=0 if st.session_state.usr_prof.get('family_history', {}).get('mother', {}).get('smoker', 'No') == "Yes" else 1)
+                    mother_htn = st.checkbox("Mother - HTN", value=st.session_state.usr_prof.get('family_history', {}).get('mother', {}).get('htn', False))
+                    mother_dm = st.checkbox("Mother - DM", value=st.session_state.usr_prof.get('family_history', {}).get('mother', {}).get('dm', False))
+
+
+
+            
+            
             if menu == "Employment Details":
                 r0c1,r0c2 = st.columns([5,6])
                 with r0c1:
