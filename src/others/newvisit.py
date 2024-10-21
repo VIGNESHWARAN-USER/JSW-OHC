@@ -151,7 +151,7 @@ def Form(visitreason,select, select1, connection, cursor):
     with rc1:
         st.header("Get User")
     with rc2:
-        st.session_state.form_data["Employee ID"] = st.text_input("Employee ID", value=st.session_state.form_data.get("Employee ID", ""))
+        st.session_state.form_data['Employee ID'] = st.text_input('Employee ID', value=st.session_state.form_data.get('Employee ID', ""))
     with rc3: 
         if st.button("Get Info", type="primary"):  
             cursor.execute(f"SELECT * FROM Employee_det WHERE emp_no = '{st.session_state.form_data['Employee ID']}'")
@@ -170,7 +170,7 @@ def Form(visitreason,select, select1, connection, cursor):
                 st.session_state.form_data['Vaccination Status'] = data[9]
             else:
                 st.warning("No basic Data Found")
-            cursor.execute(f"SELECT * FROM vitals WHERE emp_no = {st.session_state.form_data["Employee ID"]};")
+            cursor.execute(f"SELECT * FROM vitals WHERE emp_no = {st.session_state.form_data['Employee ID']};")
             df = cursor.fetchall()
             if  len(df)!=0:
                 st.session_state.form_data["Systolic"] = df[-1][3]
@@ -184,7 +184,7 @@ def Form(visitreason,select, select1, connection, cursor):
                 st.session_state.form_data["Height"] = df[-1][9]
             else:
                 st.warning("No Vitals found")
-            cursor.execute(f"SELECT * FROM medicalpersonalhist WHERE emp_no = {st.session_state.form_data["Employee ID"]};")
+            cursor.execute(f"SELECT * FROM medicalpersonalhist WHERE emp_no = {st.session_state.form_data['Employee ID']};")
             df = cursor.fetchall()
             if len(df)!=0: 
                 st.session_state.form_data["Personal History"] = df[0][3]
@@ -194,7 +194,7 @@ def Form(visitreason,select, select1, connection, cursor):
                 st.session_state.form_data["Mother"] = df[-1][7]
             else:
                 st.warning("No Medical History found")
-            cursor.execute(f"SELECT * FROM hematology_result WHERE emp_no = {st.session_state.form_data["Employee ID"]};")
+            cursor.execute(f"SELECT * FROM hematology_result WHERE emp_no = {st.session_state.form_data['Employee ID']};")
             df = cursor.fetchall()
             if len(df)!=0: 
                 st.session_state.form_data["Hemoglobin"] = df[-1][3]
@@ -217,7 +217,7 @@ def Form(visitreason,select, select1, connection, cursor):
                 st.session_state.form_data["Preipheral Blood Smear - Others"] = df[-1][50]
             else:
                 st.warning("No Hematology Result found")
-            cursor.execute(f"SELECT * FROM routine_sugartest WHERE emp_no = {st.session_state.form_data["Employee ID"]};")
+            cursor.execute(f"SELECT * FROM routine_sugartest WHERE emp_no = {st.session_state.form_data['Employee ID']};")
             df = cursor.fetchall()
             if len(df)!=0: 
                 st.session_state.form_data["Glucose (F)"] = df[-1][3]
@@ -225,10 +225,10 @@ def Form(visitreason,select, select1, connection, cursor):
                 st.session_state.form_data["Random Blood sugar"] = df[-1][9]
                 st.session_state.form_data["Estimated Average Glucose"] = df[-1][12]
                 st.session_state.form_data["HbA1c"] = df[-1][15]
-                st.session_state.form_data["Employee ID"] = df[-1][2]
+                st.session_state.form_data['Employee ID'] = df[-1][2]
             else:
                 st.warning("No Routine Sugar Test Result found")
-            cursor.execute(f"SELECT * FROM rft_result WHERE emp_no = {st.session_state.form_data["Employee ID"]};")
+            cursor.execute(f"SELECT * FROM rft_result WHERE emp_no = {st.session_state.form_data['Employee ID']};")
             df = cursor.fetchall()
             if len(df)!=0: 
                 st.session_state.form_data["Urea"] = df[-1][3]
@@ -242,7 +242,7 @@ def Form(visitreason,select, select1, connection, cursor):
                 st.session_state.form_data["Chloride"] = df[-1][27]
             else:
                 st.warning("No Renal Function Test Result found")
-            cursor.execute(f"SELECT * FROM lipid_profile WHERE emp_no = {st.session_state.form_data["Employee ID"]};")
+            cursor.execute(f"SELECT * FROM lipid_profile WHERE emp_no = {st.session_state.form_data['Employee ID']};")
             df = cursor.fetchall()
             if len(df)!=0: 
                 st.session_state.form_data["Total Cholesterol"] = df[-1][3]
@@ -254,7 +254,7 @@ def Form(visitreason,select, select1, connection, cursor):
                 st.session_state.form_data["LDL.CHOL/HDL.CHOL Ratio"] = df[-1][21]
             else:
                 st.warning("No Lipid Profile Test Result found")
-            cursor.execute(f"SELECT * FROM liver_function WHERE emp_no = {st.session_state.form_data["Employee ID"]};")
+            cursor.execute(f"SELECT * FROM liver_function WHERE emp_no = {st.session_state.form_data['Employee ID']};")
             df = cursor.fetchall()
             if len(df)!=0: 
                 st.session_state.form_data["Bilirubin - Total"] = df[-1][3] 
@@ -270,7 +270,7 @@ def Form(visitreason,select, select1, connection, cursor):
                 st.session_state.form_data["Gamma Glutamyl transferase"] = df[-1][33] 
             else:
                 st.warning("No Liver Function Test Result found")
-            cursor.execute(f"SELECT * FROM thyroid_function_test WHERE emp_no = {st.session_state.form_data["Employee ID"]};")
+            cursor.execute(f"SELECT * FROM thyroid_function_test WHERE emp_no = {st.session_state.form_data['Employee ID']};")
             df = cursor.fetchall()
             if len(df)!=0: 
                 st.session_state.form_data["T3- Triiodothyroine"] = df[-1][3]
@@ -278,7 +278,7 @@ def Form(visitreason,select, select1, connection, cursor):
                 st.session_state.form_data["TSH- Thyroid Stimulating Hormone"] = df[-1][7]  
             else:
                 st.warning("No Thyroid Function Test Result found")
-            cursor.execute(f"SELECT * FROM autoimmune_test WHERE emp_no = {st.session_state.form_data["Employee ID"]};")
+            cursor.execute(f"SELECT * FROM autoimmune_test WHERE emp_no = {st.session_state.form_data['Employee ID']};")
             df = cursor.fetchall()
             if len(df)!=0: 
                 st.session_state.form_data["ANA (Antinuclear Antibody)"] = df[-1][3]
@@ -287,7 +287,7 @@ def Form(visitreason,select, select1, connection, cursor):
                 st.session_state.form_data["Anticardiolipin Antibodies (IgG & IgM)"] = df[-1][9] 
             else:
                 st.warning("No Auto Inumme Test Result found")
-            cursor.execute(f"SELECT * FROM coagulation_test WHERE emp_no = {st.session_state.form_data["Employee ID"]};")
+            cursor.execute(f"SELECT * FROM coagulation_test WHERE emp_no = {st.session_state.form_data['Employee ID']};")
             df = cursor.fetchall()
             if len(df)!=0: 
                 st.session_state.form_data["Prothrombin Time (PT)"] = df[-1][3] 
@@ -296,7 +296,7 @@ def Form(visitreason,select, select1, connection, cursor):
                 st.session_state.form_data["Clotting Time (CT)"] = df[-1][12] 
             else:
                 st.warning("No Coagulation Test Result found")
-            cursor.execute(f"SELECT * FROM enzymes_cardio WHERE emp_no = {st.session_state.form_data["Employee ID"]};")
+            cursor.execute(f"SELECT * FROM enzymes_cardio WHERE emp_no = {st.session_state.form_data['Employee ID']};")
             df = cursor.fetchall()
             if len(df)!=0: 
                 
@@ -315,7 +315,7 @@ def Form(visitreason,select, select1, connection, cursor):
                 st.session_state.form_data["TMT"] = df[-1][31] 
                 st.session_state.form_data["TMT-Comments"] = df[-1][32] 
                 st.warning("No Enzymes Cardio Test Result found")
-            cursor.execute(f"SELECT * FROM urine_routine WHERE emp_no =  {st.session_state.form_data["Employee ID"]};")
+            cursor.execute(f"SELECT * FROM urine_routine WHERE emp_no =  {st.session_state.form_data['Employee ID']};")
             df = cursor.fetchall()
             if len(df)!=0: 
                 st.session_state.form_data["Colour"] = df[-1][3] 
@@ -336,7 +336,7 @@ def Form(visitreason,select, select1, connection, cursor):
                 st.session_state.form_data["Epithelial cells"] = df[-1][39]  
             else:
                 st.warning("No Urine Routine Test Result found")
-            cursor.execute(f"SELECT * FROM serology_result WHERE emp_no = {st.session_state.form_data["Employee ID"]};")
+            cursor.execute(f"SELECT * FROM serology_result WHERE emp_no = {st.session_state.form_data['Employee ID']};")
             df = cursor.fetchall()
             if len(df)!=0: 
                 st.session_state.form_data["Screening For HIV I & II"] = df[-1][3] 
@@ -350,7 +350,7 @@ def Form(visitreason,select, select1, connection, cursor):
   
             else:
                 st.warning("No Serology Result found")
-            cursor.execute(f"SELECT * FROM motion WHERE emp_no = {st.session_state.form_data["Employee ID"]};")
+            cursor.execute(f"SELECT * FROM motion WHERE emp_no = {st.session_state.form_data['Employee ID']};")
             df = cursor.fetchall()
             if len(df)!=0: 
                 st.session_state.form_data["Colour (Motion)"] = df[-1][3] 
@@ -364,7 +364,7 @@ def Form(visitreason,select, select1, connection, cursor):
                 st.session_state.form_data["Others"] = df[-1][27] 
             else:
                 st.warning("No Motion Result found")
-            cursor.execute(f"SELECT * FROM routine_culture WHERE emp_no = {st.session_state.form_data["Employee ID"]};")
+            cursor.execute(f"SELECT * FROM routine_culture WHERE emp_no = {st.session_state.form_data['Employee ID']};")
             df = cursor.fetchall()
             if len(df)!=0: 
                 st.session_state.form_data["Urine"] = df[-1][3]
@@ -373,13 +373,13 @@ def Form(visitreason,select, select1, connection, cursor):
                 st.session_state.form_data["Blood"] = df[-1][12] 
             else:
                 st.warning("No Routine Cultre Sensitivity Result found")
-            cursor.execute(f"SELECT * FROM mens_pack WHERE emp_no = {st.session_state.form_data["Employee ID"]};")
+            cursor.execute(f"SELECT * FROM mens_pack WHERE emp_no = {st.session_state.form_data['Employee ID']};")
             df = cursor.fetchall()
             if len(df)!=0: 
                 st.session_state.form_data["PSA (Prostate specific Antigen)"] = df[-1][3]
             else:
                 st.warning("No Men's Pack Result found")
-            cursor.execute(f"SELECT * FROM womens_pack WHERE emp_no = {st.session_state.form_data["Employee ID"]};")
+            cursor.execute(f"SELECT * FROM womens_pack WHERE emp_no = {st.session_state.form_data['Employee ID']};")
             df = cursor.fetchall()
             if len(df)!=0: 
                 st.session_state.form_data["Mammogram"] = df[-1][3] 
@@ -388,7 +388,7 @@ def Form(visitreason,select, select1, connection, cursor):
                 st.session_state.form_data["PAP Smear-Comments"] = df[-1][6] 
             else:
                 st.warning("No Women's Pack Result found")
-            cursor.execute(f"SELECT * FROM occupational_profile WHERE emp_no =  {st.session_state.form_data["Employee ID"]};")
+            cursor.execute(f"SELECT * FROM occupational_profile WHERE emp_no =  {st.session_state.form_data['Employee ID']};")
             df = cursor.fetchall()
             if len(df)!=0:
                 st.session_state.form_data["Audiometry"] = df[-1][3] 
@@ -397,14 +397,14 @@ def Form(visitreason,select, select1, connection, cursor):
                 st.session_state.form_data["PFT-Comments"] = df[-1][6]  
             else:
                 st.warning("No Occupational Profile found")
-            cursor.execute(f"SELECT * FROM other_tests WHERE emp_no = {st.session_state.form_data["Employee ID"]};")
+            cursor.execute(f"SELECT * FROM other_tests WHERE emp_no = {st.session_state.form_data['Employee ID']};")
             df = cursor.fetchall()
             if len(df)!=0: 
                 st.session_state.form_data["Pathology"] = df[-1][3] 
                 st.session_state.form_data["Pathology-Comments"] = df[-1][4]
             else:
                 st.warning("No Other Test Result found")
-            cursor.execute(f"SELECT * FROM ophthalmic_report WHERE emp_no = {st.session_state.form_data["Employee ID"]};")
+            cursor.execute(f"SELECT * FROM ophthalmic_report WHERE emp_no = {st.session_state.form_data['Employee ID']};")
             df = cursor.fetchall()
             if len(df)!=0: 
                 st.session_state.form_data["Vision"] = df[-1][3] 
@@ -413,7 +413,7 @@ def Form(visitreason,select, select1, connection, cursor):
                 st.session_state.form_data["Color Vision-Comments"] = df[-1][6] 
             else:
                 st.warning("No Ophthalmic Test Result found")
-            cursor.execute(f"SELECT * FROM x_ray WHERE emp_no = {st.session_state.form_data["Employee ID"]};")
+            cursor.execute(f"SELECT * FROM x_ray WHERE emp_no = {st.session_state.form_data['Employee ID']};")
             df = cursor.fetchall()
             if len(df)!=0: 
                 
@@ -429,7 +429,7 @@ def Form(visitreason,select, select1, connection, cursor):
                 st.session_state.form_data["X-RAY Abdomen-Comments"] =df[-1][8] 
             else:
                 st.warning("No X-Ray Test Result found")
-            cursor.execute(f"SELECT * FROM usg WHERE emp_no = {st.session_state.form_data["Employee ID"]};")
+            cursor.execute(f"SELECT * FROM usg WHERE emp_no = {st.session_state.form_data['Employee ID']};")
             df = cursor.fetchall()
             if len(df)!=0: 
                 
@@ -444,7 +444,7 @@ def Form(visitreason,select, select1, connection, cursor):
                     
             else:
                 st.warning("No USG Test Result found")
-            cursor.execute(f"SELECT * FROM ct_report WHERE emp_no = {st.session_state.form_data["Employee ID"]};")
+            cursor.execute(f"SELECT * FROM ct_report WHERE emp_no = {st.session_state.form_data['Employee ID']};")
             df = cursor.fetchall()
             if len(df)!=0: 
                 st.session_state.form_data["CT Brain"] = df[-1][3] 
@@ -459,7 +459,7 @@ def Form(visitreason,select, select1, connection, cursor):
                 st.session_state.form_data["CT Pelvis-Comments"] = df[-1][8]  
             else:
                 st.warning("No CT Test Result found")
-            cursor.execute(f"SELECT * FROM mri WHERE emp_no = {st.session_state.form_data["Employee ID"]};")
+            cursor.execute(f"SELECT * FROM mri WHERE emp_no = {st.session_state.form_data['Employee ID']};")
             df = cursor.fetchall()
             if len(df)!=0: 
                 
@@ -475,7 +475,7 @@ def Form(visitreason,select, select1, connection, cursor):
                 st.session_state.form_data["MRI Pelvis-Comments"] = df[-1][8]
             else:
                 st.warning("No MRI Test Result found")
-            # cursor.execute(f"SELECT * FROM fitness WHERE emp_no = {st.session_state.form_data["Employee ID"]};")
+            # cursor.execute(f"SELECT * FROM fitness WHERE emp_no = {st.session_state.form_data['Employee ID']};")
             # df = cursor.fetchall()
             # if len(df)!=0: 
             #     st.session_state.form_data["Fitness"] = df[-1][3]
@@ -513,7 +513,7 @@ def Form(visitreason,select, select1, connection, cursor):
                 
         with r2c3:
             if st.button("Add Data", type="primary"):
-                emp_id = st.session_state.form_data["Employee ID"]
+                emp_id = st.session_state.form_data['Employee ID']
                 sql = """
                 INSERT INTO basicdetails (
                     emp_no, PatientName, PatientAge, Gender,
@@ -664,7 +664,7 @@ def Form(visitreason,select, select1, connection, cursor):
         with r3c3:
             if st.button("Add Data", type="primary"):
                 try:
-                    emp_id = st.session_state.form_data["Employee ID"]
+                    emp_id = st.session_state.form_data['Employee ID']
                     if not emp_id:
                         st.error("Employee ID is missing!")
                         return
@@ -754,7 +754,7 @@ def Form(visitreason,select, select1, connection, cursor):
                         ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                     """
                     data = (
-                        st.session_state.form_data["Employee ID"],  # emp_no
+                        st.session_state.form_data['Employee ID'],  # emp_no
                         datetime.now().date(),  # entry_date
                         st.session_state.form_data["Hemoglobin"],  # heamoglobin, unit
                         st.session_state.form_data["Total RBC"],  # rbc_count, unit
@@ -890,7 +890,7 @@ def Form(visitreason,select, select1, connection, cursor):
                     """
                     data = (
                         datetime.now().date(),  # entry_date
-                        st.session_state.form_data["Employee ID"],  # emp_no
+                        st.session_state.form_data['Employee ID'],  # emp_no
                         st.session_state.form_data["Urea"],
                         st.session_state.form_data["BUN"], 
                         st.session_state.form_data["Serum Creatinine"], 
@@ -969,7 +969,7 @@ def Form(visitreason,select, select1, connection, cursor):
                     
                     data = (
                         datetime.now().date(),  # entry_date
-                        st.session_state.form_data["Employee ID"],  # emp_no
+                        st.session_state.form_data['Employee ID'],  # emp_no
                         st.session_state.form_data["Total Cholesterol"],
                         st.session_state.form_data["Triglycerides"],
                         st.session_state.form_data["HDL - Cholesterol"],
@@ -1032,7 +1032,7 @@ def Form(visitreason,select, select1, connection, cursor):
                     
                     data = (
                         datetime.now().date(),  # entry_date
-                        st.session_state.form_data["Employee ID"],  # emp_no
+                        st.session_state.form_data['Employee ID'],  # emp_no
                         st.session_state.form_data["Bilirubin - Total"],
                         st.session_state.form_data["Bilirubin - Direct"],
                         st.session_state.form_data["Bilirubin - Indirect"],
@@ -1084,7 +1084,7 @@ def Form(visitreason,select, select1, connection, cursor):
                     
                     data = (
                         datetime.now().date(),  # entry_date
-                        st.session_state.form_data["Employee ID"],  # emp_no
+                        st.session_state.form_data['Employee ID'],  # emp_no
                         st.session_state.form_data["T3- Triiodothyroine"],
                         st.session_state.form_data["T4 - Thyroxine"],
                         st.session_state.form_data["TSH- Thyroid Stimulating Hormone"]
@@ -1133,7 +1133,7 @@ def Form(visitreason,select, select1, connection, cursor):
                     
                     data = (
                         datetime.now().date(),  # entry_date
-                        st.session_state.form_data["Employee ID"],  # emp_no
+                        st.session_state.form_data['Employee ID'],  # emp_no
                         st.session_state.form_data["ANA (Antinuclear Antibody)"],
                         st.session_state.form_data["Anti ds DNA"],
                         st.session_state.form_data["Rheumatoid factor"],
@@ -1183,7 +1183,7 @@ def Form(visitreason,select, select1, connection, cursor):
                     
                     data = (
                         datetime.now().date(),  # entry_date
-                        st.session_state.form_data["Employee ID"],  # emp_no
+                        st.session_state.form_data['Employee ID'],  # emp_no
                         st.session_state.form_data["Prothrombin Time (PT)"],
                         st.session_state.form_data["PT INR"],
                         st.session_state.form_data["Bleeding Time (BT)"],
@@ -1251,7 +1251,7 @@ def Form(visitreason,select, select1, connection, cursor):
                     
                     data = (
                         datetime.now().date(),  # entry_date
-                        st.session_state.form_data["Employee ID"],  # emp_no
+                        st.session_state.form_data['Employee ID'],  # emp_no
                         st.session_state.form_data["Acid Phosphatase"],
                         st.session_state.form_data["Adenosine Deaminase"],
                         st.session_state.form_data["Amylase"],
@@ -1328,7 +1328,7 @@ def Form(visitreason,select, select1, connection, cursor):
                     
                     data = (
                         datetime.now().date(),  # entry_date
-                        st.session_state.form_data["Employee ID"],  # emp_no
+                        st.session_state.form_data['Employee ID'],  # emp_no
                         st.session_state.form_data["Colour"],
                         st.session_state.form_data["Appearance"],
                         st.session_state.form_data["Reaction (pH)"],
@@ -1397,7 +1397,7 @@ def Form(visitreason,select, select1, connection, cursor):
                     
                     data = (
                         datetime.now().date(),  # entry_date
-                        st.session_state.form_data["Employee ID"],  # emp_no
+                        st.session_state.form_data['Employee ID'],  # emp_no
                         st.session_state.form_data["Screening For HIV I & II"],
                         st.session_state.form_data["HBsAg"],
                         st.session_state.form_data["HCV"],
@@ -1517,7 +1517,7 @@ def Form(visitreason,select, select1, connection, cursor):
                     
                     data = (
                         datetime.now().date(),  # entry_date
-                        st.session_state.form_data["Employee ID"],  # emp_no
+                        st.session_state.form_data['Employee ID'],  # emp_no
                         st.session_state.form_data["Urine"],
                         st.session_state.form_data["Motion"],
                         st.session_state.form_data["Sputum"],
@@ -1562,7 +1562,7 @@ def Form(visitreason,select, select1, connection, cursor):
                     
                     data = (
                         datetime.now().date(),  # entry_date
-                        st.session_state.form_data["Employee ID"],  # emp_no
+                        st.session_state.form_data['Employee ID'],  # emp_no
                         st.session_state.form_data["PSA (Prostate specific Antigen)"]
                     )
 
@@ -1613,7 +1613,7 @@ def Form(visitreason,select, select1, connection, cursor):
                     
                     data = (
                         datetime.now().date(),  # entry_date
-                        st.session_state.form_data["Employee ID"],  # emp_no
+                        st.session_state.form_data['Employee ID'],  # emp_no
                         st.session_state.form_data["Mammogram"],
                         st.session_state.form_data.get("Mammogram-Comments", ""),  # Comment if Abnormal
                         st.session_state.form_data["PAP Smear"],
@@ -1668,7 +1668,7 @@ def Form(visitreason,select, select1, connection, cursor):
                     
                     data = (
                         datetime.now().date(),  # entry_date
-                        st.session_state.form_data["Employee ID"],  # emp_no
+                        st.session_state.form_data['Employee ID'],  # emp_no
                         st.session_state.form_data["Audiometry"],
                         st.session_state.form_data.get("Audiometry-Comments", ""),  # Comment if Abnormal
                         st.session_state.form_data["PFT"],
@@ -1714,7 +1714,7 @@ def Form(visitreason,select, select1, connection, cursor):
                     
                     data = (
                         datetime.now().date(),  # entry_date
-                        st.session_state.form_data["Employee ID"],  # emp_no
+                        st.session_state.form_data['Employee ID'],  # emp_no
                         st.session_state.form_data["Pathology"],
                         st.session_state.form_data.get("Pathology-Comments", "")  # Comment if Abnormal
                     )
@@ -1766,7 +1766,7 @@ def Form(visitreason,select, select1, connection, cursor):
                     
                     data = (
                         datetime.now().date(),  # entry_date
-                        st.session_state.form_data["Employee ID"],  # emp_no
+                        st.session_state.form_data['Employee ID'],  # emp_no
                         st.session_state.form_data["Vision"],
                         st.session_state.form_data.get("Vision-Comments", ""),  # Comment if Abnormal
                         st.session_state.form_data["Color Vision"],
@@ -1842,7 +1842,7 @@ def Form(visitreason,select, select1, connection, cursor):
                     
                     data = (
                         datetime.now().date(),  # entry_date
-                        st.session_state.form_data["Employee ID"],  # emp_no
+                        st.session_state.form_data['Employee ID'],  # emp_no
                         st.session_state.form_data["X-RAY Chest"],
                         st.session_state.form_data.get("X-RAY Chest-Comments", ""),  # Comment if Abnormal
                         st.session_state.form_data["X-RAY KUB"],
@@ -1918,7 +1918,7 @@ def Form(visitreason,select, select1, connection, cursor):
                     
                     data = (
                         datetime.now().date(),  # entry_date
-                        st.session_state.form_data["Employee ID"],  # emp_no
+                        st.session_state.form_data['Employee ID'],  # emp_no
                         st.session_state.form_data["USG ABDOMEN"],
                         st.session_state.form_data.get("USG ABDOMEN-Comments", ""),  # Comment if Abnormal
                         st.session_state.form_data["USG KUB"],
@@ -1997,7 +1997,7 @@ def Form(visitreason,select, select1, connection, cursor):
                     
                     data = (
                         datetime.now().date(),  # entry_date
-                        st.session_state.form_data["Employee ID"],  # emp_no
+                        st.session_state.form_data['Employee ID'],  # emp_no
                         st.session_state.form_data["CT Brain"],
                         st.session_state.form_data.get("CT Brain-Comments", ""),  # Comment if Abnormal
                         st.session_state.form_data["CT Lungs"],
@@ -2079,7 +2079,7 @@ def Form(visitreason,select, select1, connection, cursor):
 
                     data = (
                         datetime.now().date(),  # entry_date
-                        st.session_state.form_data["Employee ID"],  # emp_no
+                        st.session_state.form_data['Employee ID'],  # emp_no
                         st.session_state.form_data["MRI Brain"],
                         st.session_state.form_data.get("MRI Brain-Comments", ""),  # Comment if Abnormal
                         st.session_state.form_data["MRI Lungs"],
@@ -2125,7 +2125,7 @@ def Form(visitreason,select, select1, connection, cursor):
         with r3c3:
             if st.button("Add Data", type="primary"):
                 # Collect form data
-                patient_id = st.session_state.form_data.get("Employee ID")  # Assuming you have Employee ID from the earlier form
+                patient_id = st.session_state.form_data.get('Employee ID')  # Assuming you have Employee ID from the earlier form
                 fitness_status = ", ".join(st.session_state.form_data["Fitness"])  # Join selected fitness options
                 fitness_comments = st.session_state.form_data["Fitness-Comments"]
 
@@ -2197,7 +2197,7 @@ def Form(visitreason,select, select1, connection, cursor):
 
         if st.button("Submit", type="primary"):
             # Collect form data
-            emp_no = st.session_state.form_data.get("Employee ID")  # Assuming Employee ID was collected earlier
+            emp_no = st.session_state.form_data.get('Employee ID')  # Assuming Employee ID was collected earlier
             complaints = st.session_state.form_data.get("Complaints", "")
             diagnosis = st.session_state.form_data.get("Diagnosis", "")
             remarks = st.session_state.form_data.get("Remarks", "")
@@ -2266,7 +2266,7 @@ def Form(visitreason,select, select1, connection, cursor):
                 i = st.session_state.form_data # MARK: Data Insert
                 try:
                     insert_basicdetails = ("INSERT INTO basic_details (emp_no, entry_date, PatientAge, PatientName, Gender, Department, Work, MobileNo, BloodGroup, Vaccinated, Address) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)")
-                    basicdetails_data = (i.get("Employee ID"), i.get("Visit Date"), i.get("Employee Age"), i.get("Employee Name"), i.get("Gender"), i.get("Department"), i.get("Work"),i.get("Mobile No."), i.get("Blood Group"), i.get("Vaccination Status"), i.get("Address"))
+                    basicdetails_data = (i.get('Employee ID'), i.get("Visit Date"), i.get("Employee Age"), i.get("Employee Name"), i.get("Gender"), i.get("Department"), i.get("Work"),i.get("Mobile No."), i.get("Blood Group"), i.get("Vaccination Status"), i.get("Address"))
                     cursor.execute(insert_basicdetails, basicdetails_data)
                     connection.commit()
                 except Exception as e:
@@ -2276,7 +2276,7 @@ def Form(visitreason,select, select1, connection, cursor):
 
                 try:
                     insert_vitals = ("INSERT INTO vitals(emp_no, entry_date, Systolic, Diastolic, PulseRate, SpO2, Temperature, RespiratoryRate, Height, Weight, BMI) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)") 
-                    vitals_values = (i.get("Employee ID"), i.get("Visit Date"), i.get("Systolic"), i.get("Diastolic"), i.get("Pulse"), i.get("spo2"), i.get("Temperature"), i.get("Respiratory Rate"), i.get("Height"), i.get("Weight"), i.get("BMI"))
+                    vitals_values = (i.get('Employee ID'), i.get("Visit Date"), i.get("Systolic"), i.get("Diastolic"), i.get("Pulse"), i.get("spo2"), i.get("Temperature"), i.get("Respiratory Rate"), i.get("Height"), i.get("Weight"), i.get("BMI"))
                     cursor.execute(insert_vitals, vitals_values)
                     connection.commit()
                     st.write("Vitals Inserted")
@@ -2287,7 +2287,7 @@ def Form(visitreason,select, select1, connection, cursor):
                 
                 try:
                     insert_hematology = ("INSERT INTO hematology_result(emp_no, entry_date, heamoglobin,  rbc_count, wbc_count, haemotocrit, mcv, mch, mchc, platelet, rdw, neutrophil, lymphocyte, eosinophil, monocyte, basophils, esr, pbs_rbc, pbc_parasites, pbc_others) VALUES(%s, %s, %s, %s,%s, %s, %s, %s,%s, %s, %s, %s,%s, %s, %s, %s,%s, %s, %s, %s)")
-                    hematology_values = (i.get("Employee ID"), i.get("Visit Date"), i.get("Hemoglobin"), i.get("Total RBC"), i.get("Total WBC"), i.get("PCV"), i.get("MCV"), i.get("MCH"), i.get("MCHC"), i.get("Platelet Count"), i.get("RDW"), i.get("Neutrophil"), i.get("Lymphocyte"), i.get("Eosinophil"), i.get("Monocyte"), i.get("Basophil"), i.get("ESR"), i.get("Preipheral Blood Smear - RBC Morphology"), i.get("Preipheral Blood Smear - Parasites"), i.get("Preipheral Blood Smear - Others"))
+                    hematology_values = (i.get('Employee ID'), i.get("Visit Date"), i.get("Hemoglobin"), i.get("Total RBC"), i.get("Total WBC"), i.get("PCV"), i.get("MCV"), i.get("MCH"), i.get("MCHC"), i.get("Platelet Count"), i.get("RDW"), i.get("Neutrophil"), i.get("Lymphocyte"), i.get("Eosinophil"), i.get("Monocyte"), i.get("Basophil"), i.get("ESR"), i.get("Preipheral Blood Smear - RBC Morphology"), i.get("Preipheral Blood Smear - Parasites"), i.get("Preipheral Blood Smear - Others"))
                     cursor.execute(insert_hematology, hematology_values)
                     connection.commit()
                     st.write("Hematology Inserted")
@@ -2298,7 +2298,7 @@ def Form(visitreason,select, select1, connection, cursor):
 
                 try:
                     insert_rst = ("INSERT INTO routine_sugartest(emp_no, entry_date, glucosef, glucosepp, rbs, eag, hba1c) VALUES(%s, %s, %s, %s, %s, %s, %s)")
-                    rst_values = (i.get("Employee ID"), i.get("Visit Date"), i.get("Glucose (F)"), i.get("Glucose (PP)"), i.get("Random Blood sugar"), i.get("Estimated Average Glucose"), i.get("HbA1c"))
+                    rst_values = (i.get('Employee ID'), i.get("Visit Date"), i.get("Glucose (F)"), i.get("Glucose (PP)"), i.get("Random Blood sugar"), i.get("Estimated Average Glucose"), i.get("HbA1c"))
                     cursor.execute(insert_rst, rst_values)
                     connection.commit()
                     st.write("Data Submitted")
@@ -2308,7 +2308,7 @@ def Form(visitreason,select, select1, connection, cursor):
 
                 try:
                     insert_rft = ("INSERT INTO rft_result(entry_date, emp_no, urea, bun, sr_creatinine, uric_acid, sodium, potassium, calcium, phosphorus, chloride, bicarbonate ) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)")
-                    rft_values = (i.get("Visit Date"), i.get("Employee ID"), i.get("Urea"), i.get("Blood urea nitrogen (BUN)"), i.get("Sr.Creatinine"), i.get("Uric acid"), i.get("Sodium"), i.get("Potassium"), i.get("Calcium"), i.get("Phosphorus"), i.get("Chloride"), i.get("Bicarbonate"))                    
+                    rft_values = (i.get("Visit Date"), i.get('Employee ID'), i.get("Urea"), i.get("Blood urea nitrogen (BUN)"), i.get("Sr.Creatinine"), i.get("Uric acid"), i.get("Sodium"), i.get("Potassium"), i.get("Calcium"), i.get("Phosphorus"), i.get("Chloride"), i.get("Bicarbonate"))                    
                     cursor.execute(insert_rft, rft_values)
                     connection.commit()
                     st.write("RFT Inserted")
@@ -2319,7 +2319,7 @@ def Form(visitreason,select, select1, connection, cursor):
                     
                 try:
                     insert_lipid_prof = ("INSERT INTO lipid_profile(emp_no, entry_date, tcholesterol,triglycerides, hdl_cholesterol, vldl_cholesterol, ldl_cholesterol, chol_hdlratio, ldlhdlratio) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s)")
-                    lipid_prof_values = (i.get("Employee ID"), i.get("Visit Date"), i.get("Total Cholesterol"), i.get("Triglycerides"), i.get("HDL - Cholesterol"), i.get("VLDL -Choleserol"), i.get("LDL- Cholesterol"), i.get("CHOL HDL ratio"), i.get("LDL.CHOL/HDL.CHOL Ratio"))                    
+                    lipid_prof_values = (i.get('Employee ID'), i.get("Visit Date"), i.get("Total Cholesterol"), i.get("Triglycerides"), i.get("HDL - Cholesterol"), i.get("VLDL -Choleserol"), i.get("LDL- Cholesterol"), i.get("CHOL HDL ratio"), i.get("LDL.CHOL/HDL.CHOL Ratio"))                    
                     cursor.execute(insert_lipid_prof, lipid_prof_values)
                     connection.commit()
                     st.write("Lipid Profile Inserted")
@@ -2329,7 +2329,7 @@ def Form(visitreason,select, select1, connection, cursor):
 
                 try:
                     insert_lft = ("INSERT INTO liver_function(emp_no, entry_date, bilirubin_total, bilirubin_direct, bilirubin_indirect, sgot_alt, sgpt_alt, alkaline_phosphatase, total_protein, albumin, globulin, alb_globratio, gammagt) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) ")
-                    lft_values = (i.get("Employee ID"), i.get("Visit Date"), i.get("Bilirubin - Total"), i.get("Bilirubin - Direct"), i.get("Bilirubin - Indirect"), i.get("SGOT /AST"), i.get("SGPT /ALT"), i.get("Alkaline phosphatase"), i.get("Total Protein"), i.get("Albumin (Serum )"), i.get("Globulin(Serum)"), i.get("Alb/Glob Ratio"), i.get("Gamma Glutamyl transferase"))                    
+                    lft_values = (i.get('Employee ID'), i.get("Visit Date"), i.get("Bilirubin - Total"), i.get("Bilirubin - Direct"), i.get("Bilirubin - Indirect"), i.get("SGOT /AST"), i.get("SGPT /ALT"), i.get("Alkaline phosphatase"), i.get("Total Protein"), i.get("Albumin (Serum )"), i.get("Globulin(Serum)"), i.get("Alb/Glob Ratio"), i.get("Gamma Glutamyl transferase"))                    
                     cursor.execute(insert_lft, lft_values)
                     connection.commit()
                     st.write("LFT Inserted")
@@ -2339,7 +2339,7 @@ def Form(visitreason,select, select1, connection, cursor):
                 
                 try:
                     insert_tft = ("INSERT INTO thyroid_function_test(emp_no, entry_date, t3, t4, tsh) VALUES(%s, %s, %s, %s, %s)")
-                    tft_values = (i.get("Employee ID"), i.get("Visit Date"), i.get("T3- Triiodothyroine"), i.get("T4 - Thyroxine"), i.get("TSH- Thyroid Stimulating Hormone"))                    
+                    tft_values = (i.get('Employee ID'), i.get("Visit Date"), i.get("T3- Triiodothyroine"), i.get("T4 - Thyroxine"), i.get("TSH- Thyroid Stimulating Hormone"))                    
                     cursor.execute(insert_tft, tft_values)
                     connection.commit()
                     st.write("TFT Inserted")
@@ -2349,7 +2349,7 @@ def Form(visitreason,select, select1, connection, cursor):
 
                 try:
                     insert_ait = ("INSERT INTO autoimmune_test(emp_no, entry_date, ana, adna, anticardiolipin, rheumatoid) VALUES(%s, %s, %s, %s, %s, %s)")
-                    ait_values = (i.get("Employee ID"), i.get("Visit Date"), i.get("ANA (Antinuclear Antibody)"), i.get("Anti ds DNA"), i.get("Anticardiolipin Antibodies (IgG & IgM)"), i.get("Rheumatoid factor"))
+                    ait_values = (i.get('Employee ID'), i.get("Visit Date"), i.get("ANA (Antinuclear Antibody)"), i.get("Anti ds DNA"), i.get("Anticardiolipin Antibodies (IgG & IgM)"), i.get("Rheumatoid factor"))
                     cursor.execute(insert_ait, ait_values)
                     connection.commit()
                     st.write("AIT Inserted")
@@ -2359,7 +2359,7 @@ def Form(visitreason,select, select1, connection, cursor):
 
                 try:
                     insert_coagulation = ("INSERT INTO coagulation_test(emp_no, entry_date, pt, ptinr, bt, ct) VALUES(%s, %s, %s, %s, %s, %s)")
-                    coagulation_values = (i.get("Employee ID"), i.get("Visit Date"), i.get("Prothrombin Time (PT)"), i.get("PT INR"), i.get("Bleeding Time (BT)"), i.get("Clotting Time (CT)"))
+                    coagulation_values = (i.get('Employee ID'), i.get("Visit Date"), i.get("Prothrombin Time (PT)"), i.get("PT INR"), i.get("Bleeding Time (BT)"), i.get("Clotting Time (CT)"))
                     cursor.execute(insert_coagulation, coagulation_values)
                     connection.commit()
                     st.write("Coagulation Inserted")
@@ -2369,7 +2369,7 @@ def Form(visitreason,select, select1, connection, cursor):
 
                 try:
                     insert_enzymes_cardio = ("INSERT INTO enzymes_cardio(emp_no, entry_date,acid_phosphatase,adenosine,amylase,lipase,troponin_t, troponin_i, cpk_total, cpk_mb, ecg, ecg_comments, echo,echo_comments, tmt, tmt_comments) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)")
-                    enzymes_cardio_values = (i.get("Employee ID"), i.get("Visit Date"), i.get("Acid Phosphatase"), i.get("Adenosine Deaminase"), i.get("Amylase"), i.get("Lipase"), i.get("Troponin- T"), i.get("Troponin- I"), i.get("CPK - Total"), i.get("CPK - MB"), i.get("ECG"), i.get("ECG-Comments"), i.get("ECHO"), i.get("ECHO-Comments"), i.get("TMT"), i.get("TMT-Comments"))
+                    enzymes_cardio_values = (i.get('Employee ID'), i.get("Visit Date"), i.get("Acid Phosphatase"), i.get("Adenosine Deaminase"), i.get("Amylase"), i.get("Lipase"), i.get("Troponin- T"), i.get("Troponin- I"), i.get("CPK - Total"), i.get("CPK - MB"), i.get("ECG"), i.get("ECG-Comments"), i.get("ECHO"), i.get("ECHO-Comments"), i.get("TMT"), i.get("TMT-Comments"))
                     cursor.execute(insert_enzymes_cardio, enzymes_cardio_values)
                     connection.commit()
                     st.write("Enzymes Cardio Inserted")
@@ -2379,7 +2379,7 @@ def Form(visitreason,select, select1, connection, cursor):
                 
                 try:
                     insert_urine_routine = ("INSERT INTO urine_routine(emp_no, entry_date, colour, apperance, reaction, specific_gravity, protein_albumin, glucose, ketone, urobilinogen, bile_salts, bile_pigments, wbc_pluscells, rbc, epithelial_cell, casts, crystals, bacteria) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)")
-                    urine_routine_values = (i.get("Employee ID"), i.get("Visit Date"), i.get("Colour"), i.get("Appearance"), i.get("Reaction (pH)"), i.get("Specific Gravity"), i.get("Protein/Albumin"), i.get("Glucose (Urine)"), i.get("Ketone Bodies"), i.get("Urobilinogen"), i.get("Bile Salts"), i.get("Bile Pigments"), i.get("WBC / Pus cells"), i.get("Red Blood Cells"), i.get("Epithelial celss"), i.get("Casts"), i.get("Crystals"), i.get("Bacteria"))
+                    urine_routine_values = (i.get('Employee ID'), i.get("Visit Date"), i.get("Colour"), i.get("Appearance"), i.get("Reaction (pH)"), i.get("Specific Gravity"), i.get("Protein/Albumin"), i.get("Glucose (Urine)"), i.get("Ketone Bodies"), i.get("Urobilinogen"), i.get("Bile Salts"), i.get("Bile Pigments"), i.get("WBC / Pus cells"), i.get("Red Blood Cells"), i.get("Epithelial celss"), i.get("Casts"), i.get("Crystals"), i.get("Bacteria"))
                     cursor.execute(insert_urine_routine, urine_routine_values)
                     connection.commit()
                     st.write("Urine Routine Inserted")
@@ -2389,7 +2389,7 @@ def Form(visitreason,select, select1, connection, cursor):
 
                 try:
                     insert_serology = ("INSERT INTO serology_result(emp_no, entry_date, hiv_screening , hbsag, hcv, widal, vdrl, denguens, dengueigg, dengueigm) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)")
-                    serology_values = (i.get("Employee ID"), i.get("Visit Date"), i.get("Screening For HIV I & II"), i.get("HBsAg"), i.get("HCV"), i.get("WIDAL"), i.get("VDRL"), i.get("Dengue NS1Ag"), i.get("Dengue IgG"), i.get("Dengue IgM"))
+                    serology_values = (i.get('Employee ID'), i.get("Visit Date"), i.get("Screening For HIV I & II"), i.get("HBsAg"), i.get("HCV"), i.get("WIDAL"), i.get("VDRL"), i.get("Dengue NS1Ag"), i.get("Dengue IgG"), i.get("Dengue IgM"))
                     cursor.execute(insert_serology, serology_values)
                     connection.commit()
                     st.write("Serology Inserted")
@@ -2399,7 +2399,7 @@ def Form(visitreason,select, select1, connection, cursor):
 
                 try:
                     insert_motion = ("INSERT INTO motion(emp_no, entry_date, colour, appearance, occult_blood, ova, cyst, mucus, pus_cells, rbcs, others_t) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)")
-                    motion_values = (i.get("Employee ID"), i.get("Visi Date"), i.get("Colour (Motion)"), i.get("Appearance (Motion)"), i.get("Occult Blood"), i.get("Ova"), i.get("Cyst"), i.get("Mucus"), i.get("Pus Cells"), i.get("RBCs"), i.get("Others"))
+                    motion_values = (i.get('Employee ID'), i.get("Visi Date"), i.get("Colour (Motion)"), i.get("Appearance (Motion)"), i.get("Occult Blood"), i.get("Ova"), i.get("Cyst"), i.get("Mucus"), i.get("Pus Cells"), i.get("RBCs"), i.get("Others"))
                     cursor.execute(insert_motion, motion_values)
                     connection.commit()
                     st.write("Motion Inserted")
@@ -2409,7 +2409,7 @@ def Form(visitreason,select, select1, connection, cursor):
 
                 try:
                     insert_routie_culture = ("INSERT INTO routine_culture(emp_no, entry_date, urine, motion, sputum, blood) VALUES( %s, %s, %s, %s, %s, %s)")
-                    routine_culture_values = (i.get("Employee ID"), i.get("Visit Date"), i.get("Urine"), i.get("Motion"), i.get("Sputum"), i.get("Blood"))
+                    routine_culture_values = (i.get('Employee ID'), i.get("Visit Date"), i.get("Urine"), i.get("Motion"), i.get("Sputum"), i.get("Blood"))
                     cursor.execute(insert_routie_culture, routine_culture_values)
                     connection.commit()
                     st.write("Routine Culture Inserted")
@@ -2419,7 +2419,7 @@ def Form(visitreason,select, select1, connection, cursor):
 
                 try:
                     insert_mens_pack = ("INSERT INTO mens_pack(emp_no, entry_date, psa) VALUES(%s, %s, %s)")
-                    mens_pack_values = (i.get("Employee ID"), i.get("Visit Date"), i.get("PSA (Prostate specific Antigen)"))
+                    mens_pack_values = (i.get('Employee ID'), i.get("Visit Date"), i.get("PSA (Prostate specific Antigen)"))
                     cursor.execute(insert_mens_pack, mens_pack_values)
                     connection.commit()
                     st.write("Mens Pack Inserted")
@@ -2429,7 +2429,7 @@ def Form(visitreason,select, select1, connection, cursor):
                 
                 try:
                     insert_womens_pack = ("INSERT INTO womens_pack(emp_no, entry_date, mammogram_nm_ab, mammogram_comment, pap_nm_ab, pap_comment) VALUES(%s, %s, %s, %s, %s, %s)")
-                    womens_pack_values = (i.get("Employee ID"), i.get("Visit Date"), i.get("Mammogram"), i.get("Mammogram-Comments"), i.get("PAP Smear"), i.get("PAP Smear-Comments"))
+                    womens_pack_values = (i.get('Employee ID'), i.get("Visit Date"), i.get("Mammogram"), i.get("Mammogram-Comments"), i.get("PAP Smear"), i.get("PAP Smear-Comments"))
                     cursor.execute(insert_womens_pack, womens_pack_values)
                     connection.commit()
                     st.write("Womens Pack Inserted")
@@ -2439,7 +2439,7 @@ def Form(visitreason,select, select1, connection, cursor):
 
                 try:
                     insert_occupational_profile = ("INSERT INTO occupational_profile(emp_no, entry_date, audiometry_nm_ab, audiometry_comment, pft_nm_ab, pft_comment) VALUES(%s, %s, %s, %s, %s, %s)")
-                    occupational_profile_values = (i.get("Employee ID"), i.get("Visit Date"), i.get("Audiometry"), i.get("Audiometry-Comments"), i.get("PFT"), i.get("PFT-Comments"))
+                    occupational_profile_values = (i.get('Employee ID'), i.get("Visit Date"), i.get("Audiometry"), i.get("Audiometry-Comments"), i.get("PFT"), i.get("PFT-Comments"))
                     cursor.execute(insert_occupational_profile, occupational_profile_values)
                     connection.commit()
                     st.write("Occupational Profile Inserted")
@@ -2450,7 +2450,7 @@ def Form(visitreason,select, select1, connection, cursor):
 
                 try:
                     insert_other_test = ("INSERT INTO other_tests(emp_no, entry_date, pathology, pathology_comments) VALUES(%s, %s, %s, %s)")
-                    other_test_values = (i.get("Employee ID"), i.get("Visit Date"), i.get("Pathology"), i.get("Pathology-Comments"))
+                    other_test_values = (i.get('Employee ID'), i.get("Visit Date"), i.get("Pathology"), i.get("Pathology-Comments"))
                     cursor.execute(insert_other_test, other_test_values)
                     connection.commit()
                     st.write("Other Test Inserted")
@@ -2460,7 +2460,7 @@ def Form(visitreason,select, select1, connection, cursor):
 
                 try:
                     insert_ophthalmic_report = ("INSERT INTO ophthalmic_report(emp_no, entry_date, vision, vision_comments, colourvision, colourvision_comment) VALUES(%s, %s, %s, %s, %s, %s)")
-                    ophthalmic_report_values = (i.get("Employee ID"), i.get("Visit Date"), i.get("Vision"), i.get("Vision-Comments"), i.get("Colour Vision"), i.get("Colour Vision-Comments"))
+                    ophthalmic_report_values = (i.get('Employee ID'), i.get("Visit Date"), i.get("Vision"), i.get("Vision-Comments"), i.get("Colour Vision"), i.get("Colour Vision-Comments"))
                     cursor.execute(insert_ophthalmic_report, ophthalmic_report_values)
                     connection.commit()
                     st.write("Ophthalmic Report Inserted")
@@ -2470,7 +2470,7 @@ def Form(visitreason,select, select1, connection, cursor):
 
                 try:
                     insert_x_ray = ("INSERT INTO x_ray(emp_no, entry_date, chest_nm_ab, chest_comment, spine_nm_ab, spine_comment, abdomen_nm_ab, abdomen_comment, kub_nm_ab, kub_comment, pelvis_nm_ab, pelvis_comment) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)")
-                    x_ray_values = (i.get("Employee ID"), i.get("Visit Date"), i.get("X-RAY Chest"), i.get("X-RAY Chest-Comments"), i.get("X-RAY Spine"), i.get("X-RAY Spine-Comments"), i.get("X-RAY Abdomen"), i.get("X-RAY Abdomen-Comments"), i.get("X-RAY KUB"), i.get("X-RAY KUB-Comments"), i.get("X-RAY Pelvis"), i.get("X-RAY Pelvis-Comments"))
+                    x_ray_values = (i.get('Employee ID'), i.get("Visit Date"), i.get("X-RAY Chest"), i.get("X-RAY Chest-Comments"), i.get("X-RAY Spine"), i.get("X-RAY Spine-Comments"), i.get("X-RAY Abdomen"), i.get("X-RAY Abdomen-Comments"), i.get("X-RAY KUB"), i.get("X-RAY KUB-Comments"), i.get("X-RAY Pelvis"), i.get("X-RAY Pelvis-Comments"))
                     cursor.execute(insert_x_ray, x_ray_values)
                     connection.commit()
                     st.write("X-Ray Inserted")
@@ -2480,7 +2480,7 @@ def Form(visitreason,select, select1, connection, cursor):
                 
                 try:
                     insert_usg = ("INSERT INTO usg(emp_no, entry_date, abdomen, abdomen_comments, pelvis, pelvis_comments,neck, neck_comments, kub, kub_comments) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)")
-                    usg_values = (i.get("Employee ID"), i.get("Visit Date"), i.get("USG ABDOMEN"), i.get("USG ABDOMEN-Comments"), i.get("USG Pelvis"), i.get("USG Pelvis-Comments"), i.get("USG Neck"), i.get("USG Neck-Comments"), i.get("USG KUB"), i.get("USG KUB-Comments"))
+                    usg_values = (i.get('Employee ID'), i.get("Visit Date"), i.get("USG ABDOMEN"), i.get("USG ABDOMEN-Comments"), i.get("USG Pelvis"), i.get("USG Pelvis-Comments"), i.get("USG Neck"), i.get("USG Neck-Comments"), i.get("USG KUB"), i.get("USG KUB-Comments"))
                     cursor.execute(insert_usg, usg_values)
                     connection.commit()
                     st.write("USG Inserted")
@@ -2490,7 +2490,7 @@ def Form(visitreason,select, select1, connection, cursor):
                 
                 try:
                     insert_ct_report = ("INSERT INTO ct_report(emp_no, entry_date, brain, brain_comment, abdomen, abdomen_comment, pelvis, pelvis_comment, ct_lungs, ct_lungs_comment, spine, spine_comment) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)")
-                    ct_report_values = (i.get("Employee ID"), i.get("Visit Date"), i.get("CT Brain"), i.get("CT Brain-Comments"), i.get("CT Abdomen"), i.get("CT Abdomen-Comments"), i.get("CT Pelvis"), i.get("CT Pelvis-Comments"), i.get("CT Lungs"), i.get("CT Lungs-Comments"), i.get("CT Spine"), i.get("CT Spine-Comments"))
+                    ct_report_values = (i.get('Employee ID'), i.get("Visit Date"), i.get("CT Brain"), i.get("CT Brain-Comments"), i.get("CT Abdomen"), i.get("CT Abdomen-Comments"), i.get("CT Pelvis"), i.get("CT Pelvis-Comments"), i.get("CT Lungs"), i.get("CT Lungs-Comments"), i.get("CT Spine"), i.get("CT Spine-Comments"))
                     cursor.execute(insert_ct_report, ct_report_values)
                     connection.commit()
                     st.write("CT Report Inserted")
@@ -2500,7 +2500,7 @@ def Form(visitreason,select, select1, connection, cursor):
 
                 try:
                     insert_mri_report = ("INSERT INTO mri(emp_no, entry_date, brain, brain_comments, abdomen, abdomen_comments, pelvis, pelvis_comments, mri_lungs, mri_lungs_comments, spine, spine_comments) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)")
-                    mri_report_values = (i.get("Employee ID"), i.get("Visit Date"), i.get("MRI Brain"), i.get("MRI Brain-Comments"), i.get("MRI Abdomen"), i.get("MRI Abdomen-Comments"), i.get("MRI Pelvis"), i.get("MRI Pelvis-Comments"), i.get("MRI Lungs"), i.get("MRI Lungs-Comments"), i.get("MRI Spine"), i.get("MRI Spine-Comments"))
+                    mri_report_values = (i.get('Employee ID'), i.get("Visit Date"), i.get("MRI Brain"), i.get("MRI Brain-Comments"), i.get("MRI Abdomen"), i.get("MRI Abdomen-Comments"), i.get("MRI Pelvis"), i.get("MRI Pelvis-Comments"), i.get("MRI Lungs"), i.get("MRI Lungs-Comments"), i.get("MRI Spine"), i.get("MRI Spine-Comments"))
                     cursor.execute(insert_mri_report, mri_report_values)
                     connection.commit()
                     st.write("MRI Report Inserted")
@@ -2510,7 +2510,7 @@ def Form(visitreason,select, select1, connection, cursor):
                 
                 try:
                     insert_consultation = ("INSERT INTO consultation(emp_no, entry_date, complaints, diagnosis, remarks) VALUES(%s, %s, %s, %s, %s)")
-                    consultation_values = (i.get("Employee ID"), i.get("Visit Date"), i.get("Complaints"), i.get("Diagnosis"), i.get("Remarks"))
+                    consultation_values = (i.get('Employee ID'), i.get("Visit Date"), i.get("Complaints"), i.get("Diagnosis"), i.get("Remarks"))
                     cursor.execute(insert_consultation, consultation_values)
                     connection.commit()
                     st.write("Consultation Inserted")
@@ -2520,7 +2520,7 @@ def Form(visitreason,select, select1, connection, cursor):
 
                 try:
                     insert_medical_history = ("INSERT INTO medicalpersonalhist(emp_no, entry_date, personal_history, medical_history, father, mother) VALUES(%s, %s, %s, %s, %s, %s)")
-                    medical_history_values = (i.get("Employee ID"), i.get("Visit Date"), json.dumps(i.get("Personal History")), json.dumps(i.get("Medical History")), i.get("Father"), i.get("Mother"))
+                    medical_history_values = (i.get('Employee ID'), i.get("Visit Date"), json.dumps(i.get("Personal History")), json.dumps(i.get("Medical History")), i.get("Father"), i.get("Mother"))
                     cursor.execute(insert_medical_history, medical_history_values)
                     connection.commit()
                     st.write("Medical History Inserted")
