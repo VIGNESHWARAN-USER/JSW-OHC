@@ -2215,7 +2215,8 @@ def Form(visitreason,select, select1, connection, cursor):
             connection.commit()
         # Check if rows were affected (if the quantity is reduced)
         if cursor.rowcount == 0:
-            print(f"Medicine {medicine_name} does not have enough stock or does not exist")
+            #print(f"Medicine {medicine_name} does not have enough stock or does not exist")
+            pass
         cursor.close()
     # In the elif block (as described earlier)
         if form_name == "Prescription":
