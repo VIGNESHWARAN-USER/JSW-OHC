@@ -7,7 +7,11 @@ from datetime import datetime
 from dateutil.parser import parse
 from  streamlit_option_menu import option_menu
 import matplotlib.pyplot as plt
+
+
 def Dashboard(connection,cursor,accessLevel):
+    if "date_val" not in st.session_state:
+        st.session_state.date_val = datetime.now().date()
     if 'optFilter' not in st.session_state:
         st.session_state.optFilter = "Healthy"
     r0c1, r0c2 = st.columns([3,7])
@@ -856,19 +860,27 @@ def Dashboard(connection,cursor,accessLevel):
     r2c1, r2c2 = st.columns([3,7])
     with r2c1:
         with st.container(border=1, height = 700):
+            rc3, rc4 = st.columns([10,3])
+            with rc3:
+                date_val = st.date_input("Date", label_visibility='collapsed')
+            with rc4:
+                if st.button("Apply"):
+                    st.session_state.date_val = date_val
             st.session_state.optFilter = option_menu("Filter", options=["Healthy", "Unhealthy"], icons=['a','a'])
     with r2c2:
         with st.container(border=1, height=700):
-            rc1, rc2 = st.columns([2,8])
+            rc1, rc2 = st.columns([2,10])
             with rc1:
                 st.subheader('Dashboard')
             with rc2:
-                opt = option_menu(None, ["Total Footfalls", "Employee", "Contractor"],orientation='horizontal',icons=['a','a','a'])
+                opt = option_menu(None, ["Total Footfalls", "Employee", "Contractor", "Visitor"],orientation='horizontal',icons=['a','a','a', 'a'])
             r1c1, r1c2, r1c3, r1c4 = st.columns(4)
             with r1c1:
-                cursor.execute(f"SELECT count(PatientID) FROM basicdetails WHERE status = 'Healthy' and DATE(EntryDateTime) = CURDATE();")
+                query = """SELECT count(PatientID) FROM basicdetails WHERE status = 'Healthy' and DATE(EntryDateTime) = %s;"""
+                cursor.execute(query, (st.session_state.date_val,))
                 footfalls = cursor.fetchall()
-                cursor.execute(f"SELECT count(appoint_ID) FROM appointments WHERE appoint_date = CURDATE();")
+                query = """SELECT count(appoint_ID) FROM appointments WHERE appoint_date = %s;"""
+                cursor.execute(query, (st.session_state.date_val,))
                 appoint = cursor.fetchall()
                 with st.container(border=True):
                     st.markdown(
@@ -931,7 +943,15 @@ def Dashboard(connection,cursor,accessLevel):
                     for row in result:
                         visitreason.append(row[0])                  
                     for reason in visitreason:
-                        cursor.execute("SELECT COUNT(PatientID) FROM basicdetails WHERE status = 'Healthy' AND vistreason = %s AND DATE(entrydatetime) = CURDATE();", (reason,))
+                        query = """
+                            SELECT COUNT(PatientID)
+                            FROM basicdetails
+                            WHERE status = 'Healthy'
+                            AND vistreason = %s
+                            AND DATE(entrydatetime) = %s;
+                        """
+                        cursor.execute(query, (reason, st.session_state.date_val))
+
                         count.append(cursor.fetchone()[0])  
                     fig, ax = plt.subplots(figsize=(10, 4), facecolor='none')
                     colors = ['#0C3D8C', '#C6256A', '#7C0C0C', '#7CAEFF', '#705314']  

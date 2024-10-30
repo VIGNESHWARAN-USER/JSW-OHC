@@ -15,56 +15,57 @@ def show_data(emp):
     for i in range(len(emp)):
         with st.container(border=1):
             r1c1,r1c3 = st.columns([7,3])
-            with r1c1:
-                st.html(f"""
-                        <style>
-                            button[kind="primary"]{{
-                                all: unset;
-                                background-color: #22384F;
-                                color: white;
-                                border-radius: 50px;
-                                text-align: center;
-                                cursor: pointer;
-                                font-size: 20px;
-                                width: 65%;
-                                padding: 10px ;
-                            }}
-                            .cnt{{
-                                width: 100%;
-                                margin-left:20px;
-                                display: flex;
-                                align-items: center;
-                            
-                            }}
-                            .cnt img{{
-                                width: 50px;
-                                height: 50px;
-                                border-radius: 50px;
+            if len(emp):
+                with r1c1:
+                    st.html(f"""
+                            <style>
+                                button[kind="primary"]{{
+                                    all: unset;
+                                    background-color: #22384F;
+                                    color: white;
+                                    border-radius: 50px;
+                                    text-align: center;
+                                    cursor: pointer;
+                                    font-size: 20px;
+                                    width: 65%;
+                                    padding: 10px ;
+                                }}
+                                .cnt{{
+                                    width: 100%;
+                                    margin-left:20px;
+                                    display: flex;
+                                    align-items: center;
                                 
-                            }}
-                            .cnt div{{
-                                margin-top: 14px;
-                                margin-left: 20px;
-                                display: flex;
-                                justify-content: center;
-                                align-items: center;                                
-                                color: #333;
-                            }}
-                        </style>
-                        <div class="cnt">
-                            <img src="https://www.w3schools.com/howto/img_avatar.png" alt="Avatar" style="width:50px; border-radius:50px">
-                            <b style="margin: 20px;" >{emp[i]["emp_no"]}</b>
-                            <b style="margin: 20px;" >{emp[i]["name"]}</b>
-                        </div>
-                    """)
-            with r1c3:
-                st.html("""
-                    <div style="width:50px;height:3px display:flex; alignItems: center"></div>
+                                }}
+                                .cnt img{{
+                                    width: 50px;
+                                    height: 50px;
+                                    border-radius: 50px;
+                                    
+                                }}
+                                .cnt div{{
+                                    margin-top: 14px;
+                                    margin-left: 20px;
+                                    display: flex;
+                                    justify-content: center;
+                                    align-items: center;                                
+                                    color: #333;
+                                }}
+                            </style>
+                            <div class="cnt">
+                                <img src="https://www.w3schools.com/howto/img_avatar.png" alt="Avatar" style="width:50px; border-radius:50px">
+                                <b style="margin: 20px;" >{emp[i]["emp_no"]}</b>
+                                <b style="margin: 20px;" >{emp[i]["name"]}</b>
+                            </div>
                         """)
-                if st.button("View",key=i,type="primary"):
-                    st.session_state.open_modal = True
-                    st.session_state.usr_prof = emp[i]
-                    st.rerun()
+                with r1c3:
+                    st.html("""
+                        <div style="width:50px;height:3px display:flex; alignItems: center"></div>
+                            """)
+                    if st.button("View",key=i,type="primary"):
+                        st.session_state.open_modal = True
+                        st.session_state.usr_prof = emp[i]
+                        st.rerun()
 
 def set_data(emp):
     st.session_state.data = emp.to_dict('records')
@@ -76,8 +77,6 @@ def Search(cursor):
     )
     if "usr_prof" not in st.session_state:
         st.session_state.usr_prof = {}
-    if "search" not in st.session_state:
-        st.session_state.search = False
     if "searchinp" not in st.session_state:
         st.session_state.searchinp = ""
     if "data" not in st.session_state:
@@ -89,19 +88,17 @@ def Search(cursor):
         st.title("Search")
         search1, search2,search3 = st.columns([7,1,3])
         with search1:
-            st.session_state.searchinp = st.text_input("search",placeholder="Search by Patient ID")
+            search_val = st.text_input("search",placeholder="Search by Patient ID")
         with search2:
             st.write("<div><br></div>", unsafe_allow_html=True)
-            st.session_state.search = st.button("Search", type="primary")
-
-        if st.session_state.search:
-            cursor.execute(f"SELECT * FROM Employee_det WHERE emp_no like '%{st.session_state.searchinp}%' ")
-
-            emp = pd.DataFrame(cursor.fetchall(), columns=[desc[0] for desc in cursor.description])
-            if emp.empty:
-                st.error("No records found")
-            else:
-                set_data(emp)
+            if st.button("Search", type="primary"):
+                st.session_state.searchinp = search_val
+                cursor.execute(f"SELECT * FROM Employee_det WHERE emp_no like '%{st.session_state.searchinp}%' ")
+                emp = pd.DataFrame(cursor.fetchall(), columns=[desc[0] for desc in cursor.description])
+                if emp.empty:
+                    st.error("No records found")
+                else:
+                    set_data(emp)
 
         r0c1,r0c2 = st.columns([7,3])
         with r0c1:
@@ -164,7 +161,7 @@ def Search(cursor):
                     st.session_state.button_label = "Edit"
                     st.rerun()
             st.button("Active",key=1,type="primary")
-        with st.container(border=1,height=500):
+        with st.container(border=1):
             menu = option_menu(
                     None,
                     ["Personal Details", "Employment Details","Vitals", "Medical/Surgical History", "Visit Reason", "Vaccinations"],

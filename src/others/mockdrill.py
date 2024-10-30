@@ -3,10 +3,11 @@ import streamlit as st
 import os
 import pandas as p
 
-if "success" not in st.session_state:
-    st.session_state.success = False
+
 
 def Mock_Drill(connection, cursor):
+    if "success" not in st.session_state:
+        st.session_state.success = False
     st.title("Mock Drill")
     st.write("""
         <style>

@@ -11,8 +11,7 @@ from datetime import datetime
 
 
 
-if "form_data" not in st.session_state:
-        st.session_state.form_data = {} 
+
 
 def systolic_diastolic_chart(systolic, diastolic):
     systolic = int(systolic)
@@ -147,341 +146,6 @@ def Form(visitreason,select, select1, connection, cursor):
             icons=['a','a','a','a','a',]
             )
 
-    rc1, rc2, rc3 = st.columns([1,3,2])
-    with rc1:
-        st.header("Get User")
-    with rc2:
-        st.session_state.form_data['Employee ID'] = st.text_input('Employee ID', value=st.session_state.form_data.get('Employee ID', ""))
-    with rc3: 
-        if st.button("Get Info", type="primary"):  
-            cursor.execute(f"SELECT * FROM Employee_det WHERE emp_no = '{st.session_state.form_data['Employee ID']}'")
-            data = cursor.fetchone()
-            if data is not None:
-                
-                st.session_state.form_data["Visit Reason"] = "Pre Employment"  # Hardcoded value
-                st.session_state.form_data["Employee Name"] = data[1]
-                st.session_state.form_data["Employee Age"] = data[3]
-                st.session_state.form_data['Gender'] = data[4]
-                st.session_state.form_data['Mobile No.'] = data[14][1:] if data[14] else ""
-                st.session_state.form_data['Address'] = data[22] if data[22] is not None else ""
-                st.session_state.form_data['Department'] = data[12]
-                st.session_state.form_data['Work'] = data[11]
-                st.session_state.form_data['Blood Group'] = data[7]
-                st.session_state.form_data['Vaccination Status'] = data[9]
-            else:
-                st.warning("No basic Data Found")
-            cursor.execute(f"SELECT * FROM vitals WHERE emp_no = {st.session_state.form_data['Employee ID']};")
-            df = cursor.fetchall()
-            if  len(df)!=0:
-                st.session_state.form_data["Systolic"] = df[-1][3]
-                st.session_state.form_data["Diastolic"] = df[-1][4]
-                st.session_state.form_data["Pulse"] = df[-1][5]
-                st.session_state.form_data["Temperature"] = df[-1][7]
-                st.session_state.form_data["Respiratory Rate"] = df[-1][8]
-                st.session_state.form_data["spo2"] = df[-1][6]
-                st.session_state.form_data["BMI"] = df[-1][11]
-                st.session_state.form_data["Weight"] = df[-1][10]
-                st.session_state.form_data["Height"] = df[-1][9]
-            else:
-                st.warning("No Vitals found")
-            cursor.execute(f"SELECT * FROM medicalpersonalhist WHERE emp_no = {st.session_state.form_data['Employee ID']};")
-            df = cursor.fetchall()
-            if len(df)!=0: 
-                st.session_state.form_data["Personal History"] = df[0][3]
-                st.session_state.form_data["Medical History"] = df[0][4]
-                st.session_state.form_data["Surgical History"] = df[0][5]
-                st.session_state.form_data["Father"] = df[-1][6]
-                st.session_state.form_data["Mother"] = df[-1][7]
-            else:
-                st.warning("No Medical History found")
-            cursor.execute(f"SELECT * FROM hematology_result WHERE emp_no = {st.session_state.form_data['Employee ID']};")
-            df = cursor.fetchall()
-            if len(df)!=0: 
-                st.session_state.form_data["Hemoglobin"] = df[-1][3]
-                st.session_state.form_data["Total RBC"] = df[-1][6]
-                st.session_state.form_data["Total WBC"] = df[-1][9]
-                st.session_state.form_data["Neutrophil"] = df[-1][30]
-                st.session_state.form_data["Monocyte"] = df[-1][39]
-                # st.session_state.form_data["PCV"] = df[-1][]
-                st.session_state.form_data["MCV"] = df[-1][15]
-                st.session_state.form_data["MCH"] = df[-1][18]
-                st.session_state.form_data["Lymphocyte"] = df[-1][33]
-                st.session_state.form_data["ESR"] = df[-1][45]            
-                st.session_state.form_data["MCHC"] = df[-1][21]
-                st.session_state.form_data["Platelet Count"] = df[-1][24]
-                st.session_state.form_data["RDW"] = df[-1][27]
-                st.session_state.form_data["Eosinophil"] = df[-1][36]
-                st.session_state.form_data["Basophil"] = df[-1][42]
-                st.session_state.form_data["Preipheral Blood Smear - RBC Morphology"] = df[-1][48]
-                st.session_state.form_data["Preipheral Blood Smear - Parasites"] = df[-1][49]
-                st.session_state.form_data["Preipheral Blood Smear - Others"] = df[-1][50]
-            else:
-                st.warning("No Hematology Result found")
-            cursor.execute(f"SELECT * FROM routine_sugartest WHERE emp_no = {st.session_state.form_data['Employee ID']};")
-            df = cursor.fetchall()
-            if len(df)!=0: 
-                st.session_state.form_data["Glucose (F)"] = df[-1][3]
-                st.session_state.form_data["Glucose (PP)"] = df[-1][6]
-                st.session_state.form_data["Random Blood sugar"] = df[-1][9]
-                st.session_state.form_data["Estimated Average Glucose"] = df[-1][12]
-                st.session_state.form_data["HbA1c"] = df[-1][15]
-                st.session_state.form_data['Employee ID'] = df[-1][2]
-            else:
-                st.warning("No Routine Sugar Test Result found")
-            cursor.execute(f"SELECT * FROM rft_result WHERE emp_no = {st.session_state.form_data['Employee ID']};")
-            df = cursor.fetchall()
-            if len(df)!=0: 
-                st.session_state.form_data["Urea"] = df[-1][3]
-                st.session_state.form_data['BUN'] = df[-1][6]
-                st.session_state.form_data["Serum Creatinine"] = df[-1][9]
-                st.session_state.form_data["Uric Acid"] = df[-1][12] 
-                st.session_state.form_data["Sodium"] = df[-1][15]
-                st.session_state.form_data["Potassium"] = df[-1][18]
-                st.session_state.form_data["Calcium"] = df[-1][21]
-                st.session_state.form_data["Phosphorus"] = df[-1][24]
-                st.session_state.form_data["Chloride"] = df[-1][27]
-            else:
-                st.warning("No Renal Function Test Result found")
-            cursor.execute(f"SELECT * FROM lipid_profile WHERE emp_no = {st.session_state.form_data['Employee ID']};")
-            df = cursor.fetchall()
-            if len(df)!=0: 
-                st.session_state.form_data["Total Cholesterol"] = df[-1][3]
-                st.session_state.form_data["Triglycerides"] = df[-1][6]
-                st.session_state.form_data["HDL - Cholesterol"] = df[-1][9]
-                st.session_state.form_data["LDL- Cholesterol"] = df[-1][15]
-                st.session_state.form_data["CHOL HDL ratio"] = df[-1][18]
-                st.session_state.form_data["VLDL -Choleserol"] = df[-1][12]
-                st.session_state.form_data["LDL.CHOL/HDL.CHOL Ratio"] = df[-1][21]
-            else:
-                st.warning("No Lipid Profile Test Result found")
-            cursor.execute(f"SELECT * FROM liver_function WHERE emp_no = {st.session_state.form_data['Employee ID']};")
-            df = cursor.fetchall()
-            if len(df)!=0: 
-                st.session_state.form_data["Bilirubin - Total"] = df[-1][3] 
-                st.session_state.form_data["Bilirubin - Direct"] = df[-1][6] 
-                st.session_state.form_data["Bilirubin - Indirect"] = df[-1][9]
-                st.session_state.form_data["SGOT /AST"] = df[-1][12] 
-                st.session_state.form_data["SGPT /ALT"] = df[-1][15] 
-                st.session_state.form_data["Alkaline phosphatase"] = df[-1][18] 
-                st.session_state.form_data["Total Protein"] = df[-1][21] 
-                st.session_state.form_data["Albumin (Serum )"] = df[-1][24] 
-                st.session_state.form_data["Globulin(Serum)"] = df[-1][27] 
-                st.session_state.form_data["Alb/Glob Ratio"] = df[-1][30] 
-                st.session_state.form_data["Gamma Glutamyl transferase"] = df[-1][33] 
-            else:
-                st.warning("No Liver Function Test Result found")
-            cursor.execute(f"SELECT * FROM thyroid_function_test WHERE emp_no = {st.session_state.form_data['Employee ID']};")
-            df = cursor.fetchall()
-            if len(df)!=0: 
-                st.session_state.form_data["T3- Triiodothyroine"] = df[-1][3]
-                st.session_state.form_data["T4 - Thyroxine"] = df[-1][6] 
-                st.session_state.form_data["TSH- Thyroid Stimulating Hormone"] = df[-1][7]  
-            else:
-                st.warning("No Thyroid Function Test Result found")
-            cursor.execute(f"SELECT * FROM autoimmune_test WHERE emp_no = {st.session_state.form_data['Employee ID']};")
-            df = cursor.fetchall()
-            if len(df)!=0: 
-                st.session_state.form_data["ANA (Antinuclear Antibody)"] = df[-1][3]
-                st.session_state.form_data["Anti ds DNA"] = df[-1][6] 
-                st.session_state.form_data["Rheumatoid factor"] = df[-1][12] 
-                st.session_state.form_data["Anticardiolipin Antibodies (IgG & IgM)"] = df[-1][9] 
-            else:
-                st.warning("No Auto Inumme Test Result found")
-            cursor.execute(f"SELECT * FROM coagulation_test WHERE emp_no = {st.session_state.form_data['Employee ID']};")
-            df = cursor.fetchall()
-            if len(df)!=0: 
-                st.session_state.form_data["Prothrombin Time (PT)"] = df[-1][3] 
-                st.session_state.form_data["PT INR"] = df[-1][6] 
-                st.session_state.form_data["Bleeding Time (BT)"] = df[-1][9] 
-                st.session_state.form_data["Clotting Time (CT)"] = df[-1][12] 
-            else:
-                st.warning("No Coagulation Test Result found")
-            cursor.execute(f"SELECT * FROM enzymes_cardio WHERE emp_no = {st.session_state.form_data['Employee ID']};")
-            df = cursor.fetchall()
-            if len(df)!=0: 
-                
-                st.session_state.form_data["Acid Phosphatase"] = df[-1][3] 
-                st.session_state.form_data["Adenosine Deaminase"] = df[-1][6] 
-                st.session_state.form_data["Amylase"] = df[-1][9] 
-                st.session_state.form_data["ECG"] = df[-1][27] 
-                st.session_state.form_data["ECG-Comments"] = df[-1][28] 
-                st.session_state.form_data["Troponin- T"] = df[-1][15] 
-                st.session_state.form_data["Troponin- I"] = df[-1][18] 
-                st.session_state.form_data["CPK - TOTAL"] = df[-1][21] 
-                st.session_state.form_data["ECHO"] = df[-1][29] 
-                st.session_state.form_data["ECHO-Comments"] = df[-1][30] 
-                st.session_state.form_data["Lipase"] = df[-1][12] 
-                st.session_state.form_data["CPK - MB"] = df[-1][24]
-                st.session_state.form_data["TMT"] = df[-1][31] 
-                st.session_state.form_data["TMT-Comments"] = df[-1][32] 
-                st.warning("No Enzymes Cardio Test Result found")
-            cursor.execute(f"SELECT * FROM urine_routine WHERE emp_no =  {st.session_state.form_data['Employee ID']};")
-            df = cursor.fetchall()
-            if len(df)!=0: 
-                st.session_state.form_data["Colour"] = df[-1][3] 
-                st.session_state.form_data["Appearance"] = df[-1][6] 
-                st.session_state.form_data["Reaction (pH)"] = df[-1][9] 
-                st.session_state.form_data["Specific gravity"] = df[-1][12] 
-                st.session_state.form_data["Crystals"] = df[-1][45] 
-                st.session_state.form_data["Bacteria"] = df[-1][48]
-                st.session_state.form_data["Protein/Albumin"] = df[-1][15] 
-                st.session_state.form_data["Glucose (Urine)"] = df[-1][18] 
-                st.session_state.form_data["Ketone Bodies"] = df[-1][21] 
-                st.session_state.form_data["Urobilinogen"] = df[-1][24] 
-                st.session_state.form_data["Casts"] = df[-1][42] 
-                st.session_state.form_data["Bile Salts"] = df[-1][27] 
-                st.session_state.form_data["Bile Pigments"] = df[-1][30] 
-                st.session_state.form_data["WBC / Pus cells"] = df[-1][33] 
-                st.session_state.form_data["Red Blood Cells"] = df[-1][36] 
-                st.session_state.form_data["Epithelial cells"] = df[-1][39]  
-            else:
-                st.warning("No Urine Routine Test Result found")
-            cursor.execute(f"SELECT * FROM serology_result WHERE emp_no = {st.session_state.form_data['Employee ID']};")
-            df = cursor.fetchall()
-            if len(df)!=0: 
-                st.session_state.form_data["Screening For HIV I & II"] = df[-1][3] 
-                st.session_state.form_data["HBsAg"] = df[-1][6] 
-                st.session_state.form_data["HCV"] = df[-1][9] 
-                st.session_state.form_data["VDRL"] = df[-1][15]
-                st.session_state.form_data["Dengue NS1Ag"] = df[-1][18] 
-                st.session_state.form_data["Dengue IgG"] = df[-1][21] 
-                st.session_state.form_data["Dengue IgM"] = df[-1][24] 
-                st.session_state.form_data["WIDAL"] = df[-1][12]  
-  
-            else:
-                st.warning("No Serology Result found")
-            cursor.execute(f"SELECT * FROM motion WHERE emp_no = {st.session_state.form_data['Employee ID']};")
-            df = cursor.fetchall()
-            if len(df)!=0: 
-                st.session_state.form_data["Colour (Motion)"] = df[-1][3] 
-                st.session_state.form_data["Appearance (Motion)"] = df[-1][6] 
-                st.session_state.form_data["Occult Blood"] = df[-1][9] 
-                st.session_state.form_data["Cyst"] = df[-1][15] 
-                st.session_state.form_data["Mucus"] = df[-1][18] 
-                st.session_state.form_data["Pus Cells"] = df[-1][21]
-                st.session_state.form_data["Ova"] = df[-1][12] 
-                st.session_state.form_data["RBCs"] = df[-1][24] 
-                st.session_state.form_data["Others"] = df[-1][27] 
-            else:
-                st.warning("No Motion Result found")
-            cursor.execute(f"SELECT * FROM routine_culture WHERE emp_no = {st.session_state.form_data['Employee ID']};")
-            df = cursor.fetchall()
-            if len(df)!=0: 
-                st.session_state.form_data["Urine"] = df[-1][3]
-                st.session_state.form_data["Motion"] = df[-1][6] 
-                st.session_state.form_data["Sputum"] = df[-1][9]
-                st.session_state.form_data["Blood"] = df[-1][12] 
-            else:
-                st.warning("No Routine Cultre Sensitivity Result found")
-            cursor.execute(f"SELECT * FROM mens_pack WHERE emp_no = {st.session_state.form_data['Employee ID']};")
-            df = cursor.fetchall()
-            if len(df)!=0: 
-                st.session_state.form_data["PSA (Prostate specific Antigen)"] = df[-1][3]
-            else:
-                st.warning("No Men's Pack Result found")
-            cursor.execute(f"SELECT * FROM womens_pack WHERE emp_no = {st.session_state.form_data['Employee ID']};")
-            df = cursor.fetchall()
-            if len(df)!=0: 
-                st.session_state.form_data["Mammogram"] = df[-1][3] 
-                st.session_state.form_data["Mammogram-Comments"] = df[-1][4] 
-                st.session_state.form_data["PAP Smear"] = df[-1][5] 
-                st.session_state.form_data["PAP Smear-Comments"] = df[-1][6] 
-            else:
-                st.warning("No Women's Pack Result found")
-            cursor.execute(f"SELECT * FROM occupational_profile WHERE emp_no =  {st.session_state.form_data['Employee ID']};")
-            df = cursor.fetchall()
-            if len(df)!=0:
-                st.session_state.form_data["Audiometry"] = df[-1][3] 
-                st.session_state.form_data["Audiometry-Comments"] = df[-1][4] 
-                st.session_state.form_data["PFT"] = df[-1][5] 
-                st.session_state.form_data["PFT-Comments"] = df[-1][6]  
-            else:
-                st.warning("No Occupational Profile found")
-            cursor.execute(f"SELECT * FROM other_tests WHERE emp_no = {st.session_state.form_data['Employee ID']};")
-            df = cursor.fetchall()
-            if len(df)!=0: 
-                st.session_state.form_data["Pathology"] = df[-1][3] 
-                st.session_state.form_data["Pathology-Comments"] = df[-1][4]
-            else:
-                st.warning("No Other Test Result found")
-            cursor.execute(f"SELECT * FROM ophthalmic_report WHERE emp_no = {st.session_state.form_data['Employee ID']};")
-            df = cursor.fetchall()
-            if len(df)!=0: 
-                st.session_state.form_data["Vision"] = df[-1][3] 
-                st.session_state.form_data["Vision-Comments"] = df[-1][4] 
-                st.session_state.form_data["Color Vision"] = df[-1][5] 
-                st.session_state.form_data["Color Vision-Comments"] = df[-1][6] 
-            else:
-                st.warning("No Ophthalmic Test Result found")
-            cursor.execute(f"SELECT * FROM x_ray WHERE emp_no = {st.session_state.form_data['Employee ID']};")
-            df = cursor.fetchall()
-            if len(df)!=0: 
-                
-                st.session_state.form_data["X-RAY Chest"] =df[-1][3] 
-                st.session_state.form_data["X-RAY Chest-Comments"] =df[-1][4] 
-                st.session_state.form_data["X-RAY KUB"] =df[-1][9] 
-                st.session_state.form_data["X-RAY KUB-Comments"] =df[-1][10] 
-                st.session_state.form_data["X-RAY Spine"] =df[-1][5] 
-                st.session_state.form_data["X-RAY Spine-Comments"] =df[-1][6] 
-                st.session_state.form_data["X-RAY Pelvis"] =df[-1][11] 
-                st.session_state.form_data["X-RAY Pelvis-Comments"] =df[-1][12] 
-                st.session_state.form_data["X-RAY Abdomen"] =df[-1][7] 
-                st.session_state.form_data["X-RAY Abdomen-Comments"] =df[-1][8] 
-            else:
-                st.warning("No X-Ray Test Result found")
-            cursor.execute(f"SELECT * FROM usg WHERE emp_no = {st.session_state.form_data['Employee ID']};")
-            df = cursor.fetchall()
-            if len(df)!=0: 
-                
-                st.session_state.form_data["USG ABDOMEN"] = df[-1][3] 
-                st.session_state.form_data["USG ABDOMEN-Comments"] = df[-1][4] 
-                st.session_state.form_data["USG KUB"] = df[-1][9] 
-                st.session_state.form_data["USG KUB-Comments"] = df[-1][10] 
-                st.session_state.form_data["USG Pelvis"] = df[-1][5] 
-                st.session_state.form_data["USG Pelvis-Comments"] = df[-1][6]  
-                st.session_state.form_data["USG Neck"] = df[-1][7] 
-                st.session_state.form_data["USG Neck-Comments"] = df[-1][8] 
-                    
-            else:
-                st.warning("No USG Test Result found")
-            cursor.execute(f"SELECT * FROM ct_report WHERE emp_no = {st.session_state.form_data['Employee ID']};")
-            df = cursor.fetchall()
-            if len(df)!=0: 
-                st.session_state.form_data["CT Brain"] = df[-1][3] 
-                st.session_state.form_data["CT Brain-Comments"] = df[-1][4] 
-                st.session_state.form_data["CT Lungs"] = df[-1][9] 
-                st.session_state.form_data["CT Lungs-Comments"] = df[-1][10] 
-                st.session_state.form_data["CT Abdomen"] = df[-1][5]   
-                st.session_state.form_data["CT Abdomen-Comments"] = df[-1][6] 
-                st.session_state.form_data["CT Spine"] = df[-1][11] 
-                st.session_state.form_data["CT Spine-Comments"] = df[-1][12] 
-                st.session_state.form_data["CT Pelvis"] = df[-1][7] 
-                st.session_state.form_data["CT Pelvis-Comments"] = df[-1][8]  
-            else:
-                st.warning("No CT Test Result found")
-            cursor.execute(f"SELECT * FROM mri WHERE emp_no = {st.session_state.form_data['Employee ID']};")
-            df = cursor.fetchall()
-            if len(df)!=0: 
-                
-                st.session_state.form_data["MRI Brain"] = df[-1][3] 
-                st.session_state.form_data["MRI Brain-Comments"] = df[-1][4]  
-                st.session_state.form_data["MRI Lungs"] = df[-1][9]
-                st.session_state.form_data["MRI Lungs-Comments"] = df[-1][10]
-                st.session_state.form_data["MRI Abdomen"] = df[-1][5] 
-                st.session_state.form_data["MRI Abdomen-Comments"] = df[-1][6] 
-                st.session_state.form_data["MRI Spine"] = df[-1][11] 
-                st.session_state.form_data["MRI Spine-Comments"] = df[-1][12] 
-                st.session_state.form_data["MRI Pelvis"] = df[-1][7]
-                st.session_state.form_data["MRI Pelvis-Comments"] = df[-1][8]
-            else:
-                st.warning("No MRI Test Result found")
-            # cursor.execute(f"SELECT * FROM fitness WHERE emp_no = {st.session_state.form_data['Employee ID']};")
-            # df = cursor.fetchall()
-            # if len(df)!=0: 
-            #     st.session_state.form_data["Fitness"] = df[-1][3]
-            #     st.session_state.form_data["Fitness-Comments"] = df[-1][3] 
-            # else:
-            #     st.warning("No MRI Test Result found")
             
     if form_name == "Basic Details":
         st.subheader("Basic Details")
@@ -2243,7 +1907,7 @@ def Form(visitreason,select, select1, connection, cursor):
         
         st.header("Surgical History")
 
-        st.text_area("comments", value = st.session_state.form_data["Surgical History"])
+        st.text_area("comments")
         
         st.markdown("<h3 style='margin-left:30px;'> Family History </h3>", unsafe_allow_html=True)
 
@@ -2692,11 +2356,349 @@ def Form(visitreason,select, select1, connection, cursor):
 
 
 def New_Visit(connection,cursor):
+    if "form_data" not in st.session_state:
+        st.session_state.form_data = {} 
     st.header("NewVisit")
 
     global selected, select
 
     with st.container(border=1):
+        rc1, rc2, rc3 = st.columns([1,3,2])
+        with rc1:
+            st.header("Get User")
+        with rc2:
+            st.session_state.form_data['Employee ID'] = st.text_input('Employee ID', value=st.session_state.form_data.get('Employee ID', ""))
+        with rc3: 
+            if st.button("Get Info", type="primary"):  
+                cursor.execute(f"SELECT * FROM Employee_det WHERE emp_no = '{st.session_state.form_data['Employee ID']}'")
+                data = cursor.fetchone()
+                if data is not None:
+                    
+                    st.session_state.form_data["Visit Reason"] = "Pre Employment"  # Hardcoded value
+                    st.session_state.form_data["Employee Name"] = data[1]
+                    st.session_state.form_data["Employee Age"] = data[3]
+                    st.session_state.form_data['Gender'] = data[4]
+                    st.session_state.form_data['Mobile No.'] = data[14][1:] if data[14] else ""
+                    st.session_state.form_data['Address'] = data[22] if data[22] is not None else ""
+                    st.session_state.form_data['Department'] = data[12]
+                    st.session_state.form_data['Work'] = data[11]
+                    st.session_state.form_data['Blood Group'] = data[7]
+                    st.session_state.form_data['Vaccination Status'] = data[9]
+                else:
+                    st.warning("No basic Data Found")
+                cursor.execute(f"SELECT * FROM vitals WHERE emp_no = {st.session_state.form_data['Employee ID']};")
+                df = cursor.fetchall()
+                if  len(df)!=0:
+                    st.session_state.form_data["Systolic"] = df[-1][3]
+                    st.session_state.form_data["Diastolic"] = df[-1][4]
+                    st.session_state.form_data["Pulse"] = df[-1][5]
+                    st.session_state.form_data["Temperature"] = df[-1][7]
+                    st.session_state.form_data["Respiratory Rate"] = df[-1][8]
+                    st.session_state.form_data["spo2"] = df[-1][6]
+                    st.session_state.form_data["BMI"] = df[-1][11]
+                    st.session_state.form_data["Weight"] = df[-1][10]
+                    st.session_state.form_data["Height"] = df[-1][9]
+                else:
+                    st.warning("No Vitals found")
+                cursor.execute(f"SELECT * FROM medicalpersonalhist WHERE emp_no = {st.session_state.form_data['Employee ID']};")
+                df = cursor.fetchall()
+                if len(df)!=0: 
+                    st.session_state.form_data["Personal History"] = df[0][3]
+                    st.session_state.form_data["Medical History"] = df[0][4]
+                    st.session_state.form_data["Surgical History"] = df[0][5]
+                    st.session_state.form_data["Father"] = df[-1][6]
+                    st.session_state.form_data["Mother"] = df[-1][7]
+                else:
+                    st.warning("No Medical History found")
+                cursor.execute(f"SELECT * FROM hematology_result WHERE emp_no = {st.session_state.form_data['Employee ID']};")
+                df = cursor.fetchall()
+                if len(df)!=0: 
+                    st.session_state.form_data["Hemoglobin"] = df[-1][3]
+                    st.session_state.form_data["Total RBC"] = df[-1][6]
+                    st.session_state.form_data["Total WBC"] = df[-1][9]
+                    st.session_state.form_data["Neutrophil"] = df[-1][30]
+                    st.session_state.form_data["Monocyte"] = df[-1][39]
+                    # st.session_state.form_data["PCV"] = df[-1][]
+                    st.session_state.form_data["MCV"] = df[-1][15]
+                    st.session_state.form_data["MCH"] = df[-1][18]
+                    st.session_state.form_data["Lymphocyte"] = df[-1][33]
+                    st.session_state.form_data["ESR"] = df[-1][45]            
+                    st.session_state.form_data["MCHC"] = df[-1][21]
+                    st.session_state.form_data["Platelet Count"] = df[-1][24]
+                    st.session_state.form_data["RDW"] = df[-1][27]
+                    st.session_state.form_data["Eosinophil"] = df[-1][36]
+                    st.session_state.form_data["Basophil"] = df[-1][42]
+                    st.session_state.form_data["Preipheral Blood Smear - RBC Morphology"] = df[-1][48]
+                    st.session_state.form_data["Preipheral Blood Smear - Parasites"] = df[-1][49]
+                    st.session_state.form_data["Preipheral Blood Smear - Others"] = df[-1][50]
+                else:
+                    st.warning("No Hematology Result found")
+                cursor.execute(f"SELECT * FROM routine_sugartest WHERE emp_no = {st.session_state.form_data['Employee ID']};")
+                df = cursor.fetchall()
+                if len(df)!=0: 
+                    st.session_state.form_data["Glucose (F)"] = df[-1][3]
+                    st.session_state.form_data["Glucose (PP)"] = df[-1][6]
+                    st.session_state.form_data["Random Blood sugar"] = df[-1][9]
+                    st.session_state.form_data["Estimated Average Glucose"] = df[-1][12]
+                    st.session_state.form_data["HbA1c"] = df[-1][15]
+                    st.session_state.form_data['Employee ID'] = df[-1][2]
+                else:
+                    st.warning("No Routine Sugar Test Result found")
+                cursor.execute(f"SELECT * FROM rft_result WHERE emp_no = {st.session_state.form_data['Employee ID']};")
+                df = cursor.fetchall()
+                if len(df)!=0: 
+                    st.session_state.form_data["Urea"] = df[-1][3]
+                    st.session_state.form_data['BUN'] = df[-1][6]
+                    st.session_state.form_data["Serum Creatinine"] = df[-1][9]
+                    st.session_state.form_data["Uric Acid"] = df[-1][12] 
+                    st.session_state.form_data["Sodium"] = df[-1][15]
+                    st.session_state.form_data["Potassium"] = df[-1][18]
+                    st.session_state.form_data["Calcium"] = df[-1][21]
+                    st.session_state.form_data["Phosphorus"] = df[-1][24]
+                    st.session_state.form_data["Chloride"] = df[-1][27]
+                else:
+                    st.warning("No Renal Function Test Result found")
+                cursor.execute(f"SELECT * FROM lipid_profile WHERE emp_no = {st.session_state.form_data['Employee ID']};")
+                df = cursor.fetchall()
+                if len(df)!=0: 
+                    st.session_state.form_data["Total Cholesterol"] = df[-1][3]
+                    st.session_state.form_data["Triglycerides"] = df[-1][6]
+                    st.session_state.form_data["HDL - Cholesterol"] = df[-1][9]
+                    st.session_state.form_data["LDL- Cholesterol"] = df[-1][15]
+                    st.session_state.form_data["CHOL HDL ratio"] = df[-1][18]
+                    st.session_state.form_data["VLDL -Choleserol"] = df[-1][12]
+                    st.session_state.form_data["LDL.CHOL/HDL.CHOL Ratio"] = df[-1][21]
+                else:
+                    st.warning("No Lipid Profile Test Result found")
+                cursor.execute(f"SELECT * FROM liver_function WHERE emp_no = {st.session_state.form_data['Employee ID']};")
+                df = cursor.fetchall()
+                if len(df)!=0: 
+                    st.session_state.form_data["Bilirubin - Total"] = df[-1][3] 
+                    st.session_state.form_data["Bilirubin - Direct"] = df[-1][6] 
+                    st.session_state.form_data["Bilirubin - Indirect"] = df[-1][9]
+                    st.session_state.form_data["SGOT /AST"] = df[-1][12] 
+                    st.session_state.form_data["SGPT /ALT"] = df[-1][15] 
+                    st.session_state.form_data["Alkaline phosphatase"] = df[-1][18] 
+                    st.session_state.form_data["Total Protein"] = df[-1][21] 
+                    st.session_state.form_data["Albumin (Serum )"] = df[-1][24] 
+                    st.session_state.form_data["Globulin(Serum)"] = df[-1][27] 
+                    st.session_state.form_data["Alb/Glob Ratio"] = df[-1][30] 
+                    st.session_state.form_data["Gamma Glutamyl transferase"] = df[-1][33] 
+                else:
+                    st.warning("No Liver Function Test Result found")
+                cursor.execute(f"SELECT * FROM thyroid_function_test WHERE emp_no = {st.session_state.form_data['Employee ID']};")
+                df = cursor.fetchall()
+                if len(df)!=0: 
+                    st.session_state.form_data["T3- Triiodothyroine"] = df[-1][3]
+                    st.session_state.form_data["T4 - Thyroxine"] = df[-1][6] 
+                    st.session_state.form_data["TSH- Thyroid Stimulating Hormone"] = df[-1][7]  
+                else:
+                    st.warning("No Thyroid Function Test Result found")
+                cursor.execute(f"SELECT * FROM autoimmune_test WHERE emp_no = {st.session_state.form_data['Employee ID']};")
+                df = cursor.fetchall()
+                if len(df)!=0: 
+                    st.session_state.form_data["ANA (Antinuclear Antibody)"] = df[-1][3]
+                    st.session_state.form_data["Anti ds DNA"] = df[-1][6] 
+                    st.session_state.form_data["Rheumatoid factor"] = df[-1][12] 
+                    st.session_state.form_data["Anticardiolipin Antibodies (IgG & IgM)"] = df[-1][9] 
+                else:
+                    st.warning("No Auto Inumme Test Result found")
+                cursor.execute(f"SELECT * FROM coagulation_test WHERE emp_no = {st.session_state.form_data['Employee ID']};")
+                df = cursor.fetchall()
+                if len(df)!=0: 
+                    st.session_state.form_data["Prothrombin Time (PT)"] = df[-1][3] 
+                    st.session_state.form_data["PT INR"] = df[-1][6] 
+                    st.session_state.form_data["Bleeding Time (BT)"] = df[-1][9] 
+                    st.session_state.form_data["Clotting Time (CT)"] = df[-1][12] 
+                else:
+                    st.warning("No Coagulation Test Result found")
+                cursor.execute(f"SELECT * FROM enzymes_cardio WHERE emp_no = {st.session_state.form_data['Employee ID']};")
+                df = cursor.fetchall()
+                if len(df)!=0: 
+                    
+                    st.session_state.form_data["Acid Phosphatase"] = df[-1][3] 
+                    st.session_state.form_data["Adenosine Deaminase"] = df[-1][6] 
+                    st.session_state.form_data["Amylase"] = df[-1][9] 
+                    st.session_state.form_data["ECG"] = df[-1][27] 
+                    st.session_state.form_data["ECG-Comments"] = df[-1][28] 
+                    st.session_state.form_data["Troponin- T"] = df[-1][15] 
+                    st.session_state.form_data["Troponin- I"] = df[-1][18] 
+                    st.session_state.form_data["CPK - TOTAL"] = df[-1][21] 
+                    st.session_state.form_data["ECHO"] = df[-1][29] 
+                    st.session_state.form_data["ECHO-Comments"] = df[-1][30] 
+                    st.session_state.form_data["Lipase"] = df[-1][12] 
+                    st.session_state.form_data["CPK - MB"] = df[-1][24]
+                    st.session_state.form_data["TMT"] = df[-1][31] 
+                    st.session_state.form_data["TMT-Comments"] = df[-1][32] 
+                    st.warning("No Enzymes Cardio Test Result found")
+                cursor.execute(f"SELECT * FROM urine_routine WHERE emp_no =  {st.session_state.form_data['Employee ID']};")
+                df = cursor.fetchall()
+                if len(df)!=0: 
+                    st.session_state.form_data["Colour"] = df[-1][3] 
+                    st.session_state.form_data["Appearance"] = df[-1][6] 
+                    st.session_state.form_data["Reaction (pH)"] = df[-1][9] 
+                    st.session_state.form_data["Specific gravity"] = df[-1][12] 
+                    st.session_state.form_data["Crystals"] = df[-1][45] 
+                    st.session_state.form_data["Bacteria"] = df[-1][48]
+                    st.session_state.form_data["Protein/Albumin"] = df[-1][15] 
+                    st.session_state.form_data["Glucose (Urine)"] = df[-1][18] 
+                    st.session_state.form_data["Ketone Bodies"] = df[-1][21] 
+                    st.session_state.form_data["Urobilinogen"] = df[-1][24] 
+                    st.session_state.form_data["Casts"] = df[-1][42] 
+                    st.session_state.form_data["Bile Salts"] = df[-1][27] 
+                    st.session_state.form_data["Bile Pigments"] = df[-1][30] 
+                    st.session_state.form_data["WBC / Pus cells"] = df[-1][33] 
+                    st.session_state.form_data["Red Blood Cells"] = df[-1][36] 
+                    st.session_state.form_data["Epithelial cells"] = df[-1][39]  
+                else:
+                    st.warning("No Urine Routine Test Result found")
+                cursor.execute(f"SELECT * FROM serology_result WHERE emp_no = {st.session_state.form_data['Employee ID']};")
+                df = cursor.fetchall()
+                if len(df)!=0: 
+                    st.session_state.form_data["Screening For HIV I & II"] = df[-1][3] 
+                    st.session_state.form_data["HBsAg"] = df[-1][6] 
+                    st.session_state.form_data["HCV"] = df[-1][9] 
+                    st.session_state.form_data["VDRL"] = df[-1][15]
+                    st.session_state.form_data["Dengue NS1Ag"] = df[-1][18] 
+                    st.session_state.form_data["Dengue IgG"] = df[-1][21] 
+                    st.session_state.form_data["Dengue IgM"] = df[-1][24] 
+                    st.session_state.form_data["WIDAL"] = df[-1][12]  
+    
+                else:
+                    st.warning("No Serology Result found")
+                cursor.execute(f"SELECT * FROM motion WHERE emp_no = {st.session_state.form_data['Employee ID']};")
+                df = cursor.fetchall()
+                if len(df)!=0: 
+                    st.session_state.form_data["Colour (Motion)"] = df[-1][3] 
+                    st.session_state.form_data["Appearance (Motion)"] = df[-1][6] 
+                    st.session_state.form_data["Occult Blood"] = df[-1][9] 
+                    st.session_state.form_data["Cyst"] = df[-1][15] 
+                    st.session_state.form_data["Mucus"] = df[-1][18] 
+                    st.session_state.form_data["Pus Cells"] = df[-1][21]
+                    st.session_state.form_data["Ova"] = df[-1][12] 
+                    st.session_state.form_data["RBCs"] = df[-1][24] 
+                    st.session_state.form_data["Others"] = df[-1][27] 
+                else:
+                    st.warning("No Motion Result found")
+                cursor.execute(f"SELECT * FROM routine_culture WHERE emp_no = {st.session_state.form_data['Employee ID']};")
+                df = cursor.fetchall()
+                if len(df)!=0: 
+                    st.session_state.form_data["Urine"] = df[-1][3]
+                    st.session_state.form_data["Motion"] = df[-1][6] 
+                    st.session_state.form_data["Sputum"] = df[-1][9]
+                    st.session_state.form_data["Blood"] = df[-1][12] 
+                else:
+                    st.warning("No Routine Cultre Sensitivity Result found")
+                cursor.execute(f"SELECT * FROM mens_pack WHERE emp_no = {st.session_state.form_data['Employee ID']};")
+                df = cursor.fetchall()
+                if len(df)!=0: 
+                    st.session_state.form_data["PSA (Prostate specific Antigen)"] = df[-1][3]
+                else:
+                    st.warning("No Men's Pack Result found")
+                cursor.execute(f"SELECT * FROM womens_pack WHERE emp_no = {st.session_state.form_data['Employee ID']};")
+                df = cursor.fetchall()
+                if len(df)!=0: 
+                    st.session_state.form_data["Mammogram"] = df[-1][3] 
+                    st.session_state.form_data["Mammogram-Comments"] = df[-1][4] 
+                    st.session_state.form_data["PAP Smear"] = df[-1][5] 
+                    st.session_state.form_data["PAP Smear-Comments"] = df[-1][6] 
+                else:
+                    st.warning("No Women's Pack Result found")
+                cursor.execute(f"SELECT * FROM occupational_profile WHERE emp_no =  {st.session_state.form_data['Employee ID']};")
+                df = cursor.fetchall()
+                if len(df)!=0:
+                    st.session_state.form_data["Audiometry"] = df[-1][3] 
+                    st.session_state.form_data["Audiometry-Comments"] = df[-1][4] 
+                    st.session_state.form_data["PFT"] = df[-1][5] 
+                    st.session_state.form_data["PFT-Comments"] = df[-1][6]  
+                else:
+                    st.warning("No Occupational Profile found")
+                cursor.execute(f"SELECT * FROM other_tests WHERE emp_no = {st.session_state.form_data['Employee ID']};")
+                df = cursor.fetchall()
+                if len(df)!=0: 
+                    st.session_state.form_data["Pathology"] = df[-1][3] 
+                    st.session_state.form_data["Pathology-Comments"] = df[-1][4]
+                else:
+                    st.warning("No Other Test Result found")
+                cursor.execute(f"SELECT * FROM ophthalmic_report WHERE emp_no = {st.session_state.form_data['Employee ID']};")
+                df = cursor.fetchall()
+                if len(df)!=0: 
+                    st.session_state.form_data["Vision"] = df[-1][3] 
+                    st.session_state.form_data["Vision-Comments"] = df[-1][4] 
+                    st.session_state.form_data["Color Vision"] = df[-1][5] 
+                    st.session_state.form_data["Color Vision-Comments"] = df[-1][6] 
+                else:
+                    st.warning("No Ophthalmic Test Result found")
+                cursor.execute(f"SELECT * FROM x_ray WHERE emp_no = {st.session_state.form_data['Employee ID']};")
+                df = cursor.fetchall()
+                if len(df)!=0: 
+                    
+                    st.session_state.form_data["X-RAY Chest"] =df[-1][3] 
+                    st.session_state.form_data["X-RAY Chest-Comments"] =df[-1][4] 
+                    st.session_state.form_data["X-RAY KUB"] =df[-1][9] 
+                    st.session_state.form_data["X-RAY KUB-Comments"] =df[-1][10] 
+                    st.session_state.form_data["X-RAY Spine"] =df[-1][5] 
+                    st.session_state.form_data["X-RAY Spine-Comments"] =df[-1][6] 
+                    st.session_state.form_data["X-RAY Pelvis"] =df[-1][11] 
+                    st.session_state.form_data["X-RAY Pelvis-Comments"] =df[-1][12] 
+                    st.session_state.form_data["X-RAY Abdomen"] =df[-1][7] 
+                    st.session_state.form_data["X-RAY Abdomen-Comments"] =df[-1][8] 
+                else:
+                    st.warning("No X-Ray Test Result found")
+                cursor.execute(f"SELECT * FROM usg WHERE emp_no = {st.session_state.form_data['Employee ID']};")
+                df = cursor.fetchall()
+                if len(df)!=0: 
+                    
+                    st.session_state.form_data["USG ABDOMEN"] = df[-1][3] 
+                    st.session_state.form_data["USG ABDOMEN-Comments"] = df[-1][4] 
+                    st.session_state.form_data["USG KUB"] = df[-1][9] 
+                    st.session_state.form_data["USG KUB-Comments"] = df[-1][10] 
+                    st.session_state.form_data["USG Pelvis"] = df[-1][5] 
+                    st.session_state.form_data["USG Pelvis-Comments"] = df[-1][6]  
+                    st.session_state.form_data["USG Neck"] = df[-1][7] 
+                    st.session_state.form_data["USG Neck-Comments"] = df[-1][8] 
+                        
+                else:
+                    st.warning("No USG Test Result found")
+                cursor.execute(f"SELECT * FROM ct_report WHERE emp_no = {st.session_state.form_data['Employee ID']};")
+                df = cursor.fetchall()
+                if len(df)!=0: 
+                    st.session_state.form_data["CT Brain"] = df[-1][3] 
+                    st.session_state.form_data["CT Brain-Comments"] = df[-1][4] 
+                    st.session_state.form_data["CT Lungs"] = df[-1][9] 
+                    st.session_state.form_data["CT Lungs-Comments"] = df[-1][10] 
+                    st.session_state.form_data["CT Abdomen"] = df[-1][5]   
+                    st.session_state.form_data["CT Abdomen-Comments"] = df[-1][6] 
+                    st.session_state.form_data["CT Spine"] = df[-1][11] 
+                    st.session_state.form_data["CT Spine-Comments"] = df[-1][12] 
+                    st.session_state.form_data["CT Pelvis"] = df[-1][7] 
+                    st.session_state.form_data["CT Pelvis-Comments"] = df[-1][8]  
+                else:
+                    st.warning("No CT Test Result found")
+                cursor.execute(f"SELECT * FROM mri WHERE emp_no = {st.session_state.form_data['Employee ID']};")
+                df = cursor.fetchall()
+                if len(df)!=0: 
+                    
+                    st.session_state.form_data["MRI Brain"] = df[-1][3] 
+                    st.session_state.form_data["MRI Brain-Comments"] = df[-1][4]  
+                    st.session_state.form_data["MRI Lungs"] = df[-1][9]
+                    st.session_state.form_data["MRI Lungs-Comments"] = df[-1][10]
+                    st.session_state.form_data["MRI Abdomen"] = df[-1][5] 
+                    st.session_state.form_data["MRI Abdomen-Comments"] = df[-1][6] 
+                    st.session_state.form_data["MRI Spine"] = df[-1][11] 
+                    st.session_state.form_data["MRI Spine-Comments"] = df[-1][12] 
+                    st.session_state.form_data["MRI Pelvis"] = df[-1][7]
+                    st.session_state.form_data["MRI Pelvis-Comments"] = df[-1][8]
+                else:
+                    st.warning("No MRI Test Result found")
+                # cursor.execute(f"SELECT * FROM fitness WHERE emp_no = {st.session_state.form_data['Employee ID']};")
+                # df = cursor.fetchall()
+                # if len(df)!=0: 
+                #     st.session_state.form_data["Fitness"] = df[-1][3]
+                #     st.session_state.form_data["Fitness-Comments"] = df[-1][3] 
+                # else:
+                #     st.warning("No MRI Test Result found")
+    
         r0c1, r0c2 = st.columns([5, 5])
 
         with r0c1:
