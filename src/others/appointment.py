@@ -454,19 +454,24 @@ def Appointment(connection, accessLevel):
     elif accessLevel == "nurse":
         if 'page' not in st.session_state:
             st.session_state.page = 'upload' 
-        col1, col2, col3 = st.columns([1,2,8])  
+        col1, col2, col3, col4 = st.columns([2,1.5,2,8])  
         with col1:
-            if st.button("Upload", key="upload_btn", type='primary'):  
+            if st.button("Upload Appointment", key="upload_btn", type='primary'):  
                 st.session_state.page = 'upload'  
 
         with col2:
             if st.button("Appointments", key="appointments_btn", type='primary'):  
                 st.session_state.page = 'appointments' 
 
+        with col3:
+            if st.button("Book Appointment", key="bookappointments_btn", type='primary'):  
+                st.session_state.page = 'bookappointments' 
+
         # Check if the current page is 'upload'
         if st.session_state.page == 'upload':
+            st.subheader("Upload the appoitnment excel here:")
             # File uploader for Excel files
-            file_upload = st.file_uploader("Get Excel file from Contractor Upload as .xlsx file", type=['xlsx'], key="upload_file")
+            file_upload = st.file_uploader("Get Excel file from Contractor Upload as .xlsx file", type=['xlsx'], key="upload_file", label_visibility='collapsed')
 
             if file_upload is not None:
                 df = pd.read_excel(file_upload)
@@ -534,16 +539,31 @@ def Appointment(connection, accessLevel):
                 else:
                     st.error("The uploaded file does not have the required columns.")
 
-
-
-
-
-            
-
         elif st.session_state.page == 'appointments':
-            if st.session_state.open_modal:
+            if st.session_state.open_modal == False:
                 cursor = connection.cursor()
                 with st.container( border=1):
+                    rc1, rc2 = st.columns([6,4])
+                    with rc1:
+                        with st.container(border=1):
+                            rrc1, rrc2, rrc3, rrc4, rrc5 = st.columns([1,4,0.5,4,2])
+                            with rrc1:
+                                st.write("From")
+                            with rrc2:
+                                st.date_input("from_date", label_visibility='collapsed')
+                            with rrc3:
+                                st.write("To")
+                            with rrc4:
+                                st.date_input("to_date", label_visibility='collapsed')
+                            with rrc5:
+                                st.button("Apply", type='primary')
+                    with rc2:
+                        with st.container(border=1):
+                            rrc1, rrc2 = st.columns([10,4])
+                            with rrc1:
+                                st.text_input("search", label_visibility='collapsed', placeholder="Search")
+                            with rrc2:
+                                st.button("Search", type='primary')
                     r1c1, r1c2 = st.columns([3,10])
                     with r1c1:
                         opt = option_menu(menu_title=None, menu_icon='./src/assets/Folder.png', icons=['folder','folder','folder','folder','folder','folder','folder','folder','folder'], options=['Pre Employment', 'Pre Placement', 'Annual/Periodical', 'Camps', 'Fitness After Medical Leave','Illness', 'Injury', 'Followup Visit', 'Special Work Fitness'])
@@ -588,7 +608,7 @@ def Appointment(connection, accessLevel):
                                         st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Details</b></p>', unsafe_allow_html=True)
                                         for i, val in enumerate(emp['emp_no']):
                                             if st.button('View', key=f'view_{val}', type='primary'):
-                                                st.session_state.open_modal = False
+                                                st.session_state.open_modal = True
                                                 st.rerun()
 
                     elif opt == 'Pre Placement':
@@ -630,7 +650,7 @@ def Appointment(connection, accessLevel):
                                         st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Details</b></p>', unsafe_allow_html=True)
                                         for i, val in enumerate(emp['emp_no']):
                                             if st.button('View', key=f'view_{val}', type='primary'):
-                                                st.session_state.open_modal = False
+                                                st.session_state.open_modal = True
                                                 st.rerun()
 
                     elif opt == 'Annual/Periodical':
@@ -674,7 +694,7 @@ def Appointment(connection, accessLevel):
                                         st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Details</b></p>', unsafe_allow_html=True)
                                         for i, val in enumerate(emp['emp_no']):
                                             if st.button('View', key=f'view_{val}', type='primary'):
-                                                st.session_state.open_modal = False
+                                                st.session_state.open_modal = True
                                                 st.rerun()
 
 
@@ -719,7 +739,7 @@ def Appointment(connection, accessLevel):
                                         st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Details</b></p>', unsafe_allow_html=True)
                                         for i, val in enumerate(emp['emp_no']):
                                             if st.button('View', key=f'view_camps_{val}', type='primary'):
-                                                st.session_state.open_modal = False
+                                                st.session_state.open_modal = True
                                                 st.rerun()
 
                     elif opt == 'Fitness After Medical Leave':
@@ -763,7 +783,7 @@ def Appointment(connection, accessLevel):
                                         st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Details</b></p>', unsafe_allow_html=True)
                                         for i, val in enumerate(emp['emp_no']):
                                             if st.button('View', key=f'view_fitness_{val}', type='primary'):
-                                                st.session_state.open_modal = False
+                                                st.session_state.open_modal = True
                                                 st.rerun()
 
 
@@ -807,7 +827,7 @@ def Appointment(connection, accessLevel):
                                         st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Details</b></p>', unsafe_allow_html=True)
                                         for i, val in enumerate(emp['emp_no']):
                                             if st.button('View', key=f'view_illness_{val}', type='primary'):
-                                                st.session_state.open_modal = False
+                                                st.session_state.open_modal = True
                                                 st.rerun()
 
 
@@ -853,7 +873,7 @@ def Appointment(connection, accessLevel):
                                         st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Details</b></p>', unsafe_allow_html=True)
                                         for i, val in enumerate(emp['emp_no']):
                                             if st.button('View', key=f'view_injury_{val}', type='primary'):
-                                                st.session_state.open_modal = False
+                                                st.session_state.open_modal = True
                                                 st.rerun()
 
                     elif opt == 'Followup Visit':
@@ -898,7 +918,7 @@ def Appointment(connection, accessLevel):
                                         st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Details</b></p>', unsafe_allow_html=True)
                                         for i, val in enumerate(emp['emp_no']):
                                             if st.button('View', key=f'view_followup_{val}', type='primary'):
-                                                st.session_state.open_modal = False
+                                                st.session_state.open_modal = True
                                                 st.rerun()
     
                     elif opt == 'Special Work Fitness':
@@ -941,7 +961,7 @@ def Appointment(connection, accessLevel):
                                         st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Details</b></p>', unsafe_allow_html=True)
                                         for i, val in enumerate(emp['emp_no']):
                                             if st.button('View', key=f'view_special_work_{val}', type='primary'):
-                                                st.session_state.open_modal = False
+                                                st.session_state.open_modal = True
                                                 st.rerun()
             else:
                 
@@ -950,7 +970,7 @@ def Appointment(connection, accessLevel):
                     st.subheader('Appointments')
                 with r0c3:
                     if st.button('close', type="primary"):
-                        st.session_state.open_modal = True
+                        st.session_state.open_modal = False
                         st.rerun()
                 with st.container(height=700, border=1):   
                     st.subheader('Basic Details')
@@ -1130,4 +1150,19 @@ def Appointment(connection, accessLevel):
                 connection.commit()
                 cursor.close()
                 st.success("All data inserted successfully.")
+        elif(st.session_state.page == "bookappointments"):
+            rc1, rc2 = st.columns([4,5])
+            with rc1:
+                st.write("Select the role:")
+                emp_role = st.selectbox("Select role",["Employee", "Contractor", "Visitor"], label_visibility='collapsed')
+                st.write("Enter employee ID:")
+                st.text_input("emp_no", label_visibility='collapsed')
+                st.write("Enter the purpose:")
+                st.text_input("purpose", label_visibility='collapsed')
+                st.write("Enter the date of the appointment:")
+                st.date_input("date", label_visibility='collapsed')
+                st.write("\n")
+                if st.button("Book the appointment", type='primary'):
+                    st.success("Appointment booked successfully.")
+                
     

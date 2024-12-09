@@ -35,7 +35,7 @@ def systolic_diastolic_chart(systolic, diastolic):
         return "Invalid input"
 
 
-def Form(visitreason,select, connection, cursor, accessLevel):
+def Form(visitreason,select, connection, cursor):
     st.write("""
         <style>
             div.stButton > button[kind="primary"] {
@@ -2050,75 +2050,31 @@ def Form(visitreason,select, connection, cursor, accessLevel):
         
     elif form_name == "Fitness":
         st.header("Fitness")
-
-        col1, col2 = st.columns(2)
-
-        
-        with col1:
-            choice_tremors = st.radio("Tremors", ( "Positive", "Negative"), key="tremors_choice",index=None)
-
-    
-        with col2:
-            choice_romberg = st.radio("Romberg Test", ( "Positive", "Negative"), key="romberg_choice",index=None)
-
-        
-        with col1:
-            choice_acrophobia = st.radio("Acrophobia", ("Positive", "Negative"), key="acrophobia_choice",index=None)
-            
-        with col2:
-            choice_trendelenberg = st.radio("Trendelenberg Test", ( "Positive", "Negative"), key="trendelenberg_choice",index=None)
-
-
-        st.markdown("### Job Nature (Select Multiple Options)")
-        st.multiselect("Select the options",["Heightworks","2","3","4","5"])
-        if(accessLevel=="doctor"):    
-            st.radio("Overall Fitness",("Fit to join","Unfit","Conditional fit"),index=None)
-            st.text_area("Notable Remark")
-        # Layout for Add Data button
-        r3c1, r3c2, r3c3 = st.columns([6, 4, 4])
-
-        with r3c3:
-            if st.button("Add Data", type="primary"):
-                # Collect form data
-                patient_id = st.session_state.form_data.get('Employee ID')  # Assuming you have Employee ID from the earlier form
-                fitness_status = ", ".join(st.session_state.form_data["Fitness"])  # Join selected fitness options
-                fitness_comments = st.session_state.form_data["Fitness-Comments"]
-
-                # Insert the data into the MySQL fitness table
-                insert_query = f"""
-                INSERT INTO fitness (PatientID, Status, comments, emp_no)
-                VALUES ('{patient_id}', '{fitness_status}', '{fitness_comments}', '{emp_no}')
-                """
-
-                try:
-                    # Execute the insert query
-                    cursor.execute(insert_query)
-                    connection.commit()  # Ensure to commit the transaction
-                    st.success("Data Saved Successfully")
-                except Exception as e:
-                    st.error(f"Error saving data: {str(e)}")
-        if(accessLevel=='doctor'):
-            st.subheader("Generate Form")
-            selected_forms = st.multiselect("Form",["Form 17","Form 27","Form 39","Form 40","Form 38"])
-            if st.button("Submit"):
-                # Check the selected forms
-                individual_forms = ["Form 27", "Form 40", "Form 38"]
-                group_forms = ["Form 17", "Form 39"]
-
-                selected_individual = [form for form in selected_forms if form in individual_forms]
-                selected_group = [form for form in selected_forms if form in group_forms]
-
-                # Display Individual Forms
-                if selected_individual:
-                    st.subheader("Individual Forms Selected")
-                    for form in selected_individual:
-                        st.write(f"- {form}")
-
-                # Display Group Forms
-                if selected_group:
-                    st.subheader("Group Forms Selected")
-                    for form in selected_group:
-                        st.write(f"- {form}")
+        rc1, rc2, rc3, rc4 = st.columns([3,3,3,3])
+        with rc1:
+            cc1, cc2 = st.columns([5,5])
+            with cc1:
+                st.write("Tremors")
+            with cc2:
+                tremors = st.radio("tremors", ["Positive", "Negative"], label_visibility='collapsed')
+        with rc2:
+            cc1, cc2 = st.columns([5,5])
+            with cc1:
+                st.write("Romberg Test")
+            with cc2:
+                rt = st.radio("rt", ["Positive", "Negative"], label_visibility='collapsed')
+        with rc3:
+            cc1, cc2 = st.columns([5,5])
+            with cc1:
+                st.write("Trendelenberg Test")
+            with cc2:
+                tt = st.radio("tt", ["Positive", "Negative"], label_visibility='collapsed')
+        with rc4:
+            cc1, cc2 = st.columns([5,5])
+            with cc1:
+                st.write("Acrophobia")
+            with cc2:
+                acrophobia = st.radio("acrophobia", ["Positive", "Negative"], label_visibility='collapsed')
         
         
     elif form_name == "Consultation":
@@ -2668,7 +2624,7 @@ def Form(visitreason,select, connection, cursor, accessLevel):
                 st.write("Condition Type:", condition_type)
 
 
-def New_Visit(connection,cursor, accessLevel):
+def New_Visit(connection,cursor):
     if "form_data" not in st.session_state:
         st.session_state.form_data = {} 
     st.header("NewVisit")
@@ -3054,70 +3010,70 @@ def New_Visit(connection,cursor, accessLevel):
 
         with st.container(border=1): 
             if select == "Visitor":
-                Form(select1, select, connection, cursor, accessLevel)
+                Form(select1, select, connection, cursor)
 
             elif select1 == "Alcohol Abuse":
-                Form("Alcohol Abuse", select, connection, cursor, accessLevel)
+                Form("Alcohol Abuse", select, connection, cursor)
 
             elif select1 == "Annual / Periodical":
-                Form("Annual / Periodical", select, connection, cursor, accessLevel)
+                Form("Annual / Periodical", select, connection, cursor)
 
             elif select1 == "BP Sugar (Abnormal Value)":
-                Form("BP Sugar (Abnormal Value)", select, connection, cursor, accessLevel)
+                Form("BP Sugar (Abnormal Value)", select, connection, cursor)
 
             elif select1 == "BP Sugar Check  ( Normal Value)":
-                Form("BP Sugar Check  ( Normal Value)", select, connection, cursor, accessLevel)
+                Form("BP Sugar Check  ( Normal Value)", select, connection, cursor)
 
             elif select1 == "Camps (Mandatory)":
-                Form("Camps (Mandatory)", select, connection, cursor, accessLevel)
+                Form("Camps (Mandatory)", select, connection, cursor)
 
             elif select1 == "Camps (Optional)":
-                Form("Camps (Optional)", select, connection, cursor, accessLevel)
+                Form("Camps (Optional)", select, connection, cursor)
 
             elif select1 == "Fitness After Medical Leave":
-                Form("Fitness After Medical Leave", select, connection, cursor, accessLevel)
+                Form("Fitness After Medical Leave", select, connection, cursor)
 
             elif select1 == "Followup Visits":
-                Form("Followup Visits", select, connection, cursor, accessLevel)
+                Form("Followup Visits", select, connection, cursor)
 
             elif select1 == "Illness":
-                Form("Illness", select, connection, cursor, accessLevel)
+                Form("Illness", select, connection, cursor)
 
             elif select1 == "Injury":
-                Form("Injury", select, connection, cursor, accessLevel)
+                Form("Injury", select, connection, cursor)
 
             elif select1 == "Injury Outside the Premises":
-                Form("Injury Outside the Premises", select, connection, cursor, accessLevel)
+                Form("Injury Outside the Premises", select, connection, cursor)
 
             elif select1 == "Mock Drill":
-                Form("Mock Drill", select, connection, cursor, accessLevel)
+                Form("Mock Drill", select, connection, cursor)
 
             elif select1 == "Over Counter Illness":
-                Form("Over Counter Illness", select, connection, cursor, accessLevel)
+                Form("Over Counter Illness", select, connection, cursor)
 
             elif select1 == "Over Counter Injury":
-                Form("Over Counter Injury", select, connection, cursor, accessLevel)
+                Form("Over Counter Injury", select, connection, cursor)
 
             elif select1 == "Over Counter Injury Outside the Premises":
-                Form("Over Counter Injury Outside the Premises", select, connection, cursor, accessLevel)
+                Form("Over Counter Injury Outside the Premises", select, connection, cursor)
 
             elif select1 == "Periodic (Food Handler)":
-                Form("Periodic (Food Handler)", select, connection, cursor, accessLevel)
+                Form("Periodic (Food Handler)", select, connection, cursor)
 
             elif select1 == "Pre employment":
-                Form("Pre employment", select, connection, cursor, accessLevel)
+                Form("Pre employment", select, connection, cursor)
 
             elif select1 == "Pre employment (Food Handler)":
-                Form("Pre employment (Food Handler)", select, connection, cursor, accessLevel)
+                Form("Pre employment (Food Handler)", select, connection, cursor)
 
             elif select1 == "Pre Placement":
-                Form("Pre Placement", select, connection, cursor, accessLevel)
+                Form("Pre Placement", select, connection, cursor)
 
             elif select1 == "Special Work Fitness":
-                Form("Special Work Fitness", select, connection, cursor, accessLevel)
+                Form("Special Work Fitness", select, connection, cursor)
 
             elif select1 == "Special Work Fitness (Renewal)":
-                Form("Special Work Fitness (Renewal)", select, connection, cursor, accessLevel)
+                Form("Special Work Fitness (Renewal)", select, connection, cursor)
 
             else:
                 st.write("Select a visit reason", select1)
