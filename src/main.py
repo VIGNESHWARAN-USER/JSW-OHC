@@ -8,6 +8,7 @@ from streamlit_option_menu import option_menu
 from PIL import Image
 import base64
 import io
+import bcrypt
 from others.search import Search
 from others.dashboard import Dashboard
 from others.newvisit import New_Visit
@@ -113,15 +114,21 @@ def Login():
                         background-color: transparent;
                     }
                 </style>""", unsafe_allow_html=True)
+            
             if st.button("Login", type="primary"):
-                cursor.execute(f"SELECT * FROM users WHERE username='{username}' AND password='{password}'")
+                cursor.execute(f"SELECT * FROM users WHERE username='{username}'")
                 result = cursor.fetchall()
+
                 if result:
-                    st.session_state.accessLevel =  result[0][2]
-                    st.write("Login Success")
-                    st.session_state.login = True
-                    st.rerun()
-                if username == "" or password == "":
+                    stored_hashed_password = result[0][1]  # Assuming the hashed password is in the second column
+                    if bcrypt.checkpw(password.encode('utf-8'), stored_hashed_password.encode('utf-8')):
+                        st.session_state.accessLevel = result[0][2]
+                        st.write("Login Success")
+                        st.session_state.login = True
+                        st.rerun()
+                    else:
+                        st.error("Username and password are incorrect")
+                elif username == "" or password == "":
                     st.warning("Please enter username and password")
                 else:
                     st.error("Username and password are incorrect")
@@ -182,7 +189,7 @@ if __name__ == "__main__":
                 Dashboard(st.session_state.connection,cursor, "doctor")
             
             if selected == "New Visit":
-                New_Visit(st.session_state.connection,cursor, "doctor")
+                New_Visit(st.session_state.connection,cursor)
 
             if selected == "Search":
                 Search(cursor)
@@ -226,7 +233,7 @@ if __name__ == "__main__":
                 Dashboard(st.session_state.connection,cursor, "nurse")
             
             if selected == "New Visit":
-                New_Visit(st.session_state.connection,cursor, "nurse")
+                New_Visit(st.session_state.connection,cursor)
 
             if selected == "Search":
                 Search(cursor)
