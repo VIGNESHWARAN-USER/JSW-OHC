@@ -30,11 +30,7 @@ from others.Expiry import expiry
 from others.minStock import minStock
 
 icon = Image.open("./src/assets/favicon.png")
-
 st.set_page_config(page_title="JSW", page_icon=icon, layout="wide", initial_sidebar_state="expanded")
-
-#MainMenu, header, footer {visibility: hidden;}
-
 st.markdown("""
 <style>
     .block-container{
@@ -56,17 +52,17 @@ if "connection" not in st.session_state:
         connection_timeout=600
     )
 
+
 if st.session_state.connection.is_connected():
     cursor = st.session_state.connection.cursor()
 else:
     st.session_state.connection.reconnect()
     cursor = st.session_state.connection.cursor()
 
+cursor = st.session_state.connection.cursor()
 
 if "accessLevel" not in st.session_state:
     st.session_state.accessLevel = None
-
-cursor = st.session_state.connection.cursor()
 
 if "login" not in st.session_state:
     st.session_state.login = False
@@ -186,10 +182,10 @@ if __name__ == "__main__":
                     st.rerun()
             
             if selected == "Dashboard":
-                Dashboard(st.session_state.connection,cursor, "doctor")
+                Dashboard(st.session_state.connection,cursor, st.session_state.accessLevel)
             
             if selected == "New Visit":
-                New_Visit(st.session_state.connection,cursor, "doctor")
+                New_Visit(st.session_state.connection,cursor, st.session_state.accessLevel)
 
             if selected == "Search":
                 Search(cursor)
@@ -230,10 +226,10 @@ if __name__ == "__main__":
                     st.rerun()
             
             if selected == "Dashboard":
-                Dashboard(st.session_state.connection,cursor, "nurse")
+                Dashboard(st.session_state.connection,cursor, st.session_state.accessLevel)
             
             if selected == "New Visit":
-                New_Visit(st.session_state.connection,cursor, "nurse")
+                New_Visit(st.session_state.connection,cursor, st.session_state.accessLevel)
 
             if selected == "Search":
                 Search(cursor)
@@ -257,7 +253,7 @@ if __name__ == "__main__":
                 selected = option_menu(
                     None,
                     options=['Add Stock', 'Consumption', 'Current Stock', 'Expiry', 'Minimum Stock'],
-                    icons=['plus-square', 'cart', 'box', 'clock', 'exclamation-triangle'],  # Updated icons
+                    icons=['plus-square', 'cart', 'box', 'clock', 'exclamation-triangle'],  
                     menu_icon="box-seam",
                     default_index=0
                 )

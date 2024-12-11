@@ -67,6 +67,22 @@ def show_data(emp):
                         st.session_state.usr_prof = emp[i]
                         st.rerun()
 
+def fetch_vaccination_details(emp_no, vaccination_type):
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    query = """
+        SELECT id AS `S no.`, 
+               vaccination_type AS `Disease`, 
+               normal_doses AS `Dose`, 
+               booster_doses AS `Booster`
+        FROM vaccination_details
+        WHERE emp_no = %s AND vaccination_type = %s
+    """
+    cursor.execute(query, (emp_no, vaccination_type))
+    results = cursor.fetchall()
+    conn.close()
+    return results
+
 def set_data(emp):
     st.session_state.data = emp.to_dict('records')
 
@@ -164,7 +180,7 @@ def Search(cursor):
         with st.container(border=1):
             menu = option_menu(
                     None,
-                    ["Personal Details", "Employment Details","Vitals", "Medical/Surgical History", "Visit Reason", "Vaccinations"],
+                    ["Personal Details","Employment Details","Contact Details","Vitals", "Medical/Surgical History", "Visit Reason", "Vaccinations"],
                     key="menu",
                     orientation="horizontal",
                     icons=['a','b','c', 'a','b','c','a','b','c']
@@ -174,10 +190,10 @@ def Search(cursor):
                 with r0c1:
                 # MARK: Personal Details
                     # st.markdown(f"""
-                    #     **Age**: {st.text_input( label = "Age", label_visibility='collapsed', value = st.session_state.usr_prof.get('age', 'N/A'))}<br>
-                    #     **DOB**: {st.session_state.usr_prof.get('dob', 'N/A')}<br>
-                    #     **Sex**: {st.session_state.usr_prof.get('gender', 'N/A')}<br>
-                    #     **Aadhar No**: {st.session_state.usr_prof.get('aadhar_no', 'N/A')}
+                    #     *Age*: {st.text_input( label = "Age", label_visibility='collapsed', value = st.session_state.usr_prof.get('age', 'N/A'))}<br>
+                    #     *DOB*: {st.session_state.usr_prof.get('dob', 'N/A')}<br>
+                    #     *Sex*: {st.session_state.usr_prof.get('gender', 'N/A')}<br>
+                    #     *Aadhar No*: {st.session_state.usr_prof.get('aadhar_no', 'N/A')}
                     # """, unsafe_allow_html=True)
                     rr0c1, rr0c2 = st.columns(2)
                     with rr0c1:
@@ -194,8 +210,8 @@ def Search(cursor):
                         st.text_input(label = "sex", label_visibility='collapsed', value=st.session_state.usr_prof.get('gender', 'N/A'))
                         st.text_input(label = "adno", label_visibility='collapsed', value=st.session_state.usr_prof.get('aadhar_no', 'N/A'))
                 with r0c2:
-                    # st.write(f"**Mail ID (Personal)**: {st.session_state.usr_prof['personal_mail']}")
-                    # st.write("**Identification Mark**:")
+                    # st.write(f"*Mail ID (Personal)*: {st.session_state.usr_prof['personal_mail']}")
+                    # st.write("*Identification Mark*:")
                     # st.markdown(f" * {st.session_state.usr_prof['identification_mark']}")
                     rr0c1, rr0c2 = st.columns(2)
                     with rr0c1:
@@ -206,7 +222,8 @@ def Search(cursor):
                     with rr0c2:
                         st.text_input(label = "age", label_visibility='collapsed', value=st.session_state.usr_prof.get('personal_mail', 'N/A'))
                         st.text_input(label = "dob", label_visibility='collapsed', value=st.session_state.usr_prof.get('identification_mark', 'N/A'))
-                        
+
+            
             
             
             if menu == "Medical/Surgical History":
@@ -260,13 +277,13 @@ def Search(cursor):
                 father_col, mother_col = st.columns(2)
 
                 with father_col:
-                    st.write("**Father's Medical History**")
+                    st.write("*Father's Medical History*")
                     father_smoker = st.radio("Father Smoker", options=["Yes", "No"], index=0 if st.session_state.usr_prof.get('family_history', {}).get('father', {}).get('smoker', 'No') == "Yes" else 1)
                     father_htn = st.checkbox("Father - HTN", value=st.session_state.usr_prof.get('family_history', {}).get('father', {}).get('htn', False))
                     father_dm = st.checkbox("Father - DM", value=st.session_state.usr_prof.get('family_history', {}).get('father', {}).get('dm', False))
 
                 with mother_col:
-                    st.write("**Mother's Medical History**")
+                    st.write("*Mother's Medical History*")
                     mother_smoker = st.radio("Mother Smoker", options=["Yes", "No"], index=0 if st.session_state.usr_prof.get('family_history', {}).get('mother', {}).get('smoker', 'No') == "Yes" else 1)
                     mother_htn = st.checkbox("Mother - HTN", value=st.session_state.usr_prof.get('family_history', {}).get('mother', {}).get('htn', False))
                     mother_dm = st.checkbox("Mother - DM", value=st.session_state.usr_prof.get('family_history', {}).get('mother', {}).get('dm', False))
@@ -280,9 +297,9 @@ def Search(cursor):
                 with r0c1:
                 # MARK: Personal Details
                     # st.markdown(f"""
-                    #     **Employee No**: {st.session_state.usr_prof.get('emp_no', 'N/A')}<br>
-                    #     **Designation**: {st.session_state.usr_prof.get('designation', 'N/A')}<br>
-                    #     **Department H/O**: {st.session_state.usr_prof.get('department', 'N/A')}
+                    #     *Employee No*: {st.session_state.usr_prof.get('emp_no', 'N/A')}<br>
+                    #     *Designation*: {st.session_state.usr_prof.get('designation', 'N/A')}<br>
+                    #     *Department H/O*: {st.session_state.usr_prof.get('department', 'N/A')}
                     # """, unsafe_allow_html=True)
                     rr0c1, rr0c2 = st.columns(2)
                     with rr0c1:
@@ -295,50 +312,103 @@ def Search(cursor):
                         st.text_input(label = "eno", label_visibility='collapsed', value=st.session_state.usr_prof.get('emp_no', 'N/A'))
                         st.text_input(label = "des", label_visibility='collapsed', value=st.session_state.usr_prof.get('designation', 'N/A'))
                         st.text_input(label = "dept", label_visibility='collapsed', value=st.session_state.usr_prof.get('department', 'N/A'))
+                        if st.button("View More", key="view_more_dept"):
+                            st.write("Additional information for Department H/O...")
                 with r0c2:
-                    # st.write(f"**Mail ID (Office)**: {st.session_state.usr_prof['office_mail']}")
-                    # st.write(f"**Nature of Job H/O**:{st.session_state.usr_prof['nature_of_job']}")
-                    # st.write(f"**Employer**:{st.session_state.usr_prof['personal_mail']}")
-                    # st.write(f"**Contractor**:{st.session_state.usr_prof['personal_mail']}")
+                    # st.write(f"*Mail ID (Office)*: {st.session_state.usr_prof['office_mail']}")
+                    # st.write(f"*Nature of Job H/O*:{st.session_state.usr_prof['nature_of_job']}")
+                    # st.write(f"*Employer*:{st.session_state.usr_prof['personal_mail']}")
+                    # st.write(f"*Contractor*:{st.session_state.usr_prof['personal_mail']}")
                     rr0c1, rr0c2 = st.columns(2)
                     with rr0c1:
                         st.write('Mail ID (Office) :')
                         st.write('\n')
-                        st.write('Nature of Job H/O :')
+                        
+                        st.write('Nature of Jo H/O :')
+                        st.write('\n')
+                        st.write('\n')
+                        st.write('\n')
                         st.write('\n')
                         st.write("Employer :")
                         st.write('\n')
                         st.write("Contractor :")
+    
                     with rr0c2:
                         st.text_input(label = "mail", label_visibility='collapsed' ,value=st.session_state.usr_prof.get('office_mail', 'N/A'))
                         st.text_input(label = "job", label_visibility='collapsed', value=st.session_state.usr_prof.get('nature_of_job', 'N/A'))
+                        if st.button("View More", key="view_more_dept1"):
+                            st.write("Additional information for Department H/O...")
                         st.text_input(label = "mep", label_visibility='collapsed', value=st.session_state.usr_prof.get('employer', 'N/A'))
                         st.text_input(label = "cot", label_visibility='collapsed', value=st.session_state.usr_prof.get('contractor', 'N/A'))
-            # if menu == "Contact Details":
-            #     r0c1,r0c2 = st.columns([5,6])
-            #     with r0c1:
-            #     # MARK: Personal Details
-            #         st.markdown(f"""
-            #             **Employee No**: {st.session_state.usr_prof.get('emp_no', 'N/A')}<br>
-            #             **Designation**: {st.session_state.usr_prof.get('designation', 'N/A')}<br>
-            #             **Department H/O**: {st.session_state.usr_prof.get('department', 'N/A')}
-            #         """, unsafe_allow_html=True)
-            #     with r0c2:
-            #         st.write(f"**Mail ID (Office)**: {st.session_state.usr_prof['office_mail']}")
-            #         st.write(f"**Nature of Job H/O**:{st.session_state.usr_prof['nature_of_job']}")
-            #         st.write(f"**Employer**:{st.session_state.usr_prof['personal_mail']}")
-            #         st.write(f"**Contractor**:{st.session_state.usr_prof['personal_mail']}")
+                        if st.button("View More", key="view_more_dept2"):
+                            st.write("Additional information for Department H/O...")
+
+
+
+
+            if menu == "Contact Details":
+             r0c1, r0c2 = st.columns([5, 6])  # Define two main columns with specific width ratio
+             with r0c1:
+                # MARK: Personal Details
+                rr0c1, rr0c2 = st.columns(2)  # Define sub-columns for Employee details
+                with rr0c1:
+                    st.write('Employee No :')
+                    st.write('\n')
+                    st.write('Designation :')
+                    st.write('\n')
+                    st.write("Department H/O :")
+                
+                with rr0c2:
+                    # Use unique keys for each input field to avoid duplication
+                    st.text_input(label="eno", label_visibility='collapsed', value=st.session_state.usr_prof.get('emp_no', 'N/A'), key="eno_key")
+                    st.text_input(label="des", label_visibility='collapsed', value=st.session_state.usr_prof.get('designation', 'N/A'), key="des_key")
+                    st.text_input(label="dept", label_visibility='collapsed', value=st.session_state.usr_prof.get('department', 'N/A'), key="dept_key")
+                    if st.button("View More", key="view_more_dept"):
+                        st.write("Additional information for Department H/O...")
+
+             with r0c2:
+                # MARK: Contact Details
+                rr0c1, rr0c2 = st.columns(2)  # Define sub-columns for the contact details
+                with rr0c1:
+                    st.write('Mail ID (Office) :')
+                    st.write('\n')
+                    st.write('Nature of Job H/O :')
+                    st.write('\n')
+                    st.write('\n')
+                    st.write('\n')
+                    st.write('\n')
+                    st.write("Employer :")
+                    st.write('\n')
+                    st.write("Contractor :")
+                
+                with rr0c2:
+                    # Use unique keys for each input field to avoid duplication
+                    st.text_input(label="mail", label_visibility='collapsed', value=st.session_state.usr_prof.get('office_mail', 'N/A'), key="mail_key")
+                    st.text_input(label="job", label_visibility='collapsed', value=st.session_state.usr_prof.get('nature_of_job', 'N/A'), key="job_key")
+                    if st.button("View More", key="view_more_dept1"):
+                        st.write("Additional information for Nature of Job...")
+                    st.text_input(label="mep", label_visibility='collapsed', value=st.session_state.usr_prof.get('employer', 'N/A'), key="mep_key")
+                    st.text_input(label="cot", label_visibility='collapsed', value=st.session_state.usr_prof.get('contractor', 'N/A'), key="cot_key")
+                    if st.button("View More", key="view_more_dept2"):
+                        st.write("Additional information for Contractor...")
+
+
+
+
+
+
+            
             if menu == "Vitals":
                 r0c1,r0c2 = st.columns([5,6])
                 with r0c1:
                 # # MARK: Personal Details
                 #     st.markdown(f"""
                 #         <b>Blood Pressure</b><br/>
-                #         **Systolic**: {vitals['Systolic'][0]}<br>
-                #         **Diastolic**: {vitals['Diastolic'][0]}<br>
-                #         **Pulse Rate**: {vitals['PulseRate'][0]}<br>
-                #         **SPO2**: {vitals['SpO2'][0]}
-                #         **Respiratory Rate**: {vitals['RespiratoryRate'][0]}
+                #         *Systolic*: {vitals['Systolic'][0]}<br>
+                #         *Diastolic*: {vitals['Diastolic'][0]}<br>
+                #         *Pulse Rate*: {vitals['PulseRate'][0]}<br>
+                #         *SPO2*: {vitals['SpO2'][0]}
+                #         *Respiratory Rate*: {vitals['RespiratoryRate'][0]}
                 #     """, unsafe_allow_html=True)
                     rr0c1, rr0c2 = st.columns(2)
                     with rr0c1:
@@ -362,11 +432,11 @@ def Search(cursor):
                 # # MARK: Personal Details
                 #     st.markdown(f"""
                 #         <b>Blood Pressure</b><br/>
-                #         **Systolic**: {vitals['Systolic'][0]}<br>
-                #         **Diastolic**: {vitals['Diastolic'][0]}<br>
-                #         **Pulse Rate**: {vitals['PulseRate'][0]}<br>
-                #         **SPO2**: {vitals['SpO2'][0]}
-                #         **Respiratory Rate**: {vitals['RespiratoryRate'][0]}
+                #         *Systolic*: {vitals['Systolic'][0]}<br>
+                #         *Diastolic*: {vitals['Diastolic'][0]}<br>
+                #         *Pulse Rate*: {vitals['PulseRate'][0]}<br>
+                #         *SPO2*: {vitals['SpO2'][0]}
+                #         *Respiratory Rate*: {vitals['RespiratoryRate'][0]}
                 #     """, unsafe_allow_html=True)
                     rr0c1, rr0c2 = st.columns(2)
                     with rr0c1:
@@ -383,17 +453,17 @@ def Search(cursor):
                         st.text_input(label = "Temperature", label_visibility='collapsed', value=vitals['Temperature'][0])
                         st.text_input(label = "Weight", label_visibility='collapsed', value=vitals['Weight'][0])
                 # with r0c2:
-                #     st.write(f"**BMI (in Value)**: {vitals['BMI'][0]}")
-                #     st.write(f"**Height**: {vitals['Height'][0]}")
-                #     st.write(f"**Temperature**: {vitals['Temperature'][0]}")
-                #     st.write(f"**Weight**: {vitals['Weight'][0]}")
+                #     st.write(f"*BMI (in Value)*: {vitals['BMI'][0]}")
+                #     st.write(f"*Height*: {vitals['Height'][0]}")
+                #     st.write(f"*Temperature*: {vitals['Temperature'][0]}")
+                #     st.write(f"*Weight*: {vitals['Weight'][0]}")
             if menu == "Visit Reason":
                 r0c1,r0c2 = st.columns([3,6])
                 with r0c1:
                 # MARK: Personal Details
-                    st.write("**Select the Year**")
+                    st.write("*Select the Year*")
                     st.date_input('Date', label_visibility='collapsed')
-                    st.write("**Select the Reason**")
+                    st.write("*Select the Reason*")
                     menu1 = option_menu(
                     None,
                     menu_icon='./src/assets/Folder.png',
@@ -434,29 +504,33 @@ def Search(cursor):
                             st.markdown("<b style = 'color: #22384F'>Visited Date</b>", unsafe_allow_html=True)
                         with r3c5:
                             st.markdown("<b style = 'color: #22384F'>Details</b>", unsafe_allow_html=True)
-            if( menu == "Vaccinations"):
-                r0c1, r0c2 = st.columns([3,7])
+            if menu == "Vaccinations":
+                r0c1, r0c2 = st.columns([4, 8])
                 with r0c1:
-                    st.subheader("Disease Name")
-                    menu1 = option_menu(
-                    None,
-                    menu_icon='./src/assets/Folder.png',
-                    options=["Typhoid", "Covid"],
-                    key="menu2",
-                    icons=['a','b']
+                    st.subheader("Vaccination Information")
+                    vaccine = st.selectbox(
+                        'Select Vaccine',
+                        ['Select', 'Vaccine 1', 'Vaccine 2', 'Vaccine 3']  # Replace with actual vaccine names
                     )
+                    
                 with r0c2:
-                    r3c1, r3c2, r3c3, r3c4, r3c5 = st.columns([2,1,3,2,2])
+                    # Columns for displaying Normal Doses & Booster Dose
+                    r3c1, r3c2 = st.columns([6, 6])
+
                     with r3c1:
-                        st.markdown("<b style = 'color: #22384F'>S no.</b>", unsafe_allow_html=True)
+                        st.markdown("<b style='color: #22384F'>Normal Doses</b>", unsafe_allow_html=True)
+                        # Create 5 rows for Normal Doses
+                        for i in range(1, 6):
+                            st.write(f"Dose {i}: [Date]")  # Replace with actual dose details
+
                     with r3c2:
-                        st.markdown("<b style = 'color: #22384F'>Status</b>", unsafe_allow_html=True)
-                    with r3c3:
-                        st.markdown("<b style = 'color: #22384F'>Name of Vaccine</b>", unsafe_allow_html=True)
-                    with r3c4:
-                        st.markdown("<b style = 'color: #22384F'>Dose</b>", unsafe_allow_html=True)
-                    with r3c5:
-                        st.markdown("<b style = 'color: #22384F'>Booster</b>", unsafe_allow_html=True)
+                        st.markdown("<b style='color: #22384F'>Booster Dose</b>", unsafe_allow_html=True)
+                        # Create 5 rows for Booster Doses
+                        for i in range(1, 6):
+                            st.write(f"Booster {i}: [Date]")  # Replace with actual booster dose details
+
+
+
     if st.button("close"):
         st.session_state.open_modal = False
         st.rerun()

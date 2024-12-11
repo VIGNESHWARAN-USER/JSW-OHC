@@ -44,7 +44,7 @@ def Records_Filters(cursor):
     #         "Vitals":"vitals",
     #         "Investigations":"Employee_det",
     #         "Fitness":"fitness",
-    #         "Medical History":"medicalpersonalhist"
+    #         "Medical/Surgical/Personal History":"medicalpersonalhist"
     #     }
     
     if "data" not in st.session_state:
@@ -83,12 +83,20 @@ def Records_Filters(cursor):
         
         form_name = option_menu(
             None,
-            ["All Details","Select Purpose","Personal & Emp Details","Vitals","Investigations","Fitness","Medical History"],
+            ["All Details","Select Purpose","Personal Details","Vitals","Investigations","Fitness","Medical/Surgical/Personal History", "Final Filter"],
             orientation="horizontal",
-            icons=['a','a','a','a','a','a', 'a']
+            icons=['a','a','a','a','a','a', 'a', 'a']
         )
-    
-    
+
+        if form_name == "Final Filter":
+            with st.container(border=1):
+                col1, col2, col3 = st.columns([3,3,3])
+                with col1:
+                    st.text_input("Generate Form:")
+                with col2:
+                    st.multiselect("Arrange for Call:",["Camp", "Consultation", "Vaccination", "Training/Awareness Prg", "Health Checkup", "Vaccination"])
+                with col3:
+                    st.multiselect("Review Patients:",["Present", "Null"])
         if form_name == "Investigations":
             global inv, paropt, fromval, toval
             rc1, rc2 = st.columns([4,6])
@@ -1691,7 +1699,7 @@ def Records_Filters(cursor):
 
         if form_name != "Recent" and form_name != "Investigations":
             with st.container():
-                if form_name == "Personal & Emp Details":
+                if form_name == "Personal Details":
                     with st.form(key="Basic Details"):
                         r1c1, r1c2, r1c3, r1c4 = st.columns([2, 2, 2, 2])
                         with r1c1:
@@ -1730,7 +1738,7 @@ def Records_Filters(cursor):
                 filter_data = st.session_state.filtered_data
                 
                 # Check if the form_name is 'Personal & Emp Details' before applying filters
-                if form_name == "Personal & Emp Details":
+                if form_name == "Personal Details":
                     # Apply filters based on the form inputs
                     if fdata.get("Department"):  # Use .get() to safely access the value
                         filter_data = filter_data.loc[filter_data["department"].str.contains(fdata["Department"], case=False)]
@@ -1855,8 +1863,30 @@ def Records_Filters(cursor):
             st.dataframe(filteredhem)
 
                 
-    if form_name == "Medical History": 
-        st.warning("Empty Dataset")
+    if form_name == "Medical/Surgical/Personal History": 
+        with st.container(border=1):
+            col1, col2, col3 = st.columns([3,3,3])
+            with col1:
+                cr1, cr2 = st.columns([3,7])
+                with cr1:
+                    st.write("Personal H/O:")
+                with cr2:
+                    st.multiselect("Personal", ["Smoker", "Alcoholic", "Diet-Veg", "Diet-N Veg", "Mixed Diet"], label_visibility='collapsed')
+            with col2:
+                cr1, cr2 = st.columns([3,7])
+                with cr1:
+                    st.write("Medical H/O:")
+                with cr2:
+                    st.multiselect("Personal", ["HTN", "DM", "Epileptic", "Thyroid", "Rheumatoid"], label_visibility='collapsed')
+            with col3:
+                cr1, cr2 = st.columns([3,7])
+                with cr1:
+                    st.write("Surgical H/O:")
+                    st.write('\n')
+                    st.write("Allergy H/O:")
+                with cr2:
+                    st.multiselect("Surgical", ["Present", "Absent"], label_visibility='collapsed')
+                    st.multiselect("Allergy", ["Drug", "Food", "Others"], label_visibility='collapsed')
 
     if form_name == 'Select Purpose':
         with st.form(key = "purpose"):

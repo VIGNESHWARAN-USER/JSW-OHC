@@ -96,42 +96,42 @@ def Form(visitreason,select, connection, cursor, accessLevel):
     elif select=="Contractor" and visitreason=="Over counter Injury Outside the premises":
         form_name = option_menu(
         None,
-        ["Basic Details","Consultation","Prescription","Referral" ],
+        ["Basic Details","Consultation","Prescription","Vaccination" ],
         orientation="horizontal",
         icons=['a','a','a','a','a']
         )
     elif visitreason=="Illness" or visitreason=="BP Sugar (Abnormal)" or visitreason=="Injury Outside the premises" or visitreason=="Over counter Injury Outside the premises":
         form_name = option_menu(
         None,
-        ["Basic Details", "Vitals","Medical History","Consultation","Prescription","Referral" ],
+        ["Basic Details", "Vitals","Medical History","Consultation","Prescription","Vaccination" ],
         orientation="horizontal",
         icons=['a','a','a','a','a','a','a','a']
         )
     elif visitreason=="Injury":
         form_name = option_menu(
         None,
-        ["Basic Details","Prescription","Referral"],
+        ["Basic Details","Prescription","Vaccination"],
         orientation="horizontal",
         icons=['a','a','a']
         )
     elif visitreason=="Over counter Injury":
         form_name = option_menu(
         None,
-        ["Basic Details","Consultation","Prescription","Referral"],
+        ["Basic Details","Consultation","Prescription","Vaccination"],
         orientation="horizontal",
         icons=['a','a','a','a','a']
         )
     elif select!="Contractor"and visitreason=="Follow up Visits":
         form_name = option_menu(
         None,
-        ["Basic Details","Vitals","Investigations","Consultation","Prescription","Referral"],
+        ["Basic Details","Vitals","Investigations","Consultation","Prescription","Vaccination"],
         orientation="horizontal",
         icons=['a','a','a','a','a','a',]
         )
     else:
         form_name = option_menu(
         None,
-        ["Basic Details", "Vitals","Consultation","Medical History", "Investigations", "Fitness","Prescription","Referral" ],
+        ["Basic Details", "Vitals","Consultation","Medical History", "Investigations", "Fitness","Prescription","Vaccination" ],
         orientation="horizontal",
         icons=['a','a','a','a','a','a','a','a']
         )
@@ -2048,78 +2048,79 @@ def Form(visitreason,select, connection, cursor, accessLevel):
             
 
         
+        
     elif form_name == "Fitness":
-        st.header("Fitness")
+            st.header("Fitness")
 
-        col1, col2 = st.columns(2)
+            col1, col2 = st.columns(2)
 
-        
-        with col1:
-            choice_tremors = st.radio("Tremors", ( "Positive", "Negative"), key="tremors_choice",index=None)
-
-    
-        with col2:
-            choice_romberg = st.radio("Romberg Test", ( "Positive", "Negative"), key="romberg_choice",index=None)
-
-        
-        with col1:
-            choice_acrophobia = st.radio("Acrophobia", ("Positive", "Negative"), key="acrophobia_choice",index=None)
             
-        with col2:
-            choice_trendelenberg = st.radio("Trendelenberg Test", ( "Positive", "Negative"), key="trendelenberg_choice",index=None)
+            with col1:
+                choice_tremors = st.radio("Tremors", ( "Positive", "Negative"), key="tremors_choice",index=None)
 
-
-        st.markdown("### Job Nature (Select Multiple Options)")
-        st.multiselect("Select the options",["Heightworks","2","3","4","5"])
-        if(accessLevel=="doctor"):    
-            st.radio("Overall Fitness",("Fit to join","Unfit","Conditional fit"),index=None)
-            st.text_area("Notable Remark")
-        # Layout for Add Data button
-        r3c1, r3c2, r3c3 = st.columns([6, 4, 4])
-
-        with r3c3:
-            if st.button("Add Data", type="primary"):
-                # Collect form data
-                patient_id = st.session_state.form_data.get('Employee ID')  # Assuming you have Employee ID from the earlier form
-                fitness_status = ", ".join(st.session_state.form_data["Fitness"])  # Join selected fitness options
-                fitness_comments = st.session_state.form_data["Fitness-Comments"]
-
-                # Insert the data into the MySQL fitness table
-                insert_query = f"""
-                INSERT INTO fitness (PatientID, Status, comments, emp_no)
-                VALUES ('{patient_id}', '{fitness_status}', '{fitness_comments}', '{emp_no}')
-                """
-
-                try:
-                    # Execute the insert query
-                    cursor.execute(insert_query)
-                    connection.commit()  # Ensure to commit the transaction
-                    st.success("Data Saved Successfully")
-                except Exception as e:
-                    st.error(f"Error saving data: {str(e)}")
-        if(accessLevel=='doctor'):
-            st.subheader("Generate Form")
-            selected_forms = st.multiselect("Form",["Form 17","Form 27","Form 39","Form 40","Form 38"])
-            if st.button("Submit"):
-                # Check the selected forms
-                individual_forms = ["Form 27", "Form 40", "Form 38"]
-                group_forms = ["Form 17", "Form 39"]
-
-                selected_individual = [form for form in selected_forms if form in individual_forms]
-                selected_group = [form for form in selected_forms if form in group_forms]
-
-                # Display Individual Forms
-                if selected_individual:
-                    st.subheader("Individual Forms Selected")
-                    for form in selected_individual:
-                        st.write(f"- {form}")
-
-                # Display Group Forms
-                if selected_group:
-                    st.subheader("Group Forms Selected")
-                    for form in selected_group:
-                        st.write(f"- {form}")
         
+            with col2:
+                choice_romberg = st.radio("Romberg Test", ( "Positive", "Negative"), key="romberg_choice",index=None)
+
+            
+            with col1:
+                choice_acrophobia = st.radio("Acrophobia", ("Positive", "Negative"), key="acrophobia_choice",index=None)
+                
+            with col2:
+                choice_trendelenberg = st.radio("Trendelenberg Test", ( "Positive", "Negative"), key="trendelenberg_choice",index=None)
+
+
+            st.markdown("### Job Nature (Select Multiple Options)")
+            st.multiselect("Select the options",["Heightworks","2","3","4","5"])
+            if(accessLevel=="doctor"):    
+                st.radio("Overall Fitness",("Fit to join","Unfit","Conditional fit"),index=None)
+                st.text_area("Notable Remark")
+            # Layout for Add Data button
+            r3c1, r3c2, r3c3 = st.columns([6, 4, 4])
+
+            with r3c3:
+                if st.button("Add Data", type="primary"):
+                    # Collect form data
+                    patient_id = st.session_state.form_data.get('Employee ID')  # Assuming you have Employee ID from the earlier form
+                    fitness_status = ", ".join(st.session_state.form_data["Fitness"])  # Join selected fitness options
+                    fitness_comments = st.session_state.form_data["Fitness-Comments"]
+
+                    # Insert the data into the MySQL fitness table
+                    insert_query = f"""
+                    INSERT INTO fitness (PatientID, Status, comments, emp_no)
+                    VALUES ('{patient_id}', '{fitness_status}', '{fitness_comments}', '{emp_no}')
+                    """
+
+                    try:
+                        # Execute the insert query
+                        cursor.execute(insert_query)
+                        connection.commit()  # Ensure to commit the transaction
+                        st.success("Data Saved Successfully")
+                    except Exception as e:
+                        st.error(f"Error saving data: {str(e)}")
+            if(accessLevel=='doctor'):
+                st.subheader("Generate Form")
+                selected_forms = st.multiselect("Form",["Form 17","Form 27","Form 39","Form 40","Form 38"])
+                if st.button("Submit"):
+                    # Check the selected forms
+                    individual_forms = ["Form 27", "Form 40", "Form 38"]
+                    group_forms = ["Form 17", "Form 39"]
+
+                    selected_individual = [form for form in selected_forms if form in individual_forms]
+                    selected_group = [form for form in selected_forms if form in group_forms]
+
+                    # Display Individual Forms
+                    if selected_individual:
+                        st.subheader("Individual Forms Selected")
+                        for form in selected_individual:
+                            st.write(f"- {form}")
+
+                    # Display Group Forms
+                    if selected_group:
+                        st.subheader("Group Forms Selected")
+                        for form in selected_group:
+                            st.write(f"- {form}")
+            
         
     elif form_name == "Consultation":
         st.header("Consultation")
@@ -2136,8 +2137,10 @@ def Form(visitreason,select, connection, cursor, accessLevel):
                 st.session_state.form_data["Diagnosis"] = st.text_area("Diagnosis", value=st.session_state.form_data.get("Diagnosis", ""))
                 st.session_state.form_data["Complaints"] = st.text_area("Complaints", value=st.session_state.form_data.get("Complaints", ""))
         elif(select1 == "Unhealthy" and visitreason in ["Over counter Illness", "Over counter Injury"]):
+            st.session_state.form_data["Complaints"] = st.text_area("Complaints", value=st.session_state.form_data.get("Complaints", ""))
             st.session_state.form_data["Diagnosis"] = st.text_area("Diagnosis", value=st.session_state.form_data.get("Diagnosis", ""))
-            st.session_state.form_data["Complaints"] = st.text_area("Complaints", value=st.session_state.form_data.get("Complaints", ""))        
+            
+            st.session_state.form_data["Notble Remarks"] = st.text_area("Notable Remarks", value=st.session_state.form_data.get("Notable Remarks", ""))        
         elif(visitreason in ["Special Work Fitness", "Special Work Fitness (Renewal)"]):
             st.file_uploader("Upload Self Declaration", type=['xlsx'], key="Self-declaration")
         elif(visitreason == "Fitness After Medical Leave"):
@@ -2155,10 +2158,20 @@ def Form(visitreason,select, connection, cursor, accessLevel):
             st.file_uploader("Upload FC External", type=['xlsx'], key="FC-external")
             st.file_uploader("Upload Reports", type=['xlsx'], key="Reports")
 
+        st.header("Referral")
+        condition_type = st.radio("Condition Type", ("Occupational", "Non-occupational", "Domestic"),index=None)
+        investigation = st.text_input("Investigation",placeholder="suggestion")
+        referral = st.radio("Referral", ("Yes", "No"),index=None)
+        hospital_name = st.text_input("Name of the Hospital", placeholder="Comments...")
+        doctor_name = st.text_input("Doctor name", placeholder="Comments...")
+        col1, col2 = st.columns(2)
+        
+
         # Dropdown for Submitted By and Assign Doctor
         st.write("""
             <div style='float:right;marin-right:100px;margin-top:25px'>
-            <label for="doctor">Submitted By:</label>
+             </div>
+                 <label for="doctor">Submitted By Doctor:</label>
             <select style='height:35px;width:100px;text-align:center;background-color:rgb(240,242,246);border:none;border-radius:5px;' name="doctor" id="doctor">
                 <option value="SK">SK</option>
                 <option value="Nurse">Nurse</option>
@@ -2168,7 +2181,12 @@ def Form(visitreason,select, connection, cursor, accessLevel):
                 <option value="SK">SK</option>
                 <option value="Nurse">Nurse</option>
             </select>
-            </div>
+           
+            <label for="doctor">Submitted By Nurse:</label>
+            <select style='height:35px;width:100px;text-align:center;background-color:rgb(240,242,246);border:none;border-radius:5px;' name="doctor" id="doctor">
+                <option value="SK">Nurse 1</option>
+                <option value="Nurse">Nurse 2</option>
+            </select>
         """, unsafe_allow_html=True)
 
         if st.button("Submit", type="primary"):
@@ -2646,28 +2664,57 @@ def Form(visitreason,select, connection, cursor, accessLevel):
         connection.close()
             
 
-    elif form_name=="Referral":
-        st.header("Referral")
-        referral = st.radio("Referral", ("Yes", "No"))
-        hospital_name = st.text_input("Name of the Hospital", placeholder="Comments...")
-        doctor_name = st.text_input("Doctor name", placeholder="Comments...")
-        condition_type = st.radio("Condition Type", ("Occupational", "Non-occupational", "Domestic"))
-        col1, col2 = st.columns(2)
-        with col1:
-            if st.button("Clear"):
-                referral = None
-                hospital_name = ""
-                doctor_name = ""
-                condition_type = None
-        with col2:
+    elif form_name == "Vaccination":
+        r0c1, r0c2 = st.columns([4, 8])
+        
+        with r0c1:
+            st.subheader("Vaccination Information")
+            
+            # Select existing vaccine or add a new one
+            vaccine = st.selectbox(
+                'Select Vaccine',
+                ['Select', 'Vaccine 1', 'Vaccine 2', 'Vaccine 3', 'Add New Vaccine']  # Added option to add new vaccine
+            )
+            
+            if vaccine == 'Add New Vaccine':
+                new_vaccine = st.text_input("Enter New Vaccine Name")  # Input for new vaccine name
+                if new_vaccine:
+                    st.write(f"New Vaccine Added: {new_vaccine}")
+                    vaccine = new_vaccine  # Set the vaccine to the newly entered name
+
+        with r0c2:
+            # Columns for entering Normal Doses & Booster Dose
+            r3c1, r3c2 = st.columns([6, 6])
+
+            with r3c1:
+                st.markdown("<b style='color: #22384F'>Normal Doses</b>", unsafe_allow_html=True)
+                # Create 5 input fields for Normal Doses with numbering
+                normal_doses = []
+                for i in range(1, 6):
+                    # Remove default date
+                    dose_date = st.date_input(f"Dose {i} Date", key=f"normal_dose_{i}")  # No default date
+                    normal_doses.append(dose_date)
+
+            with r3c2:
+                st.markdown("<b style='color: #22384F'>Booster Dose</b>", unsafe_allow_html=True)
+                # Create 5 input fields for Booster Doses with numbering
+                booster_doses = []
+                for i in range(1, 6):
+                    # Remove default date
+                    booster_date = st.date_input(f"Booster {i} Date", key=f"booster_dose_{i}")  # No default date
+                    booster_doses.append(booster_date)
+                
+            # Display the entered details when the user submits
             if st.button("Submit"):
-                st.success("Form submitted successfully!")
-                st.write("Referral:", referral)
-                st.write("Hospital Name:", hospital_name)
-                st.write("Doctor Name:", doctor_name)
-                st.write("Condition Type:", condition_type)
-
-
+                st.subheader("Entered Vaccination Details")
+                st.write(f"Vaccine: {vaccine}")
+                st.write("Normal Doses Dates:")
+                for i, dose in enumerate(normal_doses, 1):
+                    st.write(f"{i} Dose: {dose}")
+                
+                st.write("Booster Doses Dates:")
+                for i, booster in enumerate(booster_doses, 1):
+                    st.write(f"{i} Booster: {booster}")
 def New_Visit(connection,cursor, accessLevel):
     if "form_data" not in st.session_state:
         st.session_state.form_data = {} 
