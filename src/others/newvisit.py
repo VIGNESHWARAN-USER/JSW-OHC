@@ -3069,11 +3069,11 @@ def New_Visit(connection,cursor, accessLevel):
         with r0c2:
             if select == "Visitor":
                 select1 = st.selectbox(
-                    "Healthy Options", 
+                    "Select purpose", 
                     options=["Visitors Outsider patient", "Visitors Outsider Fitness"])
             else:
                 select1 = st.selectbox(
-                    "Healthy Options", 
+                    "Select purpose", 
                     options=[
                         "Alcohol Abuse",
                         "Annual / Periodical",
