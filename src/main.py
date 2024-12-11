@@ -189,7 +189,7 @@ if __name__ == "__main__":
                 Dashboard(st.session_state.connection,cursor, "doctor")
             
             if selected == "New Visit":
-                New_Visit(st.session_state.connection,cursor)
+                New_Visit(st.session_state.connection,cursor, "doctor")
 
             if selected == "Search":
                 Search(cursor)
@@ -233,7 +233,7 @@ if __name__ == "__main__":
                 Dashboard(st.session_state.connection,cursor, "nurse")
             
             if selected == "New Visit":
-                New_Visit(st.session_state.connection,cursor)
+                New_Visit(st.session_state.connection,cursor, "nurse")
 
             if selected == "Search":
                 Search(cursor)
