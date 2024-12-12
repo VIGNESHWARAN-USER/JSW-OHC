@@ -10,8 +10,11 @@ import datetime
 import mysql.connector
 from datetime import datetime
 
+def func():
+    st.write("Hi")
 
-
+if "fitnessoptions" not in st.session_state:
+    st.session_state.fitnessoptions = ["Height Works"]
 
 
 def systolic_diastolic_chart(systolic, diastolic):
@@ -2070,8 +2073,21 @@ def Form(visitreason,select, connection, cursor, accessLevel):
                 choice_trendelenberg = st.radio("Trendelenberg Test", ( "Positive", "Negative"), key="trendelenberg_choice",index=None)
 
 
-            st.markdown("### Job Nature (Select Multiple Options)")
-            st.multiselect("Select the options",["Heightworks","2","3","4","5"])
+            # Initial Job Nature options
+            JNature = ["Height Works", 'Add New Job Nature']
+
+            # Multiselect input
+            nature = st.multiselect("Select the options", options=JNature)
+
+            # Check if 'Add New Job Nature' is selected
+            if 'Add New Job Nature' in nature:
+                # Text input for adding a new job nature
+                new = st.text_input("Enter New Job Nature")
+                
+                # Add the new job nature if it's provided and not already in the list
+                if new and new not in JNature:
+                    JNature.append(new)
+                    st.success(f"'{new}' has been added to the options.")
             if(accessLevel=="doctor"):    
                 st.radio("Overall Fitness",("Fit to join","Unfit","Conditional fit"),index=None)
                 st.text_area("Notable Remark")

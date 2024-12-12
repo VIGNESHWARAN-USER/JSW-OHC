@@ -101,10 +101,10 @@ def Search(cursor):
         st.session_state.open_modal = False
     
     if st.session_state.open_modal == False:
-        st.title("Search")
+        st.title("Employee Profile")
         search1, search2,search3 = st.columns([7,1,3])
         with search1:
-            search_val = st.text_input("search",placeholder="Search by Patient ID")
+            search_val = st.text_input("Search by employee ID",placeholder="Search by Patient ID")
         with search2:
             st.write("<div><br></div>", unsafe_allow_html=True)
             if st.button("Search", type="primary"):
@@ -165,17 +165,6 @@ def Search(cursor):
                         </style>
                         
                     """)
-            if st.button(st.session_state.button_label, key=0, type="primary"):
-                # Toggle the edit state
-                st.session_state.edit = not st.session_state.edit
-
-                # Switch button label based on the edit state
-                if st.session_state.edit:
-                    st.session_state.button_label = "Save"
-                    st.rerun()
-                else:
-                    st.session_state.button_label = "Edit"
-                    st.rerun()
             st.button("Active",key=1,type="primary")
         with st.container(border=1):
             menu = option_menu(
@@ -205,7 +194,7 @@ def Search(cursor):
                         st.write('\n')
                         st.write("Aadhar No:")
                     with rr0c2:
-                        st.text_input(label = "age", label_visibility='collapsed', disabled=not st.session_state.edit ,value=st.session_state.usr_prof.get('age', 'N/A'))
+                        st.text_input(label = "age", label_visibility='collapsed', value=st.session_state.usr_prof.get('age', 'N/A'))
                         st.text_input(label = "dob", label_visibility='collapsed', value=st.session_state.usr_prof.get('dob', 'N/A'))
                         st.text_input(label = "sex", label_visibility='collapsed', value=st.session_state.usr_prof.get('gender', 'N/A'))
                         st.text_input(label = "adno", label_visibility='collapsed', value=st.session_state.usr_prof.get('aadhar_no', 'N/A'))

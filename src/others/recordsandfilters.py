@@ -6,12 +6,13 @@ from  streamlit_option_menu import option_menu
 
 if "df" not in st.session_state:
     st.session_state.df = pd.DataFrame()
+if "filtered_data" not in st.session_state:
+        st.session_state.filtered_data = pd.DataFrame()
 def get_data(cursor, table_name, filters=None,inv = None):
     # Execute the first query
     if "col" not in st.session_state:
         st.session_state.col = []
-    if "filtered_data" not in st.session_state:
-        st.session_state.filtered_data = pd.DataFrame()
+    
     if "df" not in st.session_state:
         st.session_state.df = pd.DataFrame()
     if "proceed" not in st.session_state:
@@ -1694,8 +1695,7 @@ def Records_Filters(cursor):
                         st.dataframe(filteredhem)
                         st.session_state.proceed = False
         if form_name == "All Details":
-            st.write(f"**Count({st.session_state.df.emp_no.count()})**")
-            st.dataframe(st.session_state.df)
+            st.warning("Dataset has to be set")
 
         if form_name != "Recent" and form_name != "Investigations":
             with st.container():

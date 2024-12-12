@@ -166,7 +166,7 @@ if __name__ == "__main__":
         if st.session_state.accessLevel == "doctor":
             with st.sidebar:
                 st.image("./src/assets/logo.png")
-                selected = option_menu(None, ['Search',"Dashboard", 'New Visit', 'Events & Camps', 'Records & Filters','Mock Drills', 'Appointments','Review People'], 
+                selected = option_menu(None, ['Employee Profile',"Dashboard", 'New Visit', 'Events & Camps', 'Records & Filters','Mock Drills', 'Appointments','Review People'], 
                     icons=['search', 'house','gear', 'calendar', 'filter', 'shield', 'calendar-check','person-vcard'],
                     menu_icon="building-fill-add", 
                     default_index=1)
@@ -187,7 +187,7 @@ if __name__ == "__main__":
             if selected == "New Visit":
                 New_Visit(st.session_state.connection,cursor, st.session_state.accessLevel)
 
-            if selected == "Search":
+            if selected == "Employee Profile":
                 Search(cursor)
 
             if selected == "Events & Camps":
@@ -210,7 +210,7 @@ if __name__ == "__main__":
             
             with st.sidebar:
                 st.image("./src/assets/logo.png")
-                selected = option_menu(None,options=['Search',"Dashboard", 'New Visit', 'Events & Camps', 'Records & Filters','Mock Drills', 'Appointments'], 
+                selected = option_menu(None,options=['Employee Profile',"Dashboard", 'New Visit', 'Events & Camps', 'Records & Filters','Mock Drills', 'Appointments'], 
                     icons=['search', 'house','gear', 'calendar', 'filter', 'shield', 'calendar-check'],
                     menu_icon="building-fill-add", 
                     default_index=1)
@@ -231,7 +231,7 @@ if __name__ == "__main__":
             if selected == "New Visit":
                 New_Visit(st.session_state.connection,cursor, st.session_state.accessLevel)
 
-            if selected == "Search":
+            if selected == "Employee Profile":
                 Search(cursor)
 
             if selected == "Events & Camps":
