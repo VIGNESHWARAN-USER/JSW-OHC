@@ -1,3 +1,4 @@
+from logging import PlaceHolder
 import streamlit as st
 import pandas as pd
 from datetime import datetime
@@ -563,20 +564,41 @@ def Appointment(connection, accessLevel):
                     
                     st.button('Submit', type='primary')      
     elif accessLevel == "nurse":
+        st.markdown("""
+                            <style>
+                            .custom-button {
+                                background-color: rgb(255, 75, 75); /* Initial color */
+                                border: none;
+                                color: white;
+                                padding: 15px 32px;
+                                text-align: center;
+                                text-decoration: none;
+                                display: inline-block;
+                                font-size: 16px;
+                                margin: 4px 2px;
+                                cursor: pointer;
+                                border-radius: 12px;
+                            }
+                            .custom-button.clicked {
+                                background-color: #00008B; /* Dark blue after success */
+                            }
+                            </style>
+                            """, unsafe_allow_html=True)
+         
         if 'page' not in st.session_state:
             st.session_state.page = 'upload' 
-        col1, col2, col3, col4 = st.columns([2,1.5,2,8])  
+        col1, col2, col3, col4 = st.columns([2,2.5,2,8])  
         with col1:
-            if st.button("Upload Appointment", key="upload_btn", type='primary'):  
-                st.session_state.page = 'upload'  
+            if st.button("Book Appointment", key="bookappointments_btn", type='primary'):  
+                st.session_state.page = 'bookappointments'  
 
         with col2:
-            if st.button("Appointments", key="appointments_btn", type='primary'):  
-                st.session_state.page = 'appointments' 
+            if st.button("upload Appointment", key="upload_btn", type='primary'):  
+                st.session_state.page = 'upload' 
 
         with col3:
-            if st.button("Book Appointment", key="bookappointments_btn", type='primary'):  
-                st.session_state.page = 'bookappointments' 
+            if st.button("Appointments", key="appointments_btnn", type='primary'):  
+                st.session_state.page = 'appointments' 
 
         # Check if the current page is 'upload'
         if st.session_state.page == 'upload':
@@ -1268,12 +1290,66 @@ def Appointment(connection, accessLevel):
                 emp_role = st.selectbox("Select role",["Employee", "Contractor", "Visitor"], label_visibility='collapsed')
                 st.write("Enter employee ID:")
                 st.text_input("emp_no", label_visibility='collapsed')
+                st.write("Aadhar No:")
+                st.text_input("aadhar_no", label_visibility='collapsed')
                 st.write("Enter the purpose:")
                 st.text_input("purpose", label_visibility='collapsed')
                 st.write("Enter the date of the appointment:")
-                st.date_input("date", label_visibility='collapsed')
+                st.date_input("date", label_visibility='collapsed', key="main_date_input")
                 st.write("\n")
-                if st.button("Book the appointment", type='primary'):
+
+
+            with rc2:
+                st.write("Name")
+                st.text_input("name", label_visibility='collapsed', key="name_input")
+
+                st.write("Name of institute / Organization:")
+                st.text_input("name_of_institute_organization", label_visibility='collapsed', key="institute_input")
+
+                st.write("Name Of Contractor:")
+                st.text_input("name_of_contractor", label_visibility='collapsed', key="contractor_input")
+
+                st.write("Date:")
+                st.date_input("date", label_visibility='collapsed', key="appointment_date_input")
+
+                st.write("Time:")
+                st.time_input("time", label_visibility='collapsed', key="appointment_time_input")
+
+            r1c1, r1c2, r1c3 = st.columns([8,2,2])
+
+            with r1c2:
+                st.selectbox("Booked by Nurse", options=["A","B","C"])
+
+            with r1c3:
+                
+                # Inject custom CSS
+                st.markdown("""
+                            <style>
+                            .custom-button {
+                                background-color: rgb(255, 75, 75); /* Initial color */
+                                border: none;
+                                color: white;
+                                padding: 15px 32px;
+                                text-align: center;
+                                text-decoration: none;
+                                display: inline-block;
+                                font-size: 16px;
+                                margin: 4px 2px;
+                                cursor: pointer;
+                                border-radius: 12px;
+                            }
+                            .custom-button.clicked {
+                                background-color: #00008B; /* Dark blue after success */
+                            }
+                            </style>
+                            """, unsafe_allow_html=True)
+
+                # Use custom HTML for the button
+                if st.markdown('<button class="custom-button">Book the appointment</button>', unsafe_allow_html=True):
                     st.success("Appointment booked successfully.")
+
+
+               
+
                 
     

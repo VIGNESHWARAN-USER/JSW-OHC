@@ -28,7 +28,8 @@ from others.consumption import consumption
 from others.currentStock import currStock
 from others.Expiry import expiry
 from others.minStock import minStock
-
+from others.admin.pages.dynamicDropdown import dynamicDropdown
+from others.admin.pages.addMember import addMember
 icon = Image.open("./src/assets/favicon.png")
 st.set_page_config(page_title="JSW", page_icon=icon, layout="wide", initial_sidebar_state="expanded")
 st.markdown("""
@@ -139,9 +140,9 @@ if __name__ == "__main__":
                 st.image("./src/assets/logo.png")
                 form = option_menu(
                     None,
-                    ["Dashboard", "Add Doctor", "Add Nurse","Add Employee","Add Reference Range"],
+                    ["Dashboard", "Add Member", "Dynamic Dropdowns"],
                     menu_icon='a',
-                    icons=['a', 'b', 'c', 'd','e']
+                    icons=['a', 'b', 'c', 'd','e', 'a']
                 )
                 st.divider()
                 st.header(f"Login as {st.session_state.accessLevel.capitalize()}")
@@ -153,15 +154,10 @@ if __name__ == "__main__":
 
             if form == "Dashboard":
                 dashboard()
-            elif form == "Add Doctor":
-                addDoctor()
-            elif form == "Add Nurse":
-                addNurse()
-            elif form == "Add Employee":
-                addEmp(st.session_state.connection,cursor)
-            elif form == "Add Reference Range":
-                addReferenceRange(st.session_state.connection,cursor)
-
+            elif form == "Add Member":
+                addMember(st.session_state.connection,cursor)
+            elif form == "Dynamic Dropdowns":
+                dynamicDropdown(st.session_state.connection,cursor)
         
         if st.session_state.accessLevel == "doctor":
             with st.sidebar:

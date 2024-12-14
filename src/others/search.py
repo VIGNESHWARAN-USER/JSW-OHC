@@ -169,13 +169,14 @@ def Search(cursor):
         with st.container(border=1):
             menu = option_menu(
                     None,
-                    ["Personal Details","Employment Details","Contact Details","Vitals", "Medical/Surgical History", "Visit Reason", "Vaccinations"],
+                    ["Details","Vitals", "Medical/Surgical History", "Visit Reason", "Vaccinations"],
                     key="menu",
                     orientation="horizontal",
                     icons=['a','b','c', 'a','b','c','a','b','c']
                 )
-            if menu == "Personal Details":
-                r0c1,r0c2 = st.columns([5,6])
+            if menu == "Details":
+                st.markdown("### Personal Details : ")
+                r0c1,r0c2,r0c3 = st.columns([10,1,10])
                 with r0c1:
                 # MARK: Personal Details
                     # st.markdown(f"""
@@ -198,7 +199,8 @@ def Search(cursor):
                         st.text_input(label = "dob", label_visibility='collapsed', value=st.session_state.usr_prof.get('dob', 'N/A'))
                         st.text_input(label = "sex", label_visibility='collapsed', value=st.session_state.usr_prof.get('gender', 'N/A'))
                         st.text_input(label = "adno", label_visibility='collapsed', value=st.session_state.usr_prof.get('aadhar_no', 'N/A'))
-                with r0c2:
+
+                with r0c3:
                     # st.write(f"*Mail ID (Personal)*: {st.session_state.usr_prof['personal_mail']}")
                     # st.write("*Identification Mark*:")
                     # st.markdown(f" * {st.session_state.usr_prof['identification_mark']}")
@@ -208,13 +210,195 @@ def Search(cursor):
                         st.write('\n')
                         st.write('Identification Mark :')
                         st.write('\n')
+                        st.write('\n')
+                        st.write('Marital Status :')
                     with rr0c2:
                         st.text_input(label = "age", label_visibility='collapsed', value=st.session_state.usr_prof.get('personal_mail', 'N/A'))
                         st.text_input(label = "dob", label_visibility='collapsed', value=st.session_state.usr_prof.get('identification_mark', 'N/A'))
+                        st.selectbox("",options=["Single","Married","Seperated","Divorced","Widowed"])
 
-            
-            
-            
+                        
+                st.write("\n")
+                st.write("\n")
+                st.write("\n")
+                st.write("\n")
+
+                st.markdown("### Employment Details : ")
+                r0c1,r0c2,r0c3 = st.columns([10,1,10])
+                with r0c1:
+                # MARK: Personal Details
+                    # st.markdown(f"""
+                    #     *Employee No*: {st.session_state.usr_prof.get('emp_no', 'N/A')}<br>
+                    #     *Designation*: {st.session_state.usr_prof.get('designation', 'N/A')}<br>
+                    #     *Department H/O*: {st.session_state.usr_prof.get('department', 'N/A')}
+                    # """, unsafe_allow_html=True)
+                    rr0c1, rr0c2 = st.columns(2)
+                    with rr0c1:
+                        st.write('\n')
+                        st.write('\n')
+                        st.write('Employer :')
+                        st.write('\n')
+                        st.write('Designation :')
+                        st.write('\n')
+                        st.write("Department H/O :")
+                    with rr0c2:
+                        st.selectbox("",options=["JSW steel","JSW cement","JSW foundation"])
+                        st.text_input(label = "des", label_visibility='collapsed', value=st.session_state.usr_prof.get('designation', 'N/A'))
+                        st.text_input(label = "dept", label_visibility='collapsed', value=st.session_state.usr_prof.get('department', 'N/A'))
+                                                # Define the data for the employment history
+                        employment_history = [
+                            {"date": "2022-01-15", "department": "Department A"},
+                            {"date": "2023-03-22", "department": "Department B"},
+                            {"date": "2024-07-10", "department": "Department C"}
+                        ]
+
+                        # Add the View More button
+                        if st.button("View More", key="view_more_dept"):
+                            st.subheader("Employment History - Department H/O")
+                            
+                            # Display the history in a table format
+                            for record in employment_history:
+                                st.markdown(f"**Date:** {record['date']}")
+                                st.markdown(f"**Department:** {record['department']}")
+                                st.markdown("---")  # Separator for clarity
+
+
+                print("       ")
+                with r0c3:
+                    # st.write(f"*Mail ID (Office)*: {st.session_state.usr_prof['office_mail']}")
+                    # st.write(f"*Nature of Job H/O*:{st.session_state.usr_prof['nature_of_job']}")
+                    # st.write(f"*Employer*:{st.session_state.usr_prof['personal_mail']}")
+                    # st.write(f"*Contractor*:{st.session_state.usr_prof['personal_mail']}")
+                    rr0c1, rr0c2 = st.columns(2)
+                    with rr0c1:
+                        st.write('\n')
+                        st.write('\n')
+                        st.write('Mode of Joining :')
+                        st.write('\n')
+                        st.write('Nature of Jo H/O :')
+                        st.write('\n')
+                        st.write('\n')
+                        st.write('\n')
+                        st.write('\n')
+                        st.write("Date of Joining :")
+                        
+    
+                    with rr0c2:
+                        # Define the options for the selectbox
+                        employee_status = st.selectbox("",
+                            options=["New Joinee", "Transfer in from other JSW sites"]
+                        )
+
+                        # Conditional display based on the selected option
+                        if employee_status == "Transfer in from other JSW sites":
+                            # Show a text area with a placeholder
+                            st.text_area(
+                                label="Transfer Details",
+                                placeholder="e.g., JSW Power Dolvi (mention site details)",
+                                key="transfer_details"
+                            )
+
+                        st.text_input(label = "job", label_visibility='collapsed', value=st.session_state.usr_prof.get('nature_of_job', 'N/A'))
+                        if st.button("View More", key="view_more_dept1"):
+                            st.write("Additional information for Department H/O...")
+                        st.text_input(label = "mep", label_visibility='collapsed', value=st.session_state.usr_prof.get('employer', 'N/A'))
+                          
+                st.write("\n")
+                st.write("\n")
+                st.write("\n")
+                st.write("\n")
+
+                st.markdown("### Contact Details : ")
+                r0c1,r0c2,r0c3 = st.columns([10,1,10])  # Define two main columns with specific width ratio
+                with r0c1:
+                    # MARK: Personal Details
+                    rr0c1, rr0c2 = st.columns(2)  # Define sub-columns for Employee details
+                    with rr0c1:
+                        st.write('Phone (Personal) :')
+                        st.write('\n')
+                        st.write('Phone (Office) :')
+                        st.write('\n')
+                        st.write('Mail ID (Personal) :')
+                        st.write('\n')
+                        st.write('Mail ID (Office) :')
+                        st.write('\n')
+                        st.write('Emergency Contact person (Name) :')
+                        
+                    with rr0c2:
+                        # Use unique keys for each input field to avoid duplication
+                        st.text_input(label="eno", label_visibility='collapsed', value=st.session_state.usr_prof.get('personal_phone_no', 'N/A'), key="eno_key")
+                        st.text_input(label="des", label_visibility='collapsed', value=st.session_state.usr_prof.get('office_phone_no', 'N/A'), key="des_key")
+                        st.text_input(label="permail", label_visibility='collapsed', value=st.session_state.usr_prof.get('personal_mail', 'N/A'), key="permail_key")
+                        st.text_input(label="offmail", label_visibility='collapsed', value=st.session_state.usr_prof.get('office_mail', 'N/A'), key="offmail_key")
+                        st.text_input(label="emgper", label_visibility='collapsed', value=st.session_state.usr_prof.get('emg_con_person', 'N/A'), key="emgper_key")
+                        
+
+                with r0c3:
+                    # MARK: Contact Details
+                    rr0c1, rr0c2 = st.columns(2)  # Define sub-columns for the contact details
+                    with rr0c1:
+                        st.write('Emergency Contact Relationship :')
+                        st.write('\n')
+                        st.write('Emergency Contact phone :')
+                        st.write('\n')
+                        st.write('Mail ID (Emergency Contact phone) :')
+                        st.write('\n')
+                        st.write("Address :")
+                    
+                    with rr0c2:
+                        # Use unique keys for each input field to avoid duplication
+                        st.text_input(label="mail", label_visibility='collapsed', value=st.session_state.usr_prof.get('office_mail', 'N/A'), key="mail_key")
+                        st.text_input(label="job", label_visibility='collapsed', value=st.session_state.usr_prof.get('nature_of_job', 'N/A'), key="job_key")
+                        st.text_input(label="mailid", label_visibility='collapsed', value=st.session_state.usr_prof.get('personal_mail', 'N/A'), key="mailid_key")
+                        st.selectbox("",options=["Permanent","Residence"])
+
+                st.write("\n")
+                st.write("\n")
+                st.write("\n")
+                st.write("\n")
+
+
+                st.markdown("### Employment Status : ")
+                r0c1,r0c2,r0c3 = st.columns([10,1,10])
+                with r0c1:
+                # MARK: Personal Details
+                    # st.markdown(f"""
+                    #     *Age*: {st.text_input( label = "Age", label_visibility='collapsed', value = st.session_state.usr_prof.get('age', 'N/A'))}<br>
+                    #     *DOB*: {st.session_state.usr_prof.get('dob', 'N/A')}<br>
+                    #     *Sex*: {st.session_state.usr_prof.get('gender', 'N/A')}<br>
+                    #     *Aadhar No*: {st.session_state.usr_prof.get('aadhar_no', 'N/A')}
+                    # """, unsafe_allow_html=True)
+                    rr0c1, rr0c2 = st.columns(2)
+                    with rr0c1:
+                        st.write('Active From :')
+                        st.write('\n')
+                        st.write('Transferred to dolvi on:')
+                        st.write('\n')
+                        st.write("Resined on :")
+                        st.write('\n')
+                        st.write("Retired on:")
+                    with rr0c2:
+                        st.text_input(label = "activeform", label_visibility='collapsed', value=st.session_state.usr_prof.get('active_form', 'N/A'))
+                        st.text_input(label = "trn", label_visibility='collapsed', value=st.session_state.usr_prof.get('transferred_to_dolvi_on', 'N/A'))
+                        st.text_input(label = "res", label_visibility='collapsed', value=st.session_state.usr_prof.get('resined_on', 'N/A'))
+                        st.text_input(label = "ret", label_visibility='collapsed', value=st.session_state.usr_prof.get('retired_on', 'N/A'))
+
+                with r0c3:
+                    # st.write(f"*Mail ID (Personal)*: {st.session_state.usr_prof['personal_mail']}")
+                    # st.write("*Identification Mark*:")
+                    # st.markdown(f" * {st.session_state.usr_prof['identification_mark']}")
+                    rr0c1, rr0c2 = st.columns(2)
+                    with rr0c1:
+                        st.write('Deceased on :')
+                        st.write('\n')
+                        st.write('Unauthorized Absence from  :')
+                        st.write('\n')
+                        st.write('Others (Specify) on :')
+                    with rr0c2:
+                        st.text_input(label = "dec", label_visibility='collapsed', value=st.session_state.usr_prof.get('deceased_on', 'N/A'))
+                        st.text_input(label = "uaf", label_visibility='collapsed', value=st.session_state.usr_prof.get('unauthorized_absence_from', 'N/A'))
+                        st.text_input(label = "oth", label_visibility='collapsed', value=st.session_state.usr_prof.get('others_on', 'N/A'))
+
             if menu == "Medical/Surgical History":
                 # Personal History Section (Smoker, Alcoholic, Diet)
                 st.subheader("Personal History")
@@ -276,116 +460,6 @@ def Search(cursor):
                     mother_smoker = st.radio("Mother Smoker", options=["Yes", "No"], index=0 if st.session_state.usr_prof.get('family_history', {}).get('mother', {}).get('smoker', 'No') == "Yes" else 1)
                     mother_htn = st.checkbox("Mother - HTN", value=st.session_state.usr_prof.get('family_history', {}).get('mother', {}).get('htn', False))
                     mother_dm = st.checkbox("Mother - DM", value=st.session_state.usr_prof.get('family_history', {}).get('mother', {}).get('dm', False))
-
-
-
-            
-            
-            if menu == "Employment Details":
-                r0c1,r0c2 = st.columns([5,6])
-                with r0c1:
-                # MARK: Personal Details
-                    # st.markdown(f"""
-                    #     *Employee No*: {st.session_state.usr_prof.get('emp_no', 'N/A')}<br>
-                    #     *Designation*: {st.session_state.usr_prof.get('designation', 'N/A')}<br>
-                    #     *Department H/O*: {st.session_state.usr_prof.get('department', 'N/A')}
-                    # """, unsafe_allow_html=True)
-                    rr0c1, rr0c2 = st.columns(2)
-                    with rr0c1:
-                        st.write('Employee No :')
-                        st.write('\n')
-                        st.write('Designation :')
-                        st.write('\n')
-                        st.write("Department H/O :")
-                    with rr0c2:
-                        st.text_input(label = "eno", label_visibility='collapsed', value=st.session_state.usr_prof.get('emp_no', 'N/A'))
-                        st.text_input(label = "des", label_visibility='collapsed', value=st.session_state.usr_prof.get('designation', 'N/A'))
-                        st.text_input(label = "dept", label_visibility='collapsed', value=st.session_state.usr_prof.get('department', 'N/A'))
-                        if st.button("View More", key="view_more_dept"):
-                            st.write("Additional information for Department H/O...")
-                with r0c2:
-                    # st.write(f"*Mail ID (Office)*: {st.session_state.usr_prof['office_mail']}")
-                    # st.write(f"*Nature of Job H/O*:{st.session_state.usr_prof['nature_of_job']}")
-                    # st.write(f"*Employer*:{st.session_state.usr_prof['personal_mail']}")
-                    # st.write(f"*Contractor*:{st.session_state.usr_prof['personal_mail']}")
-                    rr0c1, rr0c2 = st.columns(2)
-                    with rr0c1:
-                        st.write('Mail ID (Office) :')
-                        st.write('\n')
-                        
-                        st.write('Nature of Jo H/O :')
-                        st.write('\n')
-                        st.write('\n')
-                        st.write('\n')
-                        st.write('\n')
-                        st.write("Employer :")
-                        st.write('\n')
-                        st.write("Contractor :")
-    
-                    with rr0c2:
-                        st.text_input(label = "mail", label_visibility='collapsed' ,value=st.session_state.usr_prof.get('office_mail', 'N/A'))
-                        st.text_input(label = "job", label_visibility='collapsed', value=st.session_state.usr_prof.get('nature_of_job', 'N/A'))
-                        if st.button("View More", key="view_more_dept1"):
-                            st.write("Additional information for Department H/O...")
-                        st.text_input(label = "mep", label_visibility='collapsed', value=st.session_state.usr_prof.get('employer', 'N/A'))
-                        st.text_input(label = "cot", label_visibility='collapsed', value=st.session_state.usr_prof.get('contractor', 'N/A'))
-                        if st.button("View More", key="view_more_dept2"):
-                            st.write("Additional information for Department H/O...")
-
-
-
-
-            if menu == "Contact Details":
-             r0c1, r0c2 = st.columns([5, 6])  # Define two main columns with specific width ratio
-             with r0c1:
-                # MARK: Personal Details
-                rr0c1, rr0c2 = st.columns(2)  # Define sub-columns for Employee details
-                with rr0c1:
-                    st.write('Employee No :')
-                    st.write('\n')
-                    st.write('Designation :')
-                    st.write('\n')
-                    st.write("Department H/O :")
-                
-                with rr0c2:
-                    # Use unique keys for each input field to avoid duplication
-                    st.text_input(label="eno", label_visibility='collapsed', value=st.session_state.usr_prof.get('emp_no', 'N/A'), key="eno_key")
-                    st.text_input(label="des", label_visibility='collapsed', value=st.session_state.usr_prof.get('designation', 'N/A'), key="des_key")
-                    st.text_input(label="dept", label_visibility='collapsed', value=st.session_state.usr_prof.get('department', 'N/A'), key="dept_key")
-                    if st.button("View More", key="view_more_dept"):
-                        st.write("Additional information for Department H/O...")
-
-             with r0c2:
-                # MARK: Contact Details
-                rr0c1, rr0c2 = st.columns(2)  # Define sub-columns for the contact details
-                with rr0c1:
-                    st.write('Mail ID (Office) :')
-                    st.write('\n')
-                    st.write('Nature of Job H/O :')
-                    st.write('\n')
-                    st.write('\n')
-                    st.write('\n')
-                    st.write('\n')
-                    st.write("Employer :")
-                    st.write('\n')
-                    st.write("Contractor :")
-                
-                with rr0c2:
-                    # Use unique keys for each input field to avoid duplication
-                    st.text_input(label="mail", label_visibility='collapsed', value=st.session_state.usr_prof.get('office_mail', 'N/A'), key="mail_key")
-                    st.text_input(label="job", label_visibility='collapsed', value=st.session_state.usr_prof.get('nature_of_job', 'N/A'), key="job_key")
-                    if st.button("View More", key="view_more_dept1"):
-                        st.write("Additional information for Nature of Job...")
-                    st.text_input(label="mep", label_visibility='collapsed', value=st.session_state.usr_prof.get('employer', 'N/A'), key="mep_key")
-                    st.text_input(label="cot", label_visibility='collapsed', value=st.session_state.usr_prof.get('contractor', 'N/A'), key="cot_key")
-                    if st.button("View More", key="view_more_dept2"):
-                        st.write("Additional information for Contractor...")
-
-
-
-
-
-
             
             if menu == "Vitals":
                 r0c1,r0c2 = st.columns([5,6])

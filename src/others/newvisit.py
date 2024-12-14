@@ -9,13 +9,52 @@ import json
 import datetime
 import mysql.connector
 from datetime import datetime
+import re
 
-def func():
-    st.write("Hi")
 
-if "fitnessoptions" not in st.session_state:
-    st.session_state.fitnessoptions = ["Height Works"]
+def validate_name(name):
+    if not re.match("^[A-Za-z ]+$", name):
+        st.error("Name should contain only letters and spaces.")
+        return False
+    return True
 
+def validate_aadhar(aadhar):
+    if not re.match("^[0-9]{12}$", aadhar):
+        st.error("Aadhar No. must be exactly 12 digits.")
+        return False
+    return True
+
+def validate_blood_group(blood_group):
+    valid_groups = {"A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"}
+    if blood_group not in valid_groups:
+        st.error("Invalid Blood Group. Choose from A+, A-, B+, B-, O+, O-, AB+, AB-.")
+        return False
+    return True
+
+def validate_phone(phone):
+    if not re.match("^[0-9]{10}$", phone):
+        st.error("Phone number must be exactly 10 digits.")
+        return False
+    return True
+
+def validate_email(email):
+    if not re.match(r"^[\w\.-]+@[\w\.-]+\.\w+$", email):
+        st.error("Invalid email format.")
+        return False
+    return True
+
+def validate_date_format(date_str):
+    """
+    Validate if the input matches the dd/mm/yyyy format and is a valid date.
+    """
+    try:
+        return datetime.datetime.strptime(date_str, "%d/%m/%Y").date()
+    except ValueError:
+        st.error("Invalid date format. Please use dd/mm/yyyy.")
+        return None
+
+if "addonInput" not in st.session_state:
+    st.session_state.addonInput = None
 
 def systolic_diastolic_chart(systolic, diastolic):
     systolic = int(systolic)
@@ -38,7 +77,7 @@ def systolic_diastolic_chart(systolic, diastolic):
         return "Invalid input"
 
 
-def Form(visitreason,select, connection, cursor, accessLevel):
+def Form(visitreason,select, select1, connection, cursor,accessLevel):
     st.write("""
         <style>
             div.stButton > button[kind="primary"] {
@@ -60,84 +99,93 @@ def Form(visitreason,select, connection, cursor, accessLevel):
             }
         </style>
     """, unsafe_allow_html=True)
-    if visitreason=="Camps (Optional)":
-        form_name = option_menu(
-        None,
-        ["Basic Details", "Vitals","Medical History", "Investigations",  "Consultation"],
-        orientation="horizontal",
-        icons=['a','a','a','a','a']
-    )
-    elif visitreason=="Special Work Fitness":
-        form_name = option_menu(
-        None,
-        ["Basic Details", "Vitals", "Fitness", "Consultation"],
-        orientation="horizontal",
-        icons=['a','a','a','a']
-    )
-    elif visitreason=="Special Work Fitness (Renewal)" or select=="Visitor":
-        form_name = option_menu(
-        None,
-        ["Basic Details", "Vitals","Medical History", "Fitness", "Consultation"],
-        orientation="horizontal",
-        icons=['a','a','a','a','a']
-    )
-    elif visitreason=="Fitness After Medical Leave":
-        form_name = option_menu(
-        None,
-        ["Basic Details","Vitals","Medical History", "Fitness", "Consultation","Medical Leave/Sickness Absence Ratio"],  #not defined
-        orientation="horizontal",
-        icons=['a','a','a','a','a','a','a']
-        )
-    elif visitreason=="Mock Drill" or visitreason=="BP Sugar Check":
-        form_name= option_menu(
+    if select1=="Preventive":
+        if visitreason=="Camps (Optional)":
+            form_name = option_menu(
             None,
-            ["Basic Details", "Vitals"],
+            ["Basic Details", "Vitals","Medical History", "Investigations", "Vaccination"],
             orientation="horizontal",
-            icons=['a','a']
+            icons=['a','a','a','a','a','a']
         )
-    
-    elif select=="Contractor" and visitreason=="Over counter Injury Outside the premises":
-        form_name = option_menu(
-        None,
-        ["Basic Details","Consultation","Prescription","Vaccination" ],
-        orientation="horizontal",
-        icons=['a','a','a','a','a']
+        elif visitreason=="Special Work Fitness":
+            form_name = option_menu(
+            None,
+            ["Basic Details", "Vitals", "Fitness", "Vaccination"],
+            orientation="horizontal",
+            icons=['a','a','a','a','a']
         )
-    elif visitreason=="Illness" or visitreason=="BP Sugar (Abnormal)" or visitreason=="Injury Outside the premises" or visitreason=="Over counter Injury Outside the premises":
-        form_name = option_menu(
-        None,
-        ["Basic Details", "Vitals","Medical History","Consultation","Prescription","Vaccination" ],
-        orientation="horizontal",
-        icons=['a','a','a','a','a','a','a','a']
+        elif visitreason=="Special Work Fitness (Renewal)" or select=="Visitor":
+            form_name = option_menu(
+            None,
+            ["Basic Details", "Vitals","Medical History", "Vaccination","Fitness"],
+            orientation="horizontal",
+            icons=['a','a','a','a','a','a']
         )
-    elif visitreason=="Injury":
-        form_name = option_menu(
-        None,
-        ["Basic Details","Prescription","Vaccination"],
-        orientation="horizontal",
-        icons=['a','a','a']
-        )
-    elif visitreason=="Over counter Injury":
-        form_name = option_menu(
-        None,
-        ["Basic Details","Consultation","Prescription","Vaccination"],
-        orientation="horizontal",
-        icons=['a','a','a','a','a']
-        )
-    elif select!="Contractor"and visitreason=="Follow up Visits":
-        form_name = option_menu(
-        None,
-        ["Basic Details","Vitals","Investigations","Consultation","Prescription","Vaccination"],
-        orientation="horizontal",
-        icons=['a','a','a','a','a','a',]
-        )
-    else:
-        form_name = option_menu(
-        None,
-        ["Basic Details", "Vitals","Consultation","Medical History", "Investigations", "Fitness","Prescription","Vaccination" ],
-        orientation="horizontal",
-        icons=['a','a','a','a','a','a','a','a']
-        )
+        elif visitreason=="Fitness After Medical Leave":
+            form_name = option_menu(
+            None,
+            ["Basic Details","Vitals","Medical History", "Fitness","Vaccination","Medical Leave/Sickness Absence Ratio"],  #not defined
+            orientation="horizontal",
+            icons=['a','a','a','a','a','a','a','a']
+            )
+        elif visitreason=="Mock Drill" or visitreason=="BP Sugar Check":
+            form_name= option_menu(
+                None,
+                ["Basic Details", "Vitals"],
+                orientation="horizontal",
+                icons=['a','a','a']
+            )
+        else:
+            form_name = option_menu(
+                None,
+                ["Basic Details", "Vitals","Medical History", "Investigations","Vaccination", "Fitness"],
+                orientation="horizontal",
+                icons=['a','a','a','a','a','a','a']
+            )
+    if select1=="Curative":
+        if select=="Contractor" and visitreason=="Over counter Injury Outside the premises":
+            form_name = option_menu(
+            None,
+            ["Basic Details","Consultation","Vaccination","Prescription" ],
+            orientation="horizontal",
+            icons=['a','a','a','a','a','a']
+            )
+        elif visitreason=="Illness" or visitreason=="BP Sugar (Abnormal)" or visitreason=="Injury Outside the premises" or visitreason=="Over counter Injury Outside the premises":
+            form_name = option_menu(
+            None,
+            ["Basic Details", "Vitals","Medical History","Vaccination","Consultation","Prescription" ],
+            orientation="horizontal",
+            icons=['a','a','a','a','a','a','a','a','a']
+            )
+        elif visitreason=="Injury":
+            form_name = option_menu(
+            None,
+            ["Basic Details","Vaccination","Prescription"],
+            orientation="horizontal",
+            icons=['a','a','a','a']
+            )
+        elif visitreason=="Over counter Injury":
+            form_name = option_menu(
+            None,
+            ["Basic Details","Vaccination","Consultation","Prescription"],
+            orientation="horizontal",
+            icons=['a','a','a','a','a','a']
+            )
+        elif select!="Contractor"and visitreason=="Follow up Visits":
+            form_name = option_menu(
+            None,
+            ["Basic Details","Vitals","Investigations","Consultation","Vaccination","Prescription"],
+            orientation="horizontal",
+            icons=['a','a','a','a','a','a','a']
+            )
+        else:
+            form_name = option_menu(
+            None,
+            ["Basic Details", "Vitals","Consultation","Vaccination","Prescription" ],
+            orientation="horizontal",
+            icons=['a','a','a','a','a','a']
+            )
+
 
             
     if form_name == "Basic Details":
@@ -146,35 +194,75 @@ def Form(visitreason,select, connection, cursor, accessLevel):
         r1c1, r1c2, r1c3 = st.columns(3)
 
         with r1c1:
-            st.session_state.form_data["Name"] = st.text_input("Name", value=st.session_state.form_data.get("Name", ""))
-            st.session_state.form_data["Date of Birth"] = st.date_input("Date of Birth", value=st.session_state.form_data.get("Date of Birth", None))
-            st.session_state.form_data["Sex"] = st.selectbox(
-                "Sex",
-                options=["Male", "Female", "Other"],
-                index=["Male", "Female", "Other"].index(st.session_state.form_data.get("Sex", "Male")))
-            st.session_state.form_data["Aadhar No."] = st.text_input("Aadhar No.", value=st.session_state.form_data.get("Aadhar No.", ""))
-            st.session_state.form_data["Identification Marks"] = st.text_input("Identification Marks", value=st.session_state.form_data.get("Identification Marks", ""))
-            st.session_state.form_data["Blood Group"] = st.text_input("Blood Group", value=st.session_state.form_data.get("Blood Group", ""))
-            st.session_state.form_data["Height in cm"] = st.number_input("Height in cm", format="%f", value=st.session_state.form_data.get("Height in cm", 0.0))
-            st.session_state.form_data["Weight in Kg"] = st.number_input("Weight in Kg", format="%f", value=st.session_state.form_data.get("Weight in Kg", 0.0))
+            name = st.text_input("Name", value=st.session_state.form_data.get("Name", ""), placeholder="Enter your full name")
+            if name and not validate_name(name):
+                st.stop()
 
+            dob_input = st.text_input(
+                "Date of Birth (dd/mm/yyyy)", 
+                value=st.session_state.form_data.get("Date of Birth", ""),
+                placeholder="Enter Date of Birth in dd/mm/yyyy"
+            )
+
+            if dob_input:
+                dob = validate_date_format(dob_input)
+                if dob:
+                    # Store validated DOB in session state
+                    st.session_state.form_data["Date of Birth"] = dob
+
+            sex = st.selectbox("Sex", options=["Male", "Female", "Other"], 
+                            index=["Male", "Female", "Other"].index(st.session_state.form_data.get("Sex", "Male")))
+
+            aadhar = st.text_input("Aadhar No.", value=st.session_state.form_data.get("Aadhar No.", ""), placeholder="Enter 12-digit Aadhar No.")
+            if aadhar and not validate_aadhar(aadhar):
+                st.stop()
+
+            id_marks = st.text_input("Identification Marks", value=st.session_state.form_data.get("Identification Marks", ""), placeholder="Enter any visible identification marks")
+            blood_group = st.text_input("Blood Group", value=st.session_state.form_data.get("Blood Group", ""), placeholder="e.g., A+, O-")
+            if blood_group and not validate_blood_group(blood_group):
+                st.stop()
+
+            
         with r1c2:
-            st.session_state.form_data["Employee No."] = st.text_input("Employee No.", value=st.session_state.form_data.get("Employee No.", ""))
-            st.session_state.form_data["Date of Joining"] = st.date_input("Date of Joining", value=st.session_state.form_data.get("Date of Joining", None))
-            st.session_state.form_data["Designation"] = st.text_input("Designation", value=st.session_state.form_data.get("Designation", ""))
-            st.session_state.form_data["Department"] = st.text_input("Department", value=st.session_state.form_data.get("Department", ""))
-            st.session_state.form_data["Nature of Job"] = st.text_input("Nature of Job", value=st.session_state.form_data.get("Nature of Job", ""))
-            st.session_state.form_data["Phone (Personal)"] = st.text_input("Phone (Personal)", value=st.session_state.form_data.get("Phone (Personal)", ""))
-            st.session_state.form_data["Phone (Office)"] = st.text_input("Phone (Office)", value=st.session_state.form_data.get("Phone (Office)", ""))
-            st.session_state.form_data["Mail Id (Personal)"] = st.text_input("Mail Id (Personal)", value=st.session_state.form_data.get("Mail Id (Personal)", ""))
+            emp_no = st.text_input("Employee No.", value=st.session_state.form_data.get("Employee No.", ""), placeholder="Enter employee number")
+            doj = st.text_input(
+                "Date of Birth (dd/mm/yyyy)", 
+                value=st.session_state.form_data.get("Date of Birth", ""), 
+                placeholder="Enter Date of Birth in dd/mm/yyyy",
+                key="date_of_birth"
+            )
+
+            if doj:
+                dob = validate_date_format(doj)
+                if dob:
+                    # Store validated DOB in session state
+                    st.session_state.form_data["Date of Birth"] = dob
+
+            designation = st.text_input("Designation", value=st.session_state.form_data.get("Designation", ""), placeholder="Enter job designation")
+            department = st.text_input("Department", value=st.session_state.form_data.get("Department", ""), placeholder="Enter department")
+            job_nature = st.text_input("Nature of Job", value=st.session_state.form_data.get("Nature of Job", ""), placeholder="e.g., Height Works, Fire Works")
+            personal_phone = st.text_input("Phone (Personal)", value=st.session_state.form_data.get("Phone (Personal)", ""), placeholder="Enter 10-digit phone number")
+            if personal_phone and not validate_phone(personal_phone):
+                st.stop()
+
+            office_phone = st.text_input("Phone (Office)", value=st.session_state.form_data.get("Phone (Office)", ""), placeholder="Enter office phone number")
 
         with r1c3:
-            st.session_state.form_data["Mail Id (Office)"] = st.text_input("Mail Id (Office)", value=st.session_state.form_data.get("Mail Id (Office)", ""))
-            st.session_state.form_data["Emergency Contact Person"] = st.text_input("Emergency Contact Person", value=st.session_state.form_data.get("Emergency Contact Person", ""))
-            st.session_state.form_data["Emergency Contact Relation"] = st.text_input("Emergency Contact Relation", value=st.session_state.form_data.get("Emergency Contact Relation", ""))
-            st.session_state.form_data["Emergency Contact Phone"] = st.text_input("Emergency Contact Phone", value=st.session_state.form_data.get("Emergency Contact Phone", ""))
-            st.session_state.form_data["Address"] = st.text_area("Address", value=st.session_state.form_data.get("Address", ""))
+            personal_email = st.text_input("Mail Id (Personal)", value=st.session_state.form_data.get("Mail Id (Personal)", ""), placeholder="Enter personal email")
+            if personal_email and not validate_email(personal_email):
+                st.stop()
 
+            office_email = st.text_input("Mail Id (Office)", value=st.session_state.form_data.get("Mail Id (Office)", ""), placeholder="Enter office email")
+            if office_email and not validate_email(office_email):
+                st.stop()
+
+            emergency_contact_person = st.text_input("Emergency Contact Person", value=st.session_state.form_data.get("Emergency Contact Person", ""), placeholder="Enter emergency contact person's name")
+            emergency_contact_relation = st.text_input("Emergency Contact Relation", value=st.session_state.form_data.get("Emergency Contact Relation", ""), placeholder="e.g., Father, Spouse")
+            emergency_contact_phone = st.text_input("Emergency Contact Phone", value=st.session_state.form_data.get("Emergency Contact Phone", ""), placeholder="Enter 10-digit phone number")
+            if emergency_contact_phone and not validate_phone(emergency_contact_phone):
+                st.stop()
+
+            address = st.text_area("Address", value=st.session_state.form_data.get("Address", ""), placeholder="Enter full address")
 
         r2c1, r2c2, r2c3 = st.columns([5, 2, 3])        
         with r2c3:
@@ -212,11 +300,21 @@ def Form(visitreason,select, connection, cursor, accessLevel):
         st.header("Vitals")
         r1c1,r1c2,r1c3 = st.columns([5,3,9])
         with r1c1:
-            systolic = st.session_state.form_data.get("Systolic", "0")
-            diastolic = st.session_state.form_data.get("Diastolic", "0")
+            systolic = st.session_state.form_data.get("Systolic", "")
+            diastolic = st.session_state.form_data.get("Diastolic", "")
             st.write("Blood Pressure")
-            st.session_state.form_data["Systolic"] = st.text_input("Systolic (mm Hg)", value=systolic,)
-            st.session_state.form_data["Diastolic"] = st.text_input("Diastolic (mm Hg)", value=diastolic)
+            st.session_state.form_data["Systolic"] = st.text_input(
+                "Systolic (mm Hg)", 
+                value=systolic, 
+                placeholder="Enter Systolic Pressure",
+                key="systolic"
+            )
+            st.session_state.form_data["Diastolic"] = st.text_input(
+                "Diastolic (mm Hg)", 
+                value=diastolic, 
+                placeholder="Enter Diastolic Pressure",
+                key="diastolic"
+            )
 
         with r1c2:
             # show the charts for the systolic and diastolic based on the data input
@@ -308,51 +406,110 @@ def Form(visitreason,select, connection, cursor, accessLevel):
                     </div>
                 """,unsafe_allow_html=True)
         
-        r2c1,r2c2,r2c3 = st.columns(3)
+        r2c1, r2c2, r2c3 = st.columns(3)
         with r2c1:
-            st.session_state.form_data["Pulse"] = st.text_input("Pulse (Per Minute)", value=st.session_state.form_data.get("Pulse", ""))
-            st.session_state.form_data["spo2"] = st.text_input("SpO2 (in %)", value=st.session_state.form_data.get("spo2", ""))
-            st.session_state.form_data["BMI"] = st.text_input("BMI", value=st.session_state.form_data.get("BMI", ""))
+            st.session_state.form_data["Pulse"] = st.text_input(
+                "Pulse (Per Minute)", 
+                value=st.session_state.form_data.get("Pulse", ""), 
+                placeholder="Enter Pulse Rate",
+                key="pulse"
+            )
+            st.session_state.form_data["spo2"] = st.text_input(
+                "SpO2 (in %)", 
+                value=st.session_state.form_data.get("spo2", ""), 
+                placeholder="Enter SpO2 Level",
+                key="spo2"
+            )
+            st.session_state.form_data["BMI"] = st.text_input(
+                "BMI", 
+                value=st.session_state.form_data.get("BMI", ""), 
+                placeholder="Enter BMI",
+                key="bmi"
+            )
 
         with r2c2:
-            st.session_state.form_data["Respiratory Rate"] = st.text_input("Respiratory Rate (Per Minute)", value=st.session_state.form_data.get("Respiratory Rate", ""))
-            st.session_state.form_data["Weight"] = st.text_input("Weight (in CM)", value=st.session_state.form_data.get("Weight", ""))
+            st.session_state.form_data["Respiratory Rate"] = st.text_input(
+                "Respiratory Rate (Per Minute)", 
+                value=st.session_state.form_data.get("Respiratory Rate", ""), 
+                placeholder="Enter Respiratory Rate",
+                key="respiratory_rate"
+            )
+            st.session_state.form_data["Weight"] = st.text_input(
+                "Weight (in KG)", 
+                value=st.session_state.form_data.get("Weight", ""), 
+                placeholder="Enter Weight",
+                key="weight"
+            )
 
         with r2c3:
-            st.session_state.form_data["Temperature"] = st.text_input("Temperature (in °F)", value=st.session_state.form_data.get("Temperature", ""))
-            st.session_state.form_data["Height"] = st.text_input("Height in (KG)", value=st.session_state.form_data.get("Height", ""))
+            st.session_state.form_data["Temperature"] = st.text_input(
+                "Temperature (in °F)", 
+                value=st.session_state.form_data.get("Temperature", ""), 
+                placeholder="Enter Body Temperature",
+                key="temperature"
+            )
+            st.session_state.form_data["Height"] = st.text_input(
+                "Height (in CM)", 
+                value=st.session_state.form_data.get("Height", ""), 
+                placeholder="Enter Height",
+                key="height"
+            )
 
-        # Define layout for the button
+        # Button for saving data
         r3c1, r3c2, r3c3 = st.columns([6, 4, 4])
-        
-
-        
         with r3c3:
             if st.button("Add Data", type="primary"):
                 try:
-                    emp_id = st.session_state.form_data['Employee ID']
+                    # Validation constraints
+                    emp_id = st.session_state.form_data.get('Employee ID')
                     if not emp_id:
                         st.error("Employee ID is missing!")
                         return
                     
+                    systolic = st.session_state.form_data["Systolic"]
+                    diastolic = st.session_state.form_data["Diastolic"]
+                    if not systolic.isdigit() or not diastolic.isdigit():
+                        st.error("Systolic and Diastolic must be numeric values!")
+                        return
+
+                    pulse = st.session_state.form_data["Pulse"]
+                    if pulse and not pulse.isdigit():
+                        st.error("Pulse must be a numeric value!")
+                        return
+
+                    spo2 = st.session_state.form_data["spo2"]
+                    if spo2 and (not spo2.isdigit() or int(spo2) < 0 or int(spo2) > 100):
+                        st.error("SpO2 must be a percentage value between 0 and 100!")
+                        return
+
+                    weight = st.session_state.form_data["Weight"]
+                    height = st.session_state.form_data["Height"]
+                    if weight and not weight.isdigit():
+                        st.error("Weight must be a numeric value!")
+                        return
+                    if height and not height.isdigit():
+                        st.error("Height must be a numeric value!")
+                        return
+
+                    # Insert data into the database
                     cursor.execute("""
-                        INSERT INTO vitals (emp_no, Systolic, Diastolic, PulseRate, entry_date,Spo2, BMI, RespiratoryRate, Weight, Temperature, Height)
-                        VALUES (%s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s)
+                        INSERT INTO vitals (emp_no, Systolic, Diastolic, PulseRate, entry_date, Spo2, BMI, RespiratoryRate, Weight, Temperature, Height)
+                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                     """, (
                         emp_id,
-                        st.session_state.form_data["Systolic"],
-                        st.session_state.form_data["Diastolic"],
-                        st.session_state.form_data["Pulse"],
+                        systolic,
+                        diastolic,
+                        pulse,
                         datetime.now().date(),
-                        st.session_state.form_data["spo2"],
+                        spo2,
                         st.session_state.form_data["BMI"],
                         st.session_state.form_data["Respiratory Rate"],
-                        st.session_state.form_data["Weight"],
+                        weight,
                         st.session_state.form_data["Temperature"],
-                        st.session_state.form_data["Height"]
+                        height
                     ))
                     connection.commit()
-                    st.success("Data successfully added/updated!")
+                    st.success("Data successfully added!")
                 except Exception as e:
                     st.error(f"Error saving data: {e}")
                     
@@ -2073,21 +2230,8 @@ def Form(visitreason,select, connection, cursor, accessLevel):
                 choice_trendelenberg = st.radio("Trendelenberg Test", ( "Positive", "Negative"), key="trendelenberg_choice",index=None)
 
 
-            # Initial Job Nature options
-            JNature = ["Height Works", 'Add New Job Nature']
-
-            # Multiselect input
-            nature = st.multiselect("Select the options", options=JNature)
-
-            # Check if 'Add New Job Nature' is selected
-            if 'Add New Job Nature' in nature:
-                # Text input for adding a new job nature
-                new = st.text_input("Enter New Job Nature")
-                
-                # Add the new job nature if it's provided and not already in the list
-                if new and new not in JNature:
-                    JNature.append(new)
-                    st.success(f"'{new}' has been added to the options.")
+            st.markdown("### Job Nature (Select Multiple Options)")
+            st.multiselect("Select the options",["Heightworks","2","3","4","5"])
             if(accessLevel=="doctor"):    
                 st.radio("Overall Fitness",("Fit to join","Unfit","Conditional fit"),index=None)
                 st.text_area("Notable Remark")
@@ -2175,33 +2319,69 @@ def Form(visitreason,select, connection, cursor, accessLevel):
             st.file_uploader("Upload Reports", type=['xlsx'], key="Reports")
 
         st.header("Referral")
-        condition_type = st.radio("Condition Type", ("Occupational", "Non-occupational", "Domestic"),index=None)
-        investigation = st.text_input("Investigation",placeholder="suggestion")
-        referral = st.radio("Referral", ("Yes", "No"),index=None)
-        hospital_name = st.text_input("Name of the Hospital", placeholder="Comments...")
-        doctor_name = st.text_input("Doctor name", placeholder="Comments...")
+
+        # Condition Type Radio Button
+        condition_type = st.radio(
+            "Condition Type",
+            (
+                "Occupational (Illness/Injury/Disease)", 
+                "Non-occupational (Injury)", 
+                "Domestic (Injury)", 
+                "Commutation (Injury)", 
+                "Others (Comment)"
+            ),
+            index=None
+        )
+
+        # Text input for investigation
+        investigation = st.text_input(
+            "Investigation",
+            placeholder="Suggest to do FBS/HbA1c"
+        )
+
+        # Text input for advice
+        advice = st.text_input(
+            "Advice",
+            placeholder="E.g., Diet/Exercise/Salt/Hydration/BP/Sugar Control, Alcohol Abstinence, Fat-free/Oil-free"
+        )
+
+        # Referral Radio Button
+        referral = st.radio(
+            "Referral",
+            ("Yes", "No"),
+            index=None
+        )
+
+        # Text input for hospital name
+        hospital_name = st.text_input(
+            "Name of the Hospital",
+            placeholder="Comments..."
+        )
+
+        # Text input for doctor name
+        doctor_name = st.text_input(
+            "Doctor Name",
+            placeholder="Comments..."
+        )
+
+        # Columns layout
         col1, col2 = st.columns(2)
+
+        # You can add content to col1 and col2 if needed
         
 
-        # Dropdown for Submitted By and Assign Doctor
+        
+
         st.write("""
-            <div style='float:right;marin-right:100px;margin-top:25px'>
-             </div>
-                 <label for="doctor">Submitted By Doctor:</label>
-            <select style='height:35px;width:100px;text-align:center;background-color:rgb(240,242,246);border:none;border-radius:5px;' name="doctor" id="doctor">
-                <option value="SK">SK</option>
-                <option value="Nurse">Nurse</option>
-            </select>
-            <label for="doctor">Assign Doctor:</label>
-            <select style='height:35px;width:100px;text-align:center;background-color:rgb(240,242,246);border:none;border-radius:5px;' name="doctor" id="doctor">
-                <option value="SK">SK</option>
-                <option value="Nurse">Nurse</option>
-            </select>
-           
-            <label for="doctor">Submitted By Nurse:</label>
-            <select style='height:35px;width:100px;text-align:center;background-color:rgb(240,242,246);border:none;border-radius:5px;' name="doctor" id="doctor">
-                <option value="SK">Nurse 1</option>
-                <option value="Nurse">Nurse 2</option>
+            <div style='float:right;margin-right:100px;margin-top:25px'>
+            </div>
+            
+            <!-- Dropdown for Consulted Dr -->
+            <label for="consultedBy">Consulted Dr:</label>
+            <select style='height:35px;width:150px;text-align:center;background-color:rgb(240,242,246);border:none;border-radius:5px;' name="consultedBy" id="consultedBy">
+                <option value="DrX">Dr. X</option>
+                <option value="DrY">Dr. Y</option>
+                <option value="DrZ">Dr. Z</option>
             </select>
         """, unsafe_allow_html=True)
 
@@ -2227,12 +2407,10 @@ def Form(visitreason,select, connection, cursor, accessLevel):
                 st.error(f"Error saving consultation data: {str(e)}")
             finally:
                 st.rerun()  # Rerun the app to reset the state
-
         
 
 
     elif form_name == "Medical History":
-        st.header("Medical History")
         
         # Personal History -> multi select box
         #     Smoker
@@ -2248,23 +2426,235 @@ def Form(visitreason,select, connection, cursor, accessLevel):
         #         Father    -> text_area
         #         Mother    -> text_area
 
-        st.session_state.form_data["Personal History"] = st.multiselect("Personal History", ["Smoker", "Alcoholic", "Veg", "Mixed Diet"])
-        st.session_state.form_data["Medical History"] = st.multiselect("Medical History", ["BP", "DM", "Others"])
-        
+        # Personal History Section
+        st.markdown("<h3 style='margin-left:30px;'> Personal History </h4>", unsafe_allow_html=True)
+
+        # List of personal habits and dietary preferences
+        personal_history_options = [
+            {"Habit": "Smoker", "Details": "E.g., past 5 years, 10 per day"},
+            {"Habit": "Alcoholic", "Details": "E.g., past 10 years, occasional, quarter a day"},
+            {"Habit": "Paan, Beetal Chewer", "Details": "E.g., frequency or duration"},
+            {"Habit": "Pure Veg", "Details": ""},
+            {"Habit": "Eggetarian", "Details": ""},
+            {"Habit": "Mixed Diet", "Details": ""}
+        ]
+
+        st.subheader("Smoking")
+        smoker = st.selectbox("Are you a smoker?", ["Yes", "No"])
+        if smoker == "Yes":
+            smoking_duration = st.number_input("How many years have you been smoking?", min_value=1, max_value=50)
+            cigarettes_per_day = st.number_input("How many cigarettes do you smoke per day?", min_value=1, max_value=50)
+
+        # Alcohol Consumption Section
+        st.subheader("Alcohol Consumption")
+        alcoholic = st.selectbox("Do you consume alcohol?", ["Yes", "No"])
+        if alcoholic == "Yes":
+            drinking_duration = st.number_input("How many years have you been drinking?", min_value=1, max_value=50)
+            drinking_frequency = st.radio("How often do you drink?", ["Occasional", "Daily", "Weekly"])
+            if drinking_frequency == "Daily":
+                daily_quantity = st.text_input("Daily consumption (e.g., 'quarter a day')")
+
+        # Paan, Betel Chewing Section
+        st.subheader("Paan/Betel Chewing")
+        chewer = st.selectbox("Do you chew paan or betel?", ["Yes", "No"])
+        if chewer == "Yes":
+            chewing_duration = st.number_input("How many years have you been chewing?", min_value=1, max_value=50)
+
+        # Display radio buttons for dietary preferences
+        pure_veg = st.radio(
+            "Dietary Preference",
+            options=["Pure Veg", "Eggetarian", "Mixed Diet"],
+            index=0,  # Default selection
+            help="Select your dietary preference."
+        )
+
+        # Append data to the personal history
+        st.session_state.form_data["PersonalHistory"] = [{"Habit": "Diet", "Details": pure_veg}]
+
+
+        # Personal Medical History Section
+        st.markdown("<h4 style='margin-left:30px;'> Medical History </h4>", unsafe_allow_html=True)
+
+        # List of conditions
+        conditions = [
+            "HTN", "DM", "Epileptic", "Hyper thyroid", "Hypo thyroid", "Asthma",
+            "CVS", "CNS", "RS", "GIT", "KUB", "CANCER", 
+            "Defective Colour Vision", "OTHERS"
+        ]
+
+        # Data structure to store medical history
+        personal_medical_history = []
+
+        # Input fields for each condition
+        for condition in conditions:
+            st.markdown(f"### {condition}")
+            detail = st.text_input(f"Detail for {condition}", key=f"{condition}_detail", placeholder="E.g., 10 years")
+            comments = st.text_area(f"Comments for {condition}", key=f"{condition}_comments", placeholder="E.g., On Ayurvedic medicines")
+            personal_medical_history.append({
+                "Condition": condition,
+                "Detail": detail,
+                "Comments": comments
+            })
+
+        # Additional fields for female workers
+        st.markdown("<h5 style='margin-left:30px;'> Female Workers </h5>", unsafe_allow_html=True)
+
+        female_history = {
+            "Obstetric": st.text_area(
+                "Obstetric History", key="obstetric_history", 
+                placeholder="E.g., G3 P1 L1 A1; P2 L1 A1"
+            ),
+            "Gynec": st.text_area(
+                "Gynaecological History", key="gynec_history",
+                placeholder="Add any gynecological details"
+            )
+        }
+
+        # Save the data in session state
+        st.session_state.form_data["PersonalMedicalHistory"] = personal_medical_history
+        st.session_state.form_data["FemaleHistory"] = female_history
+
+
+
+        # Surgical History Section
         st.header("Surgical History")
+        surgical_comments = st.text_area(
+            "Comments",
+            placeholder="Enter details about any past surgeries...",
+            help="Provide details about any past surgical procedures."
+        )
+        st.session_state.form_data["Surgical History"] = surgical_comments
 
-        st.text_area("comments")
-        
-        st.markdown("<h3 style='margin-left:30px;'> Family History </h3>", unsafe_allow_html=True)
+        columns = ["Relationship", "Status", "Reason (if Expired)", "Remarks (Health Condition)"]
+        parents_data = [
+            {"Relationship": "FATHER", "Status": "", "Reason": "", "Remarks": ""},
+            {"Relationship": "Paternal Grandfather", "Status": "", "Reason": "", "Remarks": ""},
+            {"Relationship": "Paternal Grandmother", "Status": "", "Reason": "", "Remarks": ""},
+            {"Relationship": "MOTHER", "Status": "", "Reason": "", "Remarks": ""},
+            {"Relationship": "Maternal Grandfather", "Status": "", "Reason": "", "Remarks": ""},
+            {"Relationship": "Maternal Grandmother", "Status": "", "Reason": "", "Remarks": ""},
+        ]
 
+        st.markdown("<h4 style='margin-left:30px;'> Children </h4>", unsafe_allow_html=True)
 
-        r1c1, r1c2, r1c3 = st.columns([1,6,2])
+        # Number of children to record
+        num_children = st.number_input(
+            "Enter the number of children", min_value=1, max_value=10, step=1, key="num_children"
+        )
 
-        with r1c2:
-            st.session_state.form_data["Father"] = st.text_area("Father",value=st.session_state.form_data.get("Father", ""))
-            st.session_state.form_data["Mother"] = st.text_area("Mother",value=st.session_state.form_data.get("Mother", ""))
+        # Initialize the children data structure
+        children = []
+
+        for i in range(1, num_children + 1):
+            st.markdown(f"<h5 style='margin-left:30px;'> Child {i} </h5>", unsafe_allow_html=True)
+            child = {
+                "No.": i,
+                "Sex": st.selectbox(
+                    f"Sex for Child {i}", options=["Male", "Female"], key=f"child_{i}_sex"
+                ),
+                "Date of Birth": st.date_input(
+                    f"Date of Birth for Child {i}", key=f"child_{i}_dob"
+                ),
+                "Status": st.selectbox(
+                    f"Status for Child {i}", options=["Alive", "Expired"], key=f"child_{i}_status"
+                ),
+                "Reason (if Expired)": st.text_input(
+                    f"Reason (if Expired) for Child {i}",
+                    key=f"child_{i}_reason",
+                    placeholder="Provide reason if child is expired"
+                ),
+                "Remarks": st.text_input(
+                    f"Remarks (Health condition) for Child {i}",
+                    key=f"child_{i}_remarks",
+                    placeholder="For example, autism, congenital disorder, etc."
+                ),
+            }
+            children.append(child)
+
+        # Save the children data in session state
+        st.session_state.form_data["Children"] = children
+
+        # Parents & Grandparents Section
+        st.markdown("<h4 style='margin-left:30px;'> Parents & Grandparents </h4>", unsafe_allow_html=True)
+
+        # Display input fields for each row in Parents & Grandparents table
+        for row in parents_data:
+            st.markdown(f"{row['Relationship']}")
+            row["Status"] = st.selectbox(
+                "Status", ["", "Alive", "Expired"], key=f"{row['Relationship']}_status"
+            )
+            row["Reason"] = st.text_input("Reason (if Expired)", key=f"{row['Relationship']}_reason")
+            row["Remarks"] = st.text_area("Remarks (Health Condition)", key=f"{row['Relationship']}_remarks",placeholder="Health condition for eg stroke..") 
+        st.session_state.form_data["ParentsDetails"] = parents_data
+
+        # Conditions Section
+        st.markdown("<h4 style='margin-left:30px;'> Health Conditions </h4>", unsafe_allow_html=True)
+
+        conditions = [
+            {"Condition": "HTN", "Relationship": []},
+            {"Condition": "DM", "Relationship": []},
+            {"Condition": "Epileptic", "Relationship": []},
+            {"Condition": "Hyper thyroid", "Relationship": []},
+            {"Condition": "Hypo thyroid", "Relationship": []},
+            {"Condition": "Asthma", "Relationship": []},
+            {"Condition": "CVS", "Relationship": []},
+            {"Condition": "CNS", "Relationship": []},
+            {"Condition": "RS", "Relationship": []},
+            {"Condition": "GIT", "Relationship": []},
+            {"Condition": "KUB", "Relationship": []},
+            {"Condition": "Cancer", "Relationship": []},
+            {"Condition": "Others", "Relationship": []},
+        ]
+
+        relationships = ["Father: BP", "Father: DM", "Mother: BP", "Mother: DM", "Others"]
+
+        for condition in conditions:
+            if condition["Condition"] == "CVS":
+                # Multiselect for CVS
+                condition["Relationship"] = st.multiselect(
+                    f"Relationship for {condition['Condition']}",
+                    relationships,
+                    key=f"{condition['Condition']}_relationship"
+                )
+                # Additional text box for remarks in CVS
+                condition["Remarks"] = st.text_input(
+                    f"Remarks for {condition['Condition']}",
+                    key=f"{condition['Condition']}_remarks",
+                    placeholder="Eg :Father stent, maternal grandmother pacemaker"
+                )
+            else:
+                # Multiselect for other conditions
+                condition["Relationship"] = st.multiselect(
+                    f"Relationship for {condition['Condition']}",
+                    relationships,
+                    key=f"{condition['Condition']}_relationship"
+                )
+
+        # Save to session state
+        st.session_state.form_data["HealthConditions"] = conditions
+
+        # Dropdown for Nurse and Doctor
+        st.write("""
+            <div style='float:right;margin-right:100px;margin-top:25px'>
+            </div>
+            <label for="submittedBy">Submitted By Nurse:</label>
+            <select style='height:35px;width:150px;text-align:center;background-color:rgb(240,242,246);border:none;border-radius:5px;' name="submittedBy" id="submittedBy">
+                <option value="Nurse1">Nurse 1</option>
+                <option value="Nurse2">Nurse 2</option>
+                <option value="Nurse3">Nurse 3</option>
+            </select>
+            <label for="bookedTo">Patient Booked to Dr:</label>
+            <select style='height:35px;width:150px;text-align:center;background-color:rgb(240,242,246);border:none;border-radius:5px;' name="bookedTo" id="bookedTo">
+                <option value="DrA">Dr. A</option>
+                <option value="DrB">Dr. B</option>
+                <option value="DrC">Dr. C</option>
+            </select>
+        """, unsafe_allow_html=True)
 
         r3c1,r3c2,r3c3 = st.columns([6,4,4])
+
+        
+
         
         
         with r3c3:
@@ -2272,17 +2662,48 @@ def Form(visitreason,select, connection, cursor, accessLevel):
                 st.write("Data Saved")
                 st.session_state.form_data["visitreason"] = visitreason
                 st.rerun()
-            if st.button("Submit", type = "primary"):
-                i = st.session_state.form_data # MARK: Data Insert
+
+            if st.button("Submit", type="primary"):
+                i = st.session_state.form_data  # Form data collected
+
                 try:
-                    insert_basicdetails = ("INSERT INTO basic_details (emp_no, entry_date, PatientAge, PatientName, Gender, Department, Work, MobileNo, BloodGroup, Vaccinated, Address) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)")
-                    basicdetails_data = (i.get('Employee ID'), i.get("Visit Date"), i.get("Employee Age"), i.get("Employee Name"), i.get("Gender"), i.get("Department"), i.get("Work"),i.get("Mobile No."), i.get("Blood Group"), i.get("Vaccination Status"), i.get("Address"))
+                    # Step 1: Get the current date
+                    today = datetime.now()
+                    day = today.strftime("%d")
+                    month = today.strftime("%m")
+                    year = today.strftime("%y")
+
+                    # Step 2: Query database for the current date's entries
+                    cursor.execute("SELECT COUNT(*) FROM medicalpersonalhist WHERE entry_date = %s", (today.date(),))
+                    count = cursor.fetchone()[0]
+
+                    # Step 3: Generate the OHCVisitno
+                    auto_increment_no = f"{count + 1:03d}"  # Format with leading zeroes (001, 002, ...)
+                    OHCVisitno = f"{auto_increment_no}{day}{month}{year}"
+
+                    # Temporary Debug Output
+                    st.write(f"Debug Info: auto_increment_no = {auto_increment_no}, day = {day}, month = {month}, year = {year}")
+                    st.write(f"Generated OHCVisitno: {OHCVisitno}")
+
+                    # Step 4: Insert the data into the database
+                    insert_basicdetails = (
+                        "INSERT INTO medicalpersonalhist (emp_no, entry_date, OHCVisitno, personal_history, medical_history, "
+                        "surgical_history, father, mother, diet, smoker, alcoholic, drug_allergy, food_allergy, other_allergy) "
+                        "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                    )
+                    basicdetails_data = (
+                        i.get('Employee ID'), today.date(), OHCVisitno, 
+                        i.get('Personal History'), i.get('Medical History'), i.get('Surgical History'),
+                        i.get('Father'), i.get('Mother'), i.get('Diet'),
+                        i.get('Smoker'), i.get('Alcoholic'), i.get('Drug Allergy'),
+                        i.get('Food Allergy'), i.get('Other Allergy')
+                    )
                     cursor.execute(insert_basicdetails, basicdetails_data)
                     connection.commit()
-                except Exception as e:
-                    st.write(e)
-                    st.write("Error in basic details")
 
+                    st.success(f"Data saved successfully! Generated OHCVisitno: {OHCVisitno}")
+                except Exception as e:
+                    st.error(f"Error: {e}")
 
                 try:
                     insert_vitals = ("INSERT INTO vitals(emp_no, entry_date, Systolic, Diastolic, PulseRate, SpO2, Temperature, RespiratoryRate, Height, Weight, BMI) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)") 
@@ -2681,15 +3102,17 @@ def Form(visitreason,select, connection, cursor, accessLevel):
             
 
     elif form_name == "Vaccination":
-        r0c1, r0c2 = st.columns([4, 8])
         
+        st.subheader("Vaccination Information")
+        r0c1, r0c2 = st.columns([4, 6])
         with r0c1:
-            st.subheader("Vaccination Information")
             
+            st.markdown("<b style='color: #22384F'>Select Vaccine</b>", unsafe_allow_html=True)
             # Select existing vaccine or add a new one
             vaccine = st.selectbox(
                 'Select Vaccine',
-                ['Select', 'Vaccine 1', 'Vaccine 2', 'Vaccine 3', 'Add New Vaccine']  # Added option to add new vaccine
+                ['Select', 'Vaccine 1', 'Vaccine 2', 'Vaccine 3', 'Add New Vaccine'],
+                label_visibility='collapsed'  # Added option to add new vaccine
             )
             
             if vaccine == 'Add New Vaccine':
@@ -2697,31 +3120,38 @@ def Form(visitreason,select, connection, cursor, accessLevel):
                 if new_vaccine:
                     st.write(f"New Vaccine Added: {new_vaccine}")
                     vaccine = new_vaccine  # Set the vaccine to the newly entered name
+            st.markdown("<b style='color: #22384F'>Status</b>", unsafe_allow_html=True)
+            st.selectbox("Status", ["Full", "Partial"], label_visibility='collapsed')
 
         with r0c2:
             # Columns for entering Normal Doses & Booster Dose
-            r3c1, r3c2 = st.columns([6, 6])
-
+            r3c1, r3c2 = st.columns(2)
+            
+                
             with r3c1:
                 st.markdown("<b style='color: #22384F'>Normal Doses</b>", unsafe_allow_html=True)
                 # Create 5 input fields for Normal Doses with numbering
                 normal_doses = []
+                normal_doses_names = []
                 for i in range(1, 6):
                     # Remove default date
                     dose_date = st.date_input(f"Dose {i} Date", key=f"normal_dose_{i}")  # No default date
+                    dose_name = st.text_input(f"Dose {i} Name", key=f"normal_dose_name{i}")
                     normal_doses.append(dose_date)
-
+                    normal_doses_names.append(dose_name)
             with r3c2:
                 st.markdown("<b style='color: #22384F'>Booster Dose</b>", unsafe_allow_html=True)
                 # Create 5 input fields for Booster Doses with numbering
                 booster_doses = []
+                booster_doses_names = []
                 for i in range(1, 6):
                     # Remove default date
-                    booster_date = st.date_input(f"Booster {i} Date", key=f"booster_dose_{i}")  # No default date
+                    booster_date = st.date_input(f"Booster {i} Date", key=f"booster_dose_{i}")
+                    booster_date_name = st.text_input(f"Booster {i} Name", key=f"booster_dose_name{i}")  # No default date
                     booster_doses.append(booster_date)
-                
+                    booster_doses_names.append(booster_date_name)
             # Display the entered details when the user submits
-            if st.button("Submit"):
+            if st.button("Submit", type='primary'):
                 st.subheader("Entered Vaccination Details")
                 st.write(f"Vaccine: {vaccine}")
                 st.write("Normal Doses Dates:")
@@ -3076,111 +3506,65 @@ def New_Visit(connection,cursor, accessLevel):
                 #     st.warning("No MRI Test Result found")
     
         r0c1, r0c2 = st.columns([5, 5])
+
         with r0c1:
+            # First selectbox for Employee, Contractor, Visitor
             select = st.selectbox(
                 "Select Type", 
                 options=["Employee", "Contractor", "Visitor"]
             )
 
         with r0c2:
-            if select == "Visitor":
-                select1 = st.selectbox(
-                    "Select purpose", 
-                    options=["Visitors Outsider patient", "Visitors Outsider Fitness"])
+            # Second selectbox for Healthy, Unhealthy
+            select1 = st.selectbox(
+                "Select Type of Visit",
+                options=["Preventive", "Curative"]
+            )
+            st.session_state.form_data["Health status"] = select1
+
+            if select1 == "Preventive":
+                selected = st.selectbox(
+                            "Select Register",
+                            options=["Pre Employment","Pre Employment (Food Handler)","Pre Placement","Annual / Periodical","Periodical (Food Handler)","Camps (Mandatory)","Camps (Optional)","Special Work Fitness","Special Work Fitness (Renewal)","Fitness After Medical Leave","Mock Drill","BP Sugar Check ( Normal Value)"])
             else:
-                select1 = st.selectbox(
-                    "Select purpose", 
-                    options=[
-                        "Alcohol Abuse",
-                        "Annual / Periodical",
-                        "BP Sugar (Abnormal Value)",
-                        "BP Sugar Check  ( Normal Value)",
-                        "Camps (Mandatory)",
-                        "Camps (Optional)",
-                        "Fitness After Medical Leave",
-                        "Followup Visits",
-                        "Illness",
-                        "Injury",
-                        "Injury Outside the Premises",
-                        "Mock Drill",
-                        "Over Counter Illness",
-                        "Over Counter Injury",
-                        "Over Counter Injury Outside the Premises",
-                        "Periodic (Food Handler)",
-                        "Pre employment",
-                        "Pre employment (Food Handler)",
-                        "Pre Placement",
-                        "Special Work Fitness",
-                        "Special Work Fitness (Renewal)"
-                    ]
-                )
-
-        with st.container(border=1): 
-            if select == "Visitor":
-                Form(select1, select, connection, cursor, accessLevel)
-
-            elif select1 == "Alcohol Abuse":
-                Form("Alcohol Abuse", select, connection, cursor, accessLevel)
-
-            elif select1 == "Annual / Periodical":
-                Form("Annual / Periodical", select, connection, cursor, accessLevel)
-
-            elif select1 == "BP Sugar (Abnormal Value)":
-                Form("BP Sugar (Abnormal Value)", select, connection, cursor, accessLevel)
-
-            elif select1 == "BP Sugar Check  ( Normal Value)":
-                Form("BP Sugar Check  ( Normal Value)", select, connection, cursor, accessLevel)
-
-            elif select1 == "Camps (Mandatory)":
-                Form("Camps (Mandatory)", select, connection, cursor, accessLevel)
-
-            elif select1 == "Camps (Optional)":
-                Form("Camps (Optional)", select, connection, cursor, accessLevel)
-
-            elif select1 == "Fitness After Medical Leave":
-                Form("Fitness After Medical Leave", select, connection, cursor, accessLevel)
-
-            elif select1 == "Followup Visits":
-                Form("Followup Visits", select, connection, cursor, accessLevel)
-
-            elif select1 == "Illness":
-                Form("Illness", select, connection, cursor, accessLevel)
-
-            elif select1 == "Injury":
-                Form("Injury", select, connection, cursor, accessLevel)
-
-            elif select1 == "Injury Outside the Premises":
-                Form("Injury Outside the Premises", select, connection, cursor, accessLevel)
-
-            elif select1 == "Mock Drill":
-                Form("Mock Drill", select, connection, cursor, accessLevel)
-
-            elif select1 == "Over Counter Illness":
-                Form("Over Counter Illness", select, connection, cursor, accessLevel)
-
-            elif select1 == "Over Counter Injury":
-                Form("Over Counter Injury", select, connection, cursor, accessLevel)
-
-            elif select1 == "Over Counter Injury Outside the Premises":
-                Form("Over Counter Injury Outside the Premises", select, connection, cursor, accessLevel)
-
-            elif select1 == "Periodic (Food Handler)":
-                Form("Periodic (Food Handler)", select, connection, cursor, accessLevel)
-
-            elif select1 == "Pre employment":
-                Form("Pre employment", select, connection, cursor, accessLevel)
-
-            elif select1 == "Pre employment (Food Handler)":
-                Form("Pre employment (Food Handler)", select, connection, cursor, accessLevel)
-
-            elif select1 == "Pre Placement":
-                Form("Pre Placement", select, connection, cursor, accessLevel)
-
-            elif select1 == "Special Work Fitness":
-                Form("Special Work Fitness", select, connection, cursor, accessLevel)
-
-            elif select1 == "Special Work Fitness (Renewal)":
-                Form("Special Work Fitness (Renewal)", select, connection, cursor, accessLevel)
-
+                selected = st.selectbox(
+                            "Select Register",
+                            options=["Illness","Over Counter Illness","Injury","Over Counter Injury","Followup Visits","BP Sugar Chart","Injury Outside the Premises","Over Counter Injury Outside the Premises","Alcohol Abuse"]
+                    )
+        with r0c1:
+            if select1 == "Preventive":
+                if selected == "Pre employment" or selected == "Pre Employment (Food Handler)" or selected == "Pre Placement" or selected == "Annual / Periodical" or selected == "Periodical (Food Handler)" or selected == "Camps (Mandatory)" or selected == "Camps (Optional)":
+                    select2 = "Medical Examination"
+                    st.text_input("Select Purpose", value = select2)
+                elif selected == "Special Work Fitness" or selected == "Special Work Fitness (Renewal)":
+                    select2 = "Periodic Work Fitness"
+                    st.text_input("Select Purpose", value = select2)
+                else:
+                    select2 = selected
+                    st.text_input("Select Purpose", value = select2)
             else:
-                st.write("Select a visit reason", select1)
+                if selected == "Illness" or selected == "Over Counter Illness" or selected == "Injury" or selected == "Over Counter Injury" or selected == "Followup Visits" or selected == "BP Sugar Chart" or selected == "Injury Outside the Premises" or selected == "Over Counter Injury Outside the Premises":
+                    select2 = "Out Patient"
+                    st.text_input("Select Purpose", value = select2)
+                else:
+                    select2 = selected
+                    st.text_input("Select Purpose", value = select2)
+        if selected == "Camps (Mandatory)" or selected == "Camps (Optional)":
+            st.session_state.addonInput = st.text_input("Enter the name of the camp:")
+        if selected  == "Annual / Periodical":
+            col1, col2, col3 = st.columns([3,3,3])
+            with col1:
+                st.text_input("Enter feild")
+            with col2: 
+                st.text_input("Enter Batch")
+            with col3:
+                st.text_input('Enter Year')
+             
+    with st.container(border=1): #initially height was 700
+        if select=="Visitor" and select1=="Preventive":
+            Form(None,select,select1,connection,cursor)
+        elif select=="Visitor" and select1=="Curative":
+            Form(None,select,select1,connection,cursor)
+        else:
+            Form(selected,select,select1,connection,cursor,accessLevel)
+            
