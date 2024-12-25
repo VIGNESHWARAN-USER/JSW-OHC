@@ -4,7 +4,25 @@ import os
 import pandas as pd
 from streamlit_modal import Modal
 from streamlit_option_menu import option_menu
-
+def systolic_diastolic_chart(systolic, diastolic):
+    systolic = int(systolic)
+    diastolic = int(diastolic)
+    if systolic ==0 or diastolic ==0:
+        return ["0", "black"]
+    elif systolic < 90 or diastolic < 60:
+        return ["Hypotension", "00ff00"]
+    elif 90 <= systolic <= 120 and 60 <= diastolic <= 80:
+        return ["Normal", "green"]
+    elif 120 < systolic <= 129 and 60 <= diastolic <= 80:
+        return ["Elevated", "yellow"]
+    elif 130 <= systolic <= 139 or 80 <= diastolic <= 89:
+        return ["HT Stage 1", "orange"]
+    elif 140 <= systolic <= 180 or 90 <= diastolic <= 120:
+        return ["HT Stage 2", "red"]
+    elif systolic > 180 or diastolic > 120:
+        return ["HT Crisis", "#990000"]
+    else:
+        return "Invalid input"
 
 if 'edit' not in st.session_state:
     st.session_state.edit = False
@@ -175,229 +193,57 @@ def Search(cursor):
                     icons=['a','b','c', 'a','b','c','a','b','c']
                 )
             if menu == "Details":
-                st.markdown("### Personal Details : ")
-                r0c1,r0c2,r0c3 = st.columns([10,1,10])
-                with r0c1:
-                # MARK: Personal Details
-                    # st.markdown(f"""
-                    #     *Age*: {st.text_input( label = "Age", label_visibility='collapsed', value = st.session_state.usr_prof.get('age', 'N/A'))}<br>
-                    #     *DOB*: {st.session_state.usr_prof.get('dob', 'N/A')}<br>
-                    #     *Sex*: {st.session_state.usr_prof.get('gender', 'N/A')}<br>
-                    #     *Aadhar No*: {st.session_state.usr_prof.get('aadhar_no', 'N/A')}
-                    # """, unsafe_allow_html=True)
-                    rr0c1, rr0c2 = st.columns(2)
-                    with rr0c1:
-                        st.write('Age :')
-                        st.write('\n')
-                        st.write('DOB :')
-                        st.write('\n')
-                        st.write("Sex :")
-                        st.write('\n')
-                        st.write("Aadhar No:")
-                    with rr0c2:
-                        st.text_input(label = "age", label_visibility='collapsed', value=st.session_state.usr_prof.get('age', 'N/A'))
-                        st.text_input(label = "dob", label_visibility='collapsed', value=st.session_state.usr_prof.get('dob', 'N/A'))
-                        st.text_input(label = "sex", label_visibility='collapsed', value=st.session_state.usr_prof.get('gender', 'N/A'))
-                        st.text_input(label = "adno", label_visibility='collapsed', value=st.session_state.usr_prof.get('aadhar_no', 'N/A'))
+                st.subheader("Basic Details")
+        
+                r1c1, r1c2, r1c3 = st.columns(3)
 
-                with r0c3:
-                    # st.write(f"*Mail ID (Personal)*: {st.session_state.usr_prof['personal_mail']}")
-                    # st.write("*Identification Mark*:")
-                    # st.markdown(f" * {st.session_state.usr_prof['identification_mark']}")
-                    rr0c1, rr0c2 = st.columns(2)
-                    with rr0c1:
-                        st.write('Mail ID :')
-                        st.write('\n')
-                        st.write('Identification Mark :')
-                        st.write('\n')
-                        st.write('\n')
-                        st.write('Marital Status :')
-                    with rr0c2:
-                        st.text_input(label = "age", label_visibility='collapsed', value=st.session_state.usr_prof.get('personal_mail', 'N/A'))
-                        st.text_input(label = "dob", label_visibility='collapsed', value=st.session_state.usr_prof.get('identification_mark', 'N/A'))
-                        st.selectbox("",options=["Single","Married","Seperated","Divorced","Widowed"])
-
-                        
-                st.write("\n")
-                st.write("\n")
-                st.write("\n")
-                st.write("\n")
-
-                st.markdown("### Employment Details : ")
-                r0c1,r0c2,r0c3 = st.columns([10,1,10])
-                with r0c1:
-                # MARK: Personal Details
-                    # st.markdown(f"""
-                    #     *Employee No*: {st.session_state.usr_prof.get('emp_no', 'N/A')}<br>
-                    #     *Designation*: {st.session_state.usr_prof.get('designation', 'N/A')}<br>
-                    #     *Department H/O*: {st.session_state.usr_prof.get('department', 'N/A')}
-                    # """, unsafe_allow_html=True)
-                    rr0c1, rr0c2 = st.columns(2)
-                    with rr0c1:
-                        st.write('\n')
-                        st.write('\n')
-                        st.write('Employer :')
-                        st.write('\n')
-                        st.write('Designation :')
-                        st.write('\n')
-                        st.write("Department H/O :")
-                    with rr0c2:
-                        st.selectbox("",options=["JSW steel","JSW cement","JSW foundation"])
-                        st.text_input(label = "des", label_visibility='collapsed', value=st.session_state.usr_prof.get('designation', 'N/A'))
-                        st.text_input(label = "dept", label_visibility='collapsed', value=st.session_state.usr_prof.get('department', 'N/A'))
-                                                # Define the data for the employment history
-                        employment_history = [
-                            {"date": "2022-01-15", "department": "Department A"},
-                            {"date": "2023-03-22", "department": "Department B"},
-                            {"date": "2024-07-10", "department": "Department C"}
-                        ]
-
-                        # Add the View More button
-                        if st.button("View More", key="view_more_dept"):
-                            st.subheader("Employment History - Department H/O")
-                            
-                            # Display the history in a table format
-                            for record in employment_history:
-                                st.markdown(f"**Date:** {record['date']}")
-                                st.markdown(f"**Department:** {record['department']}")
-                                st.markdown("---")  # Separator for clarity
-
-
-                print("       ")
-                with r0c3:
-                    # st.write(f"*Mail ID (Office)*: {st.session_state.usr_prof['office_mail']}")
-                    # st.write(f"*Nature of Job H/O*:{st.session_state.usr_prof['nature_of_job']}")
-                    # st.write(f"*Employer*:{st.session_state.usr_prof['personal_mail']}")
-                    # st.write(f"*Contractor*:{st.session_state.usr_prof['personal_mail']}")
-                    rr0c1, rr0c2 = st.columns(2)
-                    with rr0c1:
-                        st.write('\n')
-                        st.write('\n')
-                        st.write('Mode of Joining :')
-                        st.write('\n')
-                        st.write('Nature of Jo H/O :')
-                        st.write('\n')
-                        st.write('\n')
-                        st.write('\n')
-                        st.write('\n')
-                        st.write("Date of Joining :")
-                        
-    
-                    with rr0c2:
-                        # Define the options for the selectbox
-                        employee_status = st.selectbox("",
-                            options=["New Joinee", "Transfer in from other JSW sites"]
-                        )
-
-                        # Conditional display based on the selected option
-                        if employee_status == "Transfer in from other JSW sites":
-                            # Show a text area with a placeholder
-                            st.text_area(
-                                label="Transfer Details",
-                                placeholder="e.g., JSW Power Dolvi (mention site details)",
-                                key="transfer_details"
-                            )
-
-                        st.text_input(label = "job", label_visibility='collapsed', value=st.session_state.usr_prof.get('nature_of_job', 'N/A'))
-                        if st.button("View More", key="view_more_dept1"):
-                            st.write("Additional information for Department H/O...")
-                        st.text_input(label = "mep", label_visibility='collapsed', value=st.session_state.usr_prof.get('employer', 'N/A'))
-                          
-                st.write("\n")
-                st.write("\n")
-                st.write("\n")
-                st.write("\n")
-
-                st.markdown("### Contact Details : ")
-                r0c1,r0c2,r0c3 = st.columns([10,1,10])  # Define two main columns with specific width ratio
-                with r0c1:
-                    # MARK: Personal Details
-                    rr0c1, rr0c2 = st.columns(2)  # Define sub-columns for Employee details
-                    with rr0c1:
-                        st.write('Phone (Personal) :')
-                        st.write('\n')
-                        st.write('Phone (Office) :')
-                        st.write('\n')
-                        st.write('Mail ID (Personal) :')
-                        st.write('\n')
-                        st.write('Mail ID (Office) :')
-                        st.write('\n')
-                        st.write('Emergency Contact person (Name) :')
-                        
-                    with rr0c2:
-                        # Use unique keys for each input field to avoid duplication
-                        st.text_input(label="eno", label_visibility='collapsed', value=st.session_state.usr_prof.get('personal_phone_no', 'N/A'), key="eno_key")
-                        st.text_input(label="des", label_visibility='collapsed', value=st.session_state.usr_prof.get('office_phone_no', 'N/A'), key="des_key")
-                        st.text_input(label="permail", label_visibility='collapsed', value=st.session_state.usr_prof.get('personal_mail', 'N/A'), key="permail_key")
-                        st.text_input(label="offmail", label_visibility='collapsed', value=st.session_state.usr_prof.get('office_mail', 'N/A'), key="offmail_key")
-                        st.text_input(label="emgper", label_visibility='collapsed', value=st.session_state.usr_prof.get('emg_con_person', 'N/A'), key="emgper_key")
-                        
-
-                with r0c3:
-                    # MARK: Contact Details
-                    rr0c1, rr0c2 = st.columns(2)  # Define sub-columns for the contact details
-                    with rr0c1:
-                        st.write('Emergency Contact Relationship :')
-                        st.write('\n')
-                        st.write('Emergency Contact phone :')
-                        st.write('\n')
-                        st.write('Mail ID (Emergency Contact phone) :')
-                        st.write('\n')
-                        st.write("Address :")
+                with r1c1:
+                    st.text_input("Name", value=st.session_state.usr_prof.get("Name", ""), placeholder="Enter your full name")
+                    st.text_input("Sex", value=st.session_state.usr_prof.get("gender", ""))
+                    id_marks = st.text_input("Identification Marks", value=st.session_state.usr_prof.get("Identification Marks", ""), placeholder="Enter any visible identification marks")
+                with r1c2:
+                    st.text_input(
+                        "Date of Birth (dd/mm/yyyy)", 
+                        value=st.session_state.usr_prof.get("Date of Birth", ""),
+                        placeholder="Enter Date of Birth in dd/mm/yyyy"
+                    )
+                    st.text_input("Aadhar No.", value=st.session_state.usr_prof.get("Aadhar No.", ""), placeholder="Enter 12-digit Aadhar No.")
+                    st.selectbox("Marital status",["Single","Married","Divorced", "Widowed", "Seperated"],placeholder="Select marital status")
+                with r1c3:
+                    st.text_input("Age", value=st.session_state.usr_prof.get("age", ""),placeholder="XX Years YY Months ZZ Days")
+                    st.text_input("Blood Group", value=st.session_state.usr_prof.get("Blood Group", ""), placeholder="e.g., A+, O-")
                     
-                    with rr0c2:
-                        # Use unique keys for each input field to avoid duplication
-                        st.text_input(label="mail", label_visibility='collapsed', value=st.session_state.usr_prof.get('office_mail', 'N/A'), key="mail_key")
-                        st.text_input(label="job", label_visibility='collapsed', value=st.session_state.usr_prof.get('nature_of_job', 'N/A'), key="job_key")
-                        st.text_input(label="mailid", label_visibility='collapsed', value=st.session_state.usr_prof.get('personal_mail', 'N/A'), key="mailid_key")
-                        st.selectbox("",options=["Permanent","Residence"])
+                st.subheader("Employment Details")
+                r2c1, r2c2, r2c3 = st.columns(3)
 
-                st.write("\n")
-                st.write("\n")
-                st.write("\n")
-                st.write("\n")
+                with r2c1:
+                    st.text_input("Employee Number", value=st.session_state.usr_prof.get("emp_no", ""))
+                    st.text_input("Designation", value=st.session_state.usr_prof.get("Designation", ""), placeholder="Enter job designation")
+                    st.text_input("Nature of Job", value=st.session_state.usr_prof.get("Nature of Job", ""), placeholder="e.g., Height Works, Fire Works")
+                with r2c2:
+                    st.selectbox("Employer",["JSW steel" , "JSW Cement", "JSW foundation"])
+                    st.text_input("Department", value=st.session_state.usr_prof.get("Department", ""), placeholder="Enter department")
+                    st.date_input("Date of Joining")
+                with r2c3:
+                    mode = st.text_input("Mode of Joining",value=st.session_state.usr_prof.get("Nature of Job", ""))
+                    if mode == "Transfer from other JSW site":
+                        jswsite = st.text_input("Old JSW site name", placeholder="Enter old JSW site name")
 
+                st.subheader("Contact Details")
+                row1, row2, row3 = st.columns(3)
 
-                st.markdown("### Employment Status : ")
-                r0c1,r0c2,r0c3 = st.columns([10,1,10])
-                with r0c1:
-                # MARK: Personal Details
-                    # st.markdown(f"""
-                    #     *Age*: {st.text_input( label = "Age", label_visibility='collapsed', value = st.session_state.usr_prof.get('age', 'N/A'))}<br>
-                    #     *DOB*: {st.session_state.usr_prof.get('dob', 'N/A')}<br>
-                    #     *Sex*: {st.session_state.usr_prof.get('gender', 'N/A')}<br>
-                    #     *Aadhar No*: {st.session_state.usr_prof.get('aadhar_no', 'N/A')}
-                    # """, unsafe_allow_html=True)
-                    rr0c1, rr0c2 = st.columns(2)
-                    with rr0c1:
-                        st.write('Active From :')
-                        st.write('\n')
-                        st.write('Transferred to dolvi on:')
-                        st.write('\n')
-                        st.write("Resined on :")
-                        st.write('\n')
-                        st.write("Retired on:")
-                    with rr0c2:
-                        st.text_input(label = "activeform", label_visibility='collapsed', value=st.session_state.usr_prof.get('active_form', 'N/A'))
-                        st.text_input(label = "trn", label_visibility='collapsed', value=st.session_state.usr_prof.get('transferred_to_dolvi_on', 'N/A'))
-                        st.text_input(label = "res", label_visibility='collapsed', value=st.session_state.usr_prof.get('resined_on', 'N/A'))
-                        st.text_input(label = "ret", label_visibility='collapsed', value=st.session_state.usr_prof.get('retired_on', 'N/A'))
-
-                with r0c3:
-                    # st.write(f"*Mail ID (Personal)*: {st.session_state.usr_prof['personal_mail']}")
-                    # st.write("*Identification Mark*:")
-                    # st.markdown(f" * {st.session_state.usr_prof['identification_mark']}")
-                    rr0c1, rr0c2 = st.columns(2)
-                    with rr0c1:
-                        st.write('Deceased on :')
-                        st.write('\n')
-                        st.write('Unauthorized Absence from  :')
-                        st.write('\n')
-                        st.write('Others (Specify) on :')
-                    with rr0c2:
-                        st.text_input(label = "dec", label_visibility='collapsed', value=st.session_state.usr_prof.get('deceased_on', 'N/A'))
-                        st.text_input(label = "uaf", label_visibility='collapsed', value=st.session_state.usr_prof.get('unauthorized_absence_from', 'N/A'))
-                        st.text_input(label = "oth", label_visibility='collapsed', value=st.session_state.usr_prof.get('others_on', 'N/A'))
+                with row1:
+                    st.text_input("Phone (Personal)", value=st.session_state.usr_prof.get("Phone (Personal)", ""), placeholder="Enter 10-digit phone number")
+                    st.text_input("Phone (Office)", value=st.session_state.usr_prof.get("Phone (Office)", ""), placeholder="Enter office phone number")
+                    st.text_input("Mail Id (Emergency Contact Person)", value=st.session_state.usr_prof.get("Mail Id(emg)", ""), placeholder="Enter email")
+                with row2:
+                    st.text_input("Mail Id (Personal)", value=st.session_state.usr_prof.get("Mail Id (Personal)", ""), placeholder="Enter personal email")
+                    st.text_input("Mail Id (Office)", value=st.session_state.usr_prof.get("Mail Id (Office)", ""), placeholder="Enter office email")
+                    st.text_input("Emergency Contact Phone", value=st.session_state.usr_prof.get("Emergency Contact Phone", ""), placeholder="Enter 10-digit phone number")
+                with row3:
+                    st.text_input("Emergency Contact Person", value=st.session_state.usr_prof.get("Emergency Contact Person", ""), placeholder="Enter emergency contact person's name")
+                    st.text_input("Emergency Contact Relation", value=st.session_state.usr_prof.get("Emergency Contact Relation", ""), placeholder="e.g., Father, Spouse")
+                    st.text_area("Address", value=st.session_state.usr_prof.get("Address", ""), placeholder="Enter full address")
 
             if menu == "Medical/Surgical History":
                 # Personal History Section (Smoker, Alcoholic, Diet)
@@ -462,64 +308,163 @@ def Search(cursor):
                     mother_dm = st.checkbox("Mother - DM", value=st.session_state.usr_prof.get('family_history', {}).get('mother', {}).get('dm', False))
             
             if menu == "Vitals":
-                r0c1,r0c2 = st.columns([5,6])
-                with r0c1:
-                # # MARK: Personal Details
-                #     st.markdown(f"""
-                #         <b>Blood Pressure</b><br/>
-                #         *Systolic*: {vitals['Systolic'][0]}<br>
-                #         *Diastolic*: {vitals['Diastolic'][0]}<br>
-                #         *Pulse Rate*: {vitals['PulseRate'][0]}<br>
-                #         *SPO2*: {vitals['SpO2'][0]}
-                #         *Respiratory Rate*: {vitals['RespiratoryRate'][0]}
-                #     """, unsafe_allow_html=True)
-                    rr0c1, rr0c2 = st.columns(2)
-                    with rr0c1:
-                        st.write('Blood Pressure :')
-                        st.write('\n')
-                        st.write('Systolic :')
-                        st.write('\n')
-                        st.write("Diastolic :")
-                        st.write('\n')
-                        st.write("Pulse Rate :")
-                        st.write('\n')
-                        st.write("Respiratory Rate :")
-                    with rr0c2:
-                        st.text_input(label = "BMI1", label_visibility='collapsed' ,value=vitals['Systolic'][0])
-                        st.text_input(label = "Height1", label_visibility='collapsed', value=vitals['Diastolic'][0])
-                        st.text_input(label = "Temperature1", label_visibility='collapsed', value=vitals['PulseRate'][0])
-                        st.text_input(label = "Weight1", label_visibility='collapsed', value=vitals['SpO2'][0])
-                        st.text_input(label = "Weight1", label_visibility='collapsed', value=vitals['RespiratoryRate'][0])
-                    
-                with r0c2:
-                # # MARK: Personal Details
-                #     st.markdown(f"""
-                #         <b>Blood Pressure</b><br/>
-                #         *Systolic*: {vitals['Systolic'][0]}<br>
-                #         *Diastolic*: {vitals['Diastolic'][0]}<br>
-                #         *Pulse Rate*: {vitals['PulseRate'][0]}<br>
-                #         *SPO2*: {vitals['SpO2'][0]}
-                #         *Respiratory Rate*: {vitals['RespiratoryRate'][0]}
-                #     """, unsafe_allow_html=True)
-                    rr0c1, rr0c2 = st.columns(2)
-                    with rr0c1:
-                        st.write('BMI :')
-                        st.write('\n')
-                        st.write('Height :')
-                        st.write('\n')
-                        st.write("Temperature :")
-                        st.write('\n')
-                        st.write("Weight :")
-                    with rr0c2:
-                        st.text_input(label = "BMI", label_visibility='collapsed' ,value=vitals['BMI'][0])
-                        st.text_input(label = "Height", label_visibility='collapsed', value=vitals['Height'][0])
-                        st.text_input(label = "Temperature", label_visibility='collapsed', value=vitals['Temperature'][0])
-                        st.text_input(label = "Weight", label_visibility='collapsed', value=vitals['Weight'][0])
-                # with r0c2:
-                #     st.write(f"*BMI (in Value)*: {vitals['BMI'][0]}")
-                #     st.write(f"*Height*: {vitals['Height'][0]}")
-                #     st.write(f"*Temperature*: {vitals['Temperature'][0]}")
-                #     st.write(f"*Weight*: {vitals['Weight'][0]}")
+                st.header("Vitals")
+                r1c1,r1c2,r1c3 = st.columns([5,3,9])
+                with r1c1:
+                    systolic = st.session_state.usr_prof.get("Systolic", "")
+                    diastolic = st.session_state.usr_prof.get("Diastolic", "")
+                    st.write("Blood Pressure")
+                    st.session_state.usr_prof["Systolic"] = st.text_input(
+                        "Systolic (mm Hg)", 
+                        value=systolic, 
+                        placeholder="Enter Systolic Pressure",
+                        key="systolic"
+                    )
+                    st.session_state.usr_prof["Diastolic"] = st.text_input(
+                        "Diastolic (mm Hg)", 
+                        value=diastolic, 
+                        placeholder="Enter Diastolic Pressure",
+                        key="diastolic"
+                    )
+
+                with r1c2:
+                    # show the charts for the systolic and diastolic based on the data input
+                    st.write("""
+                        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 300px; height: 50px; border-radius: 10px; margin-left: 50px;"></div>
+                    """, unsafe_allow_html=True)
+                    st.write("""
+                    <style>
+                        button[kind="secondary"]{
+                            all: unset;
+                            background-color: #22384F;
+                            color: white;
+                            border-radius: 5px;
+                            text-align: center;
+                            cursor: pointer;
+                            font-size: 20px;
+                            padding: 10px;
+                            
+                        }
+                    </style>
+                    """,unsafe_allow_html=True)
+                    val = st.button("🧮", type="secondary")
+                with r1c3:
+                    if val:
+                        val,color = systolic_diastolic_chart(systolic, diastolic)
+                        st.write(f"""
+                            <style>
+                                .chart_container {{
+                                    display: flex;
+                                    flex-direction: column;
+                                    align-items: center;
+                                    justify-content: center;
+                                    width: 300px;
+                                    height: 80px;
+                                    border-radius: 10px;
+                                    margin-left: 50px;
+                                }}
+                                .chart-value h1{{
+                                    margin-top: 50px;
+                                    margin-left: 50px;
+                                    color: {color}
+                                }}
+                                .bar-values {{
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: space-between;
+                                    width: 300px;
+                                    height: 200px;
+                                }}
+                                .Normal {{
+                                    width: 19.5%;
+                                    height: 10px;
+                                    background-color: #00ff00af;
+                                    border-top-left-radius: 10px;
+                                    border-bottom-left-radius: 10px;
+                                }}
+                                .Elevated {{
+                                    width: 19.5%;
+                                    height: 10px;
+                                    background-color: #ffff00af;
+                                }}
+                                .HT-Stage-1 {{
+                                    width: 19.5%;
+                                    height: 10px;
+                                    background-color: #ff9900af;
+                                }}
+                                .HT-Stage-2 {{
+                                    width: 19.5%;
+                                    height: 10px;
+                                    background-color: #ff0000af;
+                                }}
+                                .HT-crisis {{
+                                    width: 19.5%;
+                                    height: 10px;
+                                    background-color: #990000af;
+                                    border-top-right-radius: 10px;
+                                    border-bottom-right-radius: 10px;
+                                }}
+                            </style>
+                            <div class="chart_container">
+                                <div class="chart-value"><h1>{val}</h1></div>
+                                <div class="bar-values">
+                                    <div class="Normal"></div>
+                                    <div class="Elevated"></div>
+                                    <div class="HT-Stage-1"></div>
+                                    <div class="HT-Stage-2"></div>
+                                    <div class="HT-crisis"></div>
+                                </div>
+                            </div>
+                        """,unsafe_allow_html=True)
+                
+                r2c1, r2c2, r2c3 = st.columns(3)
+                with r2c1:
+                    st.session_state.usr_prof["Pulse"] = st.text_input(
+                        "Pulse (Per Minute)", 
+                        value=st.session_state.usr_prof.get("Pulse", ""), 
+                        placeholder="Enter Pulse Rate",
+                        key="pulse"
+                    )
+                    st.session_state.usr_prof["spo2"] = st.text_input(
+                        "SpO2 (in %)", 
+                        value=st.session_state.usr_prof.get("spo2", ""), 
+                        placeholder="Enter SpO2 Level",
+                        key="spo2"
+                    )
+                    st.session_state.usr_prof["BMI"] = st.text_input(
+                        "BMI", 
+                        value=st.session_state.usr_prof.get("BMI", ""), 
+                        placeholder="Enter BMI",
+                        key="bmi"
+                    )
+
+                with r2c2:
+                    st.session_state.usr_prof["Respiratory Rate"] = st.text_input(
+                        "Respiratory Rate (Per Minute)", 
+                        value=st.session_state.usr_prof.get("Respiratory Rate", ""), 
+                        placeholder="Enter Respiratory Rate",
+                        key="respiratory_rate"
+                    )
+                    st.session_state.usr_prof["Weight"] = st.text_input(
+                        "Weight (in KG)", 
+                        value=st.session_state.usr_prof.get("Weight", ""), 
+                        placeholder="Enter Weight",
+                        key="weight"
+                    )
+
+                with r2c3:
+                    st.session_state.usr_prof["Temperature"] = st.text_input(
+                        "Temperature (in °F)", 
+                        value=st.session_state.usr_prof.get("Temperature", ""), 
+                        placeholder="Enter Body Temperature",
+                        key="temperature"
+                    )
+                    st.session_state.usr_prof["Height"] = st.text_input(
+                        "Height (in CM)", 
+                        value=st.session_state.usr_prof.get("Height", ""), 
+                        placeholder="Enter Height",
+                        key="height"
+                    )
             if menu == "Visit Reason":
                 r0c1,r0c2 = st.columns([3,6])
                 with r0c1:

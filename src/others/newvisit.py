@@ -11,6 +11,39 @@ import mysql.connector
 from datetime import datetime
 import re
 
+def calculate_age(dob):
+    """
+    Calculate age in the format 'XX Years YY Months ZZ Days' from the date of birth (dob).
+
+    Args:
+        dob (str): Date of birth in the format 'DD/MM/YYYY'.
+
+    Returns:
+        str: Age as a string in the format 'XX Years YY Months ZZ Days'.
+    """
+    try:
+        dob_date = datetime.strptime(dob, "%d/%m/%Y")
+        today = datetime.today()
+
+        # Calculate years, months, and days
+        years = today.year - dob_date.year
+        months = today.month - dob_date.month
+        days = today.day - dob_date.day
+
+        # Adjust for negative months or days
+        if days < 0:
+            months -= 1
+            days += (dob_date.replace(month=dob_date.month + 1, day=1) - dob_date).days
+        
+        if months < 0:
+            years -= 1
+            months += 12
+
+        return f"{years} Years {months} Months {days} Days"
+
+    except ValueError:
+        return "Invalid date format. Please use 'DD/MM/YYYY'."
+
 
 def validate_name(name):
     if not re.match("^[A-Za-z ]+$", name):
@@ -103,7 +136,7 @@ def Form(visitreason,select, select1, connection, cursor,accessLevel):
         if visitreason=="Camps (Optional)":
             form_name = option_menu(
             None,
-            ["Basic Details", "Vitals","Medical History", "Investigations", "Vaccination"],
+            ["Basic Details", "Vitals","Medical/Surgical/Personal History", "Investigations", "Vaccination"],
             orientation="horizontal",
             icons=['a','a','a','a','a','a']
         )
@@ -117,14 +150,14 @@ def Form(visitreason,select, select1, connection, cursor,accessLevel):
         elif visitreason=="Special Work Fitness (Renewal)" or select=="Visitor":
             form_name = option_menu(
             None,
-            ["Basic Details", "Vitals","Medical History", "Vaccination","Fitness"],
+            ["Basic Details", "Vitals","Medical/Surgical/Personal History", "Vaccination","Fitness"],
             orientation="horizontal",
             icons=['a','a','a','a','a','a']
         )
         elif visitreason=="Fitness After Medical Leave":
             form_name = option_menu(
             None,
-            ["Basic Details","Vitals","Medical History", "Fitness","Vaccination","Medical Leave/Sickness Absence Ratio"],  #not defined
+            ["Basic Details","Vitals","Medical/Surgical/Personal History", "Fitness","Vaccination","Medical Leave/Sickness Absence Ratio"],  #not defined
             orientation="horizontal",
             icons=['a','a','a','a','a','a','a','a']
             )
@@ -138,7 +171,7 @@ def Form(visitreason,select, select1, connection, cursor,accessLevel):
         else:
             form_name = option_menu(
                 None,
-                ["Basic Details", "Vitals","Medical History", "Investigations","Vaccination", "Fitness"],
+                ["Basic Details", "Vitals","Medical/Surgical/Personal History", "Investigations","Vaccination", "Fitness"],
                 orientation="horizontal",
                 icons=['a','a','a','a','a','a','a']
             )
@@ -153,7 +186,7 @@ def Form(visitreason,select, select1, connection, cursor,accessLevel):
         elif visitreason=="Illness" or visitreason=="BP Sugar (Abnormal)" or visitreason=="Injury Outside the premises" or visitreason=="Over counter Injury Outside the premises":
             form_name = option_menu(
             None,
-            ["Basic Details", "Vitals","Medical History","Vaccination","Consultation","Prescription" ],
+            ["Basic Details", "Vitals","Medical/Surgical/Personal History","Vaccination","Consultation","Prescription" ],
             orientation="horizontal",
             icons=['a','a','a','a','a','a','a','a','a']
             )
@@ -196,76 +229,74 @@ def Form(visitreason,select, select1, connection, cursor,accessLevel):
         with r1c1:
             name = st.text_input("Name", value=st.session_state.form_data.get("Name", ""), placeholder="Enter your full name")
             if name and not validate_name(name):
-                st.stop()
-
+                st.warning("Enter input corrctly")
+            sex = st.selectbox("Sex", options=["Male", "Female", "Other"], 
+                            index=["Male", "Female", "Other"].index(st.session_state.form_data.get("Sex", "Male")))
+            id_marks = st.text_input("Identification Marks", value=st.session_state.form_data.get("Identification Marks", ""), placeholder="Enter any visible identification marks")
+        with r1c2:
             dob_input = st.text_input(
                 "Date of Birth (dd/mm/yyyy)", 
                 value=st.session_state.form_data.get("Date of Birth", ""),
                 placeholder="Enter Date of Birth in dd/mm/yyyy"
             )
-
             if dob_input:
                 dob = validate_date_format(dob_input)
                 if dob:
                     # Store validated DOB in session state
                     st.session_state.form_data["Date of Birth"] = dob
-
-            sex = st.selectbox("Sex", options=["Male", "Female", "Other"], 
-                            index=["Male", "Female", "Other"].index(st.session_state.form_data.get("Sex", "Male")))
-
             aadhar = st.text_input("Aadhar No.", value=st.session_state.form_data.get("Aadhar No.", ""), placeholder="Enter 12-digit Aadhar No.")
             if aadhar and not validate_aadhar(aadhar):
-                st.stop()
-
-            id_marks = st.text_input("Identification Marks", value=st.session_state.form_data.get("Identification Marks", ""), placeholder="Enter any visible identification marks")
+                st.warning("Enter input corrctly")
+            marital_status = st.selectbox("Marital status",["Single","Married","Divorced", "Widowed", "Seperated"],placeholder="Select marital status")
+            
+        with r1c3:
+            age = st.text_input("Age", value=calculate_age(dob_input),placeholder="XX Years YY Months ZZ Days")   
             blood_group = st.text_input("Blood Group", value=st.session_state.form_data.get("Blood Group", ""), placeholder="e.g., A+, O-")
             if blood_group and not validate_blood_group(blood_group):
-                st.stop()
-
-            
-        with r1c2:
-            emp_no = st.text_input("Employee No.", value=st.session_state.form_data.get("Employee No.", ""), placeholder="Enter employee number")
-            doj = st.text_input(
-                "Date of Birth (dd/mm/yyyy)", 
-                value=st.session_state.form_data.get("Date of Birth", ""), 
-                placeholder="Enter Date of Birth in dd/mm/yyyy",
-                key="date_of_birth"
-            )
-
-            if doj:
-                dob = validate_date_format(doj)
-                if dob:
-                    # Store validated DOB in session state
-                    st.session_state.form_data["Date of Birth"] = dob
-
+                st.warning("Enter input corrctly")
+        st.subheader("Employment Details")
+        r2c1, r2c2, r2c3 = st.columns(3)
+        with r2c1:
+            emp_number = st.text_input("Employee Number", value=st.session_state.form_data.get("emp_no", ""))
             designation = st.text_input("Designation", value=st.session_state.form_data.get("Designation", ""), placeholder="Enter job designation")
-            department = st.text_input("Department", value=st.session_state.form_data.get("Department", ""), placeholder="Enter department")
             job_nature = st.text_input("Nature of Job", value=st.session_state.form_data.get("Nature of Job", ""), placeholder="e.g., Height Works, Fire Works")
+        with r2c2:
+            employer = st.selectbox("Employer",["JSW steel" , "JSW Cement", "JSW foundation"])
+            department = st.text_input("Department", value=st.session_state.form_data.get("Department", ""), placeholder="Enter department")
+            doj = st.date_input("Date of Joining")
+        with r2c3:
+            mode = st.selectbox("Mode of Joining",["New Joinee", "Transfer from other JSW site"])
+            if mode == "Transfer from other JSW site":
+                jswsite = st.text_input("Old JSW site name", placeholder="Enter old JSW site name")
+        st.subheader("Contact Details")
+        row1, row2, row3 = st.columns(3)
+        with row1:
             personal_phone = st.text_input("Phone (Personal)", value=st.session_state.form_data.get("Phone (Personal)", ""), placeholder="Enter 10-digit phone number")
             if personal_phone and not validate_phone(personal_phone):
-                st.stop()
+                st.warning("Enter input corrctly")
 
             office_phone = st.text_input("Phone (Office)", value=st.session_state.form_data.get("Phone (Office)", ""), placeholder="Enter office phone number")
-
-        with r1c3:
+            mail_contact_per = st.text_input("Mail Id (Emergency Contact Person)", value=st.session_state.form_data.get("Mail Id(emg)", ""), placeholder="Enter email")
+            if mail_contact_per and not validate_email(mail_contact_per):
+                st.warning("Enter input corrctly")
+        with row2:
             personal_email = st.text_input("Mail Id (Personal)", value=st.session_state.form_data.get("Mail Id (Personal)", ""), placeholder="Enter personal email")
             if personal_email and not validate_email(personal_email):
-                st.stop()
-
+                st.warning("Enter input corrctly")
             office_email = st.text_input("Mail Id (Office)", value=st.session_state.form_data.get("Mail Id (Office)", ""), placeholder="Enter office email")
             if office_email and not validate_email(office_email):
-                st.stop()
-
-            emergency_contact_person = st.text_input("Emergency Contact Person", value=st.session_state.form_data.get("Emergency Contact Person", ""), placeholder="Enter emergency contact person's name")
-            emergency_contact_relation = st.text_input("Emergency Contact Relation", value=st.session_state.form_data.get("Emergency Contact Relation", ""), placeholder="e.g., Father, Spouse")
+                st.warning("Enter input corrctly")
             emergency_contact_phone = st.text_input("Emergency Contact Phone", value=st.session_state.form_data.get("Emergency Contact Phone", ""), placeholder="Enter 10-digit phone number")
             if emergency_contact_phone and not validate_phone(emergency_contact_phone):
-                st.stop()
-
+                st.warning("Enter input corrctly")
+        with row3:
+            emergency_contact_person = st.text_input("Emergency Contact Person", value=st.session_state.form_data.get("Emergency Contact Person", ""), placeholder="Enter emergency contact person's name")
+            emergency_contact_relation = st.text_input("Emergency Contact Relation", value=st.session_state.form_data.get("Emergency Contact Relation", ""), placeholder="e.g., Father, Spouse")
+            
             address = st.text_area("Address", value=st.session_state.form_data.get("Address", ""), placeholder="Enter full address")
 
-        r2c1, r2c2, r2c3 = st.columns([5, 2, 3])        
-        with r2c3:
+        rc1, rc2, rc3 = st.columns([5, 2, 3])     
+        with rc3:
             if st.button("Add Data", type="primary"):
                 emp_id = st.session_state.form_data['Employee ID']
                 sql = """
@@ -523,7 +554,7 @@ def Form(visitreason,select, select1, connection, cursor,accessLevel):
 
         if select_inv == "HAEMATALOGY":
         
-            r1c1, r1c2, r1c3 = st.columns(3)
+            r1c1, r1c2, r1c3, r1c4 = st.columns(4)
             with r1c1:
                 st.session_state.form_data["Hemoglobin"] = st.text_input("Hemoglobin", value=st.session_state.form_data.get("Hemoglobin", ""))
                 st.session_state.form_data["Total RBC"] = st.text_input("Total RBC", value=st.session_state.form_data.get("Total RBC", ""))
@@ -572,6 +603,22 @@ def Form(visitreason,select, select1, connection, cursor,accessLevel):
                 st.text_input("Reference Range", key="rdw1")
                 st.text_input("Reference Range", key="euso1")
                 st.text_input("Reference Range", key="baso1")
+            with r1c4:
+                st.text_input("Comments", key="hemoglobin2")
+                st.text_input("Comments", key="rbc2")
+                st.text_input("Comments", key="wbc2")
+                st.text_input("Comments", key="neutro2")
+                st.text_input("Comments", key="mono2")
+                st.text_input("Comments", key="pvc2")
+                st.text_input("Comments", key="mvc2")
+                st.text_input("Comments", key="mch2")
+                st.text_input("Comments", key="lymph2")
+                st.text_input("Comments", key="esr2")
+                st.text_input("Comments", key="mchc2")
+                st.text_input("Comments", key="platelet2")
+                st.text_input("Comments", key="rdw2")
+                st.text_input("Comments", key="euso2")
+                st.text_input("Comments", key="baso2")
             st.session_state.form_data["Preipheral Blood Smear - RBC Morphology"] = st.text_area("Preipheral Blood Smear - RBC Morphology", value=st.session_state.form_data.get("Preipheral Blood Smear - RBC Morphology", ""))
             st.session_state.form_data["Preipheral Blood Smear - Parasites"] = st.text_area("Preipheral Blood Smear - Parasites", value=st.session_state.form_data.get("Preipheral Blood Smear - Parasites", ""))
             st.session_state.form_data["Preipheral Blood Smear - Others"] = st.text_area("Preipheral Blood Smear - Others", value=st.session_state.form_data.get("Preipheral Blood Smear - Others", ""))
@@ -637,9 +684,7 @@ def Form(visitreason,select, select1, connection, cursor,accessLevel):
         
 
         if select_inv == "ROUTINE SUGAR TESTS":
-            r1c1, r1c2, r1c3 = st.columns(3)
-            
-            
+            r1c1, r1c2, r1c3, r1c4 = st.columns(4)
             
             with r1c1:
                 st.session_state.form_data["Glucose (F)"] = st.text_input("Glucose (F)", value=st.session_state.form_data.get("Glucose (F)", ""))
@@ -659,6 +704,12 @@ def Form(visitreason,select, select1, connection, cursor,accessLevel):
                 st.text_input("Reference Range", key="RBS")
                 st.text_input("Reference Range", key="EAG")
                 st.text_input("Reference Range", key="hba1c")
+            with r1c4:
+                st.text_input("Comments", key="glucosef2")
+                st.text_input("Comments", key="glucosepp2")
+                st.text_input("Comments", key="RBS2")
+                st.text_input("Comments", key="EAG2")
+                st.text_input("Comments", key="hba1c2")
             r3c1, r3c2, r3c3 = st.columns([6, 4, 4])
             
             with r3c3:
@@ -702,7 +753,7 @@ def Form(visitreason,select, select1, connection, cursor,accessLevel):
             if 'emp_no' not in st.session_state:
                 st.session_state.emp_no = st.text_input("Employee No", value="")  # Replace with actual logic to fetch emp_no
 
-            r1c1, r1c2, r1c3 = st.columns(3)
+            r1c1, r1c2, r1c3, r1c4 = st.columns(4)
             with r1c1:
                 st.session_state.form_data["Urea"] = st.text_input("Urea", value=st.session_state.form_data.get("Urea", ""))
                 st.session_state.form_data["BUN"] = st.text_input("BUN", value=st.session_state.form_data.get("BUN", ""))
@@ -733,9 +784,16 @@ def Form(visitreason,select, select1, connection, cursor,accessLevel):
                 st.text_input("Referance Range", key="serum")
                 st.text_input("Referance Range", key="uric")
                 st.text_input("Referance Range", key="chlo")
-            r2c1, r2c2, r2c3 = st.columns(3)
-                        
-
+            with r1c4:            
+                st.text_input("Comments", key="urea2")
+                st.text_input("Comments", key="bun2")
+                st.text_input("Comments", key="calcium2")
+                st.text_input("Comments", key="sodium2")
+                st.text_input("Comments", key="pot2")
+                st.text_input("Comments", key="phos2")
+                st.text_input("Comments", key="serum2")
+                st.text_input("Comments", key="uric2")
+                st.text_input("Comments", key="chlo2")
             r3c1, r3c2, r3c3 = st.columns([6, 4, 4])
             with r3c3:
                 if st.button("Add Data", type="primary"):
@@ -806,7 +864,7 @@ def Form(visitreason,select, select1, connection, cursor,accessLevel):
                     st.session_state.form_data[key] = ""
 
             # Creating input fields
-            r1c1, r1c2, r1c3 = st.columns(3)
+            r1c1, r1c2, r1c3, r1c4 = st.columns(4)
             with r1c1:
                 st.session_state.form_data["Total Cholesterol"] = st.text_input("Total Cholesterol", value=st.session_state.form_data.get("Total Cholesterol", ""))
                 st.session_state.form_data["Triglycerides"] = st.text_input("Triglycerides", value=st.session_state.form_data.get("Triglycerides", ""))
@@ -831,6 +889,14 @@ def Form(visitreason,select, select1, connection, cursor,accessLevel):
                 st.text_input("Referance Range", key="cholr")
                 st.text_input("Referance Range", key="vldl")
                 st.text_input("Referance Range", key="ldl/")
+            with r1c4:
+                st.text_input("Comments", key="chle2")
+                st.text_input("Comments", key="trig2")
+                st.text_input("Comments", key="hdl2")
+                st.text_input("Comments", key="ldl2")
+                st.text_input("Comments", key="cholr2")
+                st.text_input("Comments", key="vldl2")
+                st.text_input("Comments", key="ldl/2")
 
             r3c1, r3c2, r3c3 = st.columns([6, 4, 4])
             
@@ -883,7 +949,7 @@ def Form(visitreason,select, select1, connection, cursor,accessLevel):
                 st.session_state.form_data = {}
 
             # Creating input fields for liver function test
-            r1c1, r1c2, r1c3 = st.columns(3)
+            r1c1, r1c2, r1c3, r1c4 = st.columns(4)
             with r1c1:
                 st.session_state.form_data["Bilirubin - Total"] = st.text_input("Bilirubin - Total", value=st.session_state.form_data.get("Bilirubin - Total", ""))
                 st.session_state.form_data["Bilirubin - Direct"] = st.text_input("Bilirubin - Direct", value=st.session_state.form_data.get("Bilirubin - Direct", ""))
@@ -920,7 +986,18 @@ def Form(visitreason,select, select1, connection, cursor,accessLevel):
                 st.text_input("Referance Range", key="globulin")
                 st.text_input("Referance Range", key="glob")
                 st.text_input("Referance Range", key="gamma")
-
+            with r1c4:
+                st.text_input("Comments", key="bilit2")
+                st.text_input("Comments", key="bilid2")
+                st.text_input("Comments", key="bili2")
+                st.text_input("Comments", key="ast2")
+                st.text_input("Comments", key="alt2")
+                st.text_input("Comments", key="alkaline2")
+                st.text_input("Comments", key="protien2")
+                st.text_input("Comments", key="albumin2")
+                st.text_input("Comments", key="globulin2")
+                st.text_input("Comments", key="glob2")
+                st.text_input("Comments", key="gamma2")
             r3c1, r3c2, r3c3 = st.columns([6, 4, 4])
             
             with r3c3:
@@ -971,7 +1048,7 @@ def Form(visitreason,select, select1, connection, cursor,accessLevel):
                 st.session_state.form_data = {}
 
             # Creating input fields for thyroid function test
-            r1c1, r1c2, r1c3 = st.columns(3)
+            r1c1, r1c2, r1c3, r1c4 = st.columns(4)
             with r1c1:
                 st.session_state.form_data["T3- Triiodothyroine"] = st.text_input("T3- Triiodothyroine", value=st.session_state.form_data.get("T3- Triiodothyroine", ""))
                 st.session_state.form_data["T4 - Thyroxine"] = st.text_input("T4 - Thyroxine", value=st.session_state.form_data.get("T4 - Thyroxine", ""))
@@ -984,6 +1061,10 @@ def Form(visitreason,select, select1, connection, cursor,accessLevel):
                 st.text_input("Reference Range", key="t3")
                 st.text_input("Reference Range", key="t4")
                 st.text_input("Reference Range", key="tsh")
+            with r1c4:
+                st.text_input("Comments", key="t32")
+                st.text_input("Comments", key="t42")
+                st.text_input("Comments", key="tsh2")
             r3c1, r3c2, r3c3 = st.columns([6, 4, 4])
 
             with r3c3:
@@ -1024,7 +1105,7 @@ def Form(visitreason,select, select1, connection, cursor,accessLevel):
                 st.session_state.form_data = {}
 
             # Creating input fields for Autoimmune Test
-            r1c1, r1c2, r1c3 = st.columns(3)
+            r1c1, r1c2, r1c3, r1c4 = st.columns(3)
             with r1c1:
                 st.session_state.form_data["ANA (Antinuclear Antibody)"] = st.text_input("ANA (Antinuclear Antibody)", value=st.session_state.form_data.get("ANA (Antinuclear Antibody)", ""))
                 st.session_state.form_data["Anti ds DNA"] = st.text_input("Anti ds DNA", value=st.session_state.form_data.get("Anti ds DNA", ""))
@@ -1040,6 +1121,11 @@ def Form(visitreason,select, select1, connection, cursor,accessLevel):
                 st.text_input("Reference Range", key="dna")
                 st.text_input("Reference Range", key="rheu")
                 st.text_input("Reference Range", key="antib")
+            with r1c4:
+                st.text_input("Comments", key="ana2")
+                st.text_input("Comments", key="dna2")
+                st.text_input("Comments", key="rheu2")
+                st.text_input("Comments", key="antib2")
             r3c1, r3c2, r3c3 = st.columns([6, 4, 4])
 
             with r3c3:
@@ -1080,7 +1166,7 @@ def Form(visitreason,select, select1, connection, cursor,accessLevel):
                 st.session_state.form_data = {}
 
             # Creating input fields for Coagulation Test
-            r1c1, r1c2, r1c3 = st.columns(3)
+            r1c1, r1c2, r1c3, r1c4 = st.columns(4)
             with r1c1:
                 st.session_state.form_data["Prothrombin Time (PT)"] = st.text_input("Prothrombin Time (PT)", value=st.session_state.form_data.get("Prothrombin Time (PT)", ""))
                 st.session_state.form_data["PT INR"] = st.text_input("PT INR", value=st.session_state.form_data.get("PT INR", ""))
@@ -1096,6 +1182,11 @@ def Form(visitreason,select, select1, connection, cursor,accessLevel):
                 st.text_input("Reference Range", key="ptinr")
                 st.text_input("Reference Range", key="ct")
                 st.text_input("Reference Range", key="bt")
+            with r1c4:
+                st.text_input("Comments", key="pt2")
+                st.text_input("Comments", key="ptinr2")
+                st.text_input("Comments", key="ct2")
+                st.text_input("Comments", key="bt2")
             # Save button layout
             r3c1, r3c2, r3c3 = st.columns([6, 4, 4])
             
@@ -1137,7 +1228,7 @@ def Form(visitreason,select, select1, connection, cursor,accessLevel):
                 st.session_state.form_data = {}
 
             # Creating input fields for Enzymes & Cardiac Profile
-            r1c1, r1c2, r1c3 = st.columns(3)
+            r1c1, r1c2, r1c3, r1c4 = st.columns(4)
             with r1c1:
                 st.session_state.form_data["Acid Phosphatase"] = st.text_input("Acid Phosphatase", value=st.session_state.form_data.get("Acid Phosphatase", ""))
                 st.session_state.form_data["Adenosine Deaminase"] = st.text_input("Adenosine Deaminase", value=st.session_state.form_data.get("Adenosine Deaminase", ""))
@@ -1178,6 +1269,17 @@ def Form(visitreason,select, select1, connection, cursor,accessLevel):
                 st.text_input("Reference Range", key="lipase")
                 st.text_input("Reference Range", key="cpk")
                 st.text_input("Reference Range", key="tmt")
+            with r1c4:
+                st.text_input("Comments", key="acid2")
+                st.text_input("Comments", key="adeno2")
+                st.text_input("Comments", key="amylase2")
+                st.text_input("Comments", key="ecg2")
+                st.text_input("Comments", key="trop2")
+                st.text_input("Comments", key="cpkt2")
+                st.text_input("Comments", key="echo2")
+                st.text_input("Comments", key="lipase2")
+                st.text_input("Comments", key="cpk2")
+                st.text_input("Comments", key="tmt2")
             # Save button layout
             r3c1, r3c2, r3c3 = st.columns([6, 4, 4])
             
@@ -1230,7 +1332,7 @@ def Form(visitreason,select, select1, connection, cursor,accessLevel):
                 st.session_state.form_data = {}
 
             # Creating input fields for Urine Routine
-            r1c1, r1c2, r1c3 = st.columns(3)
+            r1c1, r1c2, r1c3, r1c4 = st.columns(4)
             
             with r1c1:
                 st.session_state.form_data["Colour"] = st.text_input("Colour", value=st.session_state.form_data.get("Colour", ""))
@@ -1286,6 +1388,24 @@ def Form(visitreason,select, select1, connection, cursor,accessLevel):
                 st.text_input("Reference Range ", key="wbc_pus_cells_reference_range")
                 st.text_input("Reference Range ", key="red_blood_cells_reference_range")
                 st.text_input("Reference Range ", key="epithelial_cells_reference_range")
+            
+            with r1c4:
+                st.text_input("Comments ", key="colour_reference_range2")
+                st.text_input("Comments ", key="appearance_reference_range2")
+                st.text_input("Comments ", key="reaction_reference_range2")
+                st.text_input("Comments ", key="specific_gravity_reference_range2")
+                st.text_input("Comments ", key="crystals_reference_range2")
+                st.text_input("Comments ", key="bacteria_reference_range2")
+                st.text_input("Comments ", key="protein_albumin_reference_range2")
+                st.text_input("Comments ", key="glucose_reference_range2")
+                st.text_input("Comments ", key="ketone_reference_range2")
+                st.text_input("Comments ", key="urobilinogen_reference_range2")
+                st.text_input("Comments", key="casts_reference_range2")
+                st.text_input("Comments ", key="bile_salts_reference_range2")
+                st.text_input("Comments ", key="bile_pigments_reference_range2")
+                st.text_input("Comments ", key="wbc_pus_cells_reference_range2")
+                st.text_input("Comments ", key="red_blood_cells_reference_range2")
+                st.text_input("Comments ", key="epithelial_cells_reference_range2")
 
             # Save button layout
             r3c1, r3c2, r3c3 = st.columns([6, 4, 4])
@@ -1342,7 +1462,7 @@ def Form(visitreason,select, select1, connection, cursor,accessLevel):
                 st.session_state.form_data = {}
 
             # Creating input fields for Serology tests
-            r1c1, r1c2, r1c3 = st.columns(3)
+            r1c1, r1c2, r1c3, r1c4 = st.columns(4)
 
             with r1c1:
                 st.session_state.form_data["Screening For HIV I & II"] = st.text_input("Screening For HIV I & II", value=st.session_state.form_data.get("Screening For HIV I & II", ""))
@@ -1373,6 +1493,16 @@ def Form(visitreason,select, select1, connection, cursor,accessLevel):
                 st.text_input("Reference Range", key="dengue_igg_range")
                 st.text_input("Reference Range", key="dengue_igm_range")
                 st.text_input("Reference Range", key="widal_range")
+            
+            with r1c4:
+                st.text_input("Comments", key="screening_for_hiv_range2")
+                st.text_input("Comments", key="hbsag_range2")
+                st.text_input("Comments", key="hcv_range2")
+                st.text_input("Comments", key="vdrl_range2")
+                st.text_input("Comments", key="dengue_ns1ag_range2")
+                st.text_input("Comments", key="dengue_igg_range2")
+                st.text_input("Comments", key="dengue_igm_range2")
+                st.text_input("Comments", key="widal_range2")
 
             # Save button layout
             r3c1, r3c2, r3c3 = st.columns([6, 4, 4])
@@ -1421,7 +1551,7 @@ def Form(visitreason,select, select1, connection, cursor,accessLevel):
                 st.session_state.form_data = {}
 
             # Creating input fields for Motion tests
-            r1c1, r1c2, r1c3 = st.columns(3)
+            r1c1, r1c2, r1c3, r1c4 = st.columns(4)
 
             with r1c1:
                 st.session_state.form_data["Colour (Motion)"] = st.text_input("Colour (Motion)", value=st.session_state.form_data.get("Colour (Motion)", ""))
@@ -1455,6 +1585,17 @@ def Form(visitreason,select, select1, connection, cursor,accessLevel):
                 st.text_input("Reference Range", key="ova_range")
                 st.text_input("Reference Range", key="rbcs_range")
                 st.text_input("Reference Range", key="others_range")
+
+            with r1c4:
+                st.text_input("Comments", key="colour_motion_range2")
+                st.text_input("Comments", key="appearance_motion_range2")
+                st.text_input("Comments", key="occult_blood_range2")
+                st.text_input("Comments", key="cyst_range2")
+                st.text_input("Comments", key="mucus_range2")
+                st.text_input("Comments", key="pus_cells_range2")
+                st.text_input("Comments", key="ova_range2")
+                st.text_input("Comments", key="rbcs_range2")
+                st.text_input("Comments", key="others_range2")
 
             # Save button layout
             r3c1, r3c2, r3c3 = st.columns([6, 4, 4])
@@ -1502,7 +1643,7 @@ def Form(visitreason,select, select1, connection, cursor,accessLevel):
                 st.session_state.form_data = {}
 
             # Creating input fields for Routine Culture & Sensitivity tests
-            r1c1, r1c2, r1c3 = st.columns(3)
+            r1c1, r1c2, r1c3, r1c4 = st.columns(4)
 
             with r1c1:
                 st.session_state.form_data["Urine"] = st.text_input("Urine", value=st.session_state.form_data.get("Urine", ""))
@@ -1521,6 +1662,12 @@ def Form(visitreason,select, select1, connection, cursor,accessLevel):
                 st.text_input("Reference Range", key="motion_range")
                 st.text_input("Reference Range", key="sputum_range")
                 st.text_input("Reference Range", key="blood_range")
+            
+            with r1c4:
+                st.text_input("Comments", key="urine_range1")
+                st.text_input("Comments", key="motion_range1")
+                st.text_input("Comments", key="sputum_range1")
+                st.text_input("Comments", key="blood_range1")
 
 
             # Save button layout
@@ -1562,7 +1709,7 @@ def Form(visitreason,select, select1, connection, cursor,accessLevel):
                 st.session_state.form_data = {}
 
             # Creating input field for PSA (Prostate Specific Antigen)
-            r1c1, r1c2, r1c3 = st.columns(3)
+            r1c1, r1c2, r1c3, r1c4 = st.columns(4)
             with r1c1:
                 st.session_state.form_data["PSA (Prostate specific Antigen)"] = st.text_input("PSA (Prostate specific Antigen)", 
                     value=st.session_state.form_data.get("PSA (Prostate specific Antigen)", "")
@@ -1573,6 +1720,8 @@ def Form(visitreason,select, select1, connection, cursor,accessLevel):
                 
             with r1c3:
                 st.text_input("Reference Range", key="p_sa")
+            with r1c4:
+                st.text_input("Comments", key="p_sa1")
 
             # Save button layout
             r3c1, r3c2, r3c3 = st.columns([6, 4, 4])
@@ -1609,7 +1758,7 @@ def Form(visitreason,select, select1, connection, cursor,accessLevel):
                 st.session_state.form_data = {}
 
             # Creating input fields for Mammogram and PAP Smear
-            r1c1, r1c2, r1c3 = st.columns(3)
+            r1c1, r1c2, r1c3, r1c4 = st.columns(4)
             with r1c1:
                 st.session_state.form_data["Mammogram"] = st.selectbox("Mammogram", ["Normal", "Abnormal"], index=0)
                 if st.session_state.form_data["Mammogram"] == "Abnormal":
@@ -1630,6 +1779,10 @@ def Form(visitreason,select, select1, connection, cursor,accessLevel):
             with r1c3:
                 st.text_input("Reference Range", key="manmogram1")
                 st.text_input("Reference Range", key="pap1")
+
+            with r1c4:
+                st.text_input("Reference Range", key="manmogram2")
+                st.text_input("Reference Range", key="pap2")
                     
 
             # Save button layout
@@ -1671,7 +1824,7 @@ def Form(visitreason,select, select1, connection, cursor,accessLevel):
                 st.session_state.form_data = {}
 
             # Creating input fields for Audiometry and PFT
-            r1c1, r1c2, r1c3 = st.columns(3)
+            r1c1, r1c2, r1c3, r1c4 = st.columns(4)
 
             with r1c1:
                 st.session_state.form_data["Audiometry"] = st.selectbox("Audiometry", ["Normal", "Abnormal"], index=0)
@@ -1694,6 +1847,10 @@ def Form(visitreason,select, select1, connection, cursor,accessLevel):
             with r1c3:
                 st.text_input("Reference Range", key="audio1")
                 st.text_input("Reference Range", key="pft1")
+            
+            with r1c4:
+                st.text_input("Comments", key="audio2")
+                st.text_input("Comments", key="pft2")
 
             # Save button layout
             r3c1, r3c2, r3c3 = st.columns([6, 4, 4])
@@ -1733,7 +1890,7 @@ def Form(visitreason,select, select1, connection, cursor,accessLevel):
                 st.session_state.form_data = {}
 
             # Creating input fields for Pathology
-            r1c1, r1c2, r1c3 = st.columns(3)
+            r1c1, r1c2, r1c3, r1c4 = st.columns(4)
 
             with r1c1:
                 st.session_state.form_data["Pathology"] = st.selectbox("Pathology", ["Normal", "Abnormal"], index=0)
@@ -1749,6 +1906,9 @@ def Form(visitreason,select, select1, connection, cursor,accessLevel):
                     
             with r1c3:
                 st.text_input("Reference Range", key="path1")
+            
+            with r1c4:
+                st.text_input("Comments", key="path2")
 
             # Save button layout
             r3c1, r3c2, r3c3 = st.columns([6, 4, 4])
@@ -1785,7 +1945,7 @@ def Form(visitreason,select, select1, connection, cursor,accessLevel):
                 st.session_state.form_data = {}
 
             # Creating input fields for Vision and Color Vision
-            r1c1, r1c2, r1c3 = st.columns(3)
+            r1c1, r1c2, r1c3, r1c4 = st.columns(4)
 
             with r1c1:
                 st.session_state.form_data["Vision"] = st.selectbox("Vision", ["Normal", "Abnormal"], index=0)
@@ -1807,6 +1967,10 @@ def Form(visitreason,select, select1, connection, cursor,accessLevel):
             with r1c3:
                 st.text_input("Reference Range", key="vision1")
                 st.text_input("Reference Range", key="color1")
+
+            with r1c4:
+                st.text_input("Comments", key="vision2")
+                st.text_input("Comments", key="color2")
 
             # Save button layout
             r3c1, r3c2, r3c3 = st.columns([6, 4, 4])
@@ -1848,7 +2012,7 @@ def Form(visitreason,select, select1, connection, cursor,accessLevel):
                 st.session_state.form_data = {}
 
             # Creating input fields for X-RAY results
-            r1c1, r1c2, r1c3 = st.columns(3)
+            r1c1, r1c2, r1c3, r1c4 = st.columns(4)
 
             with r1c1:
                 st.session_state.form_data["X-RAY Chest"] = st.selectbox("X-RAY Chest", ["Normal", "Abnormal"], index=0)
@@ -1893,6 +2057,13 @@ def Form(visitreason,select, select1, connection, cursor,accessLevel):
                 st.text_input("Reference Range", key="xspine1")
                 st.text_input("Reference Range", key="xpelvis1")
                 st.text_input("Reference Range", key="xabdomen1")
+
+            with r1c4:
+                st.text_input("Reference Range", key="x-ray2")
+                st.text_input("Reference Range", key="xkub2")
+                st.text_input("Reference Range", key="xspine2")
+                st.text_input("Reference Range", key="xpelvis2")
+                st.text_input("Reference Range", key="xabdomen2")
                 
 
             # Save button layout
@@ -1981,6 +2152,12 @@ def Form(visitreason,select, select1, connection, cursor,accessLevel):
                 st.text_input("Reference Range", key="kub1")
                 st.text_input("Reference Range", key="pelvis1")
                 st.text_input("Reference Range", key="neck1")
+
+            with r1c4:
+                st.text_input("Comments", key="usg2")
+                st.text_input("Comments", key="kub2")
+                st.text_input("Comments", key="pelvis2")
+                st.text_input("Comments", key="neck2")
                 
 
             # Save button layout
@@ -2028,7 +2205,7 @@ def Form(visitreason,select, select1, connection, cursor,accessLevel):
                 st.session_state.form_data = {}
 
             # Creating input fields for CT results
-            r1c1, r1c2, r1c3 = st.columns(3)
+            r1c1, r1c2, r1c3, r1c4 = st.columns(4)
 
             with r1c1:
                 st.session_state.form_data["CT Brain"] = st.selectbox("CT Brain", ["Normal", "Abnormal"], index=0)
@@ -2071,6 +2248,13 @@ def Form(visitreason,select, select1, connection, cursor,accessLevel):
                 st.text_input("Reference Range", key="ctabdomen1")
                 st.text_input("Reference Range", key="ctspine1")
                 st.text_input("Reference Range", key="ctpelvis1")
+
+            with r1c4:
+                st.text_input("Comments", key="ct2")
+                st.text_input("Comments", key="ctlungs2")
+                st.text_input("Comments", key="ctabdomen2")
+                st.text_input("Comments", key="ctspine2")
+                st.text_input("Comments", key="ctpelvis2")
 
             # Save button layout
             r3c1, r3c2, r3c3 = st.columns([6, 4, 4])
@@ -2121,7 +2305,7 @@ def Form(visitreason,select, select1, connection, cursor,accessLevel):
                 st.session_state.form_data = {}
 
             # Creating input fields for MRI results
-            r1c1, r1c2, r1c3 = st.columns(3)
+            r1c1, r1c2, r1c3, r1c4 = st.columns(4)
 
             with r1c1:
                 st.session_state.form_data["MRI Brain"] = st.selectbox("MRI Brain", ["Normal", "Abnormal"], index=0)
@@ -2410,7 +2594,7 @@ def Form(visitreason,select, select1, connection, cursor,accessLevel):
         
 
 
-    elif form_name == "Medical History":
+    elif form_name == "Medical/Surgical/Personal History":
         
         # Personal History -> multi select box
         #     Smoker
@@ -2427,8 +2611,9 @@ def Form(visitreason,select, select1, connection, cursor,accessLevel):
         #         Mother    -> text_area
 
         # Personal History Section
-        st.markdown("<h3 style='margin-left:30px;'> Personal History </h4>", unsafe_allow_html=True)
-
+        st.header("Personal History")
+        st.write("\n")
+        st.write("\n")
         # List of personal habits and dietary preferences
         personal_history_options = [
             {"Habit": "Smoker", "Details": "E.g., past 5 years, 10 per day"},
@@ -2438,83 +2623,105 @@ def Form(visitreason,select, select1, connection, cursor,accessLevel):
             {"Habit": "Eggetarian", "Details": ""},
             {"Habit": "Mixed Diet", "Details": ""}
         ]
-
-        st.subheader("Smoking")
-        smoker = st.selectbox("Are you a smoker?", ["Yes", "No"])
+        rr0,rr1, rr2, rr3 = st.columns([2.5,1.5,3,3])
+        with rr0:
+            st.subheader("Smoking")
+        with rr1:
+            smoker = st.selectbox("Are you a smoker?", ["Yes", "No"])
         if smoker == "Yes":
-            smoking_duration = st.number_input("How many years have you been smoking?", min_value=1, max_value=50)
-            cigarettes_per_day = st.number_input("How many cigarettes do you smoke per day?", min_value=1, max_value=50)
-
-        # Alcohol Consumption Section
-        st.subheader("Alcohol Consumption")
-        alcoholic = st.selectbox("Do you consume alcohol?", ["Yes", "No"])
+            with rr2:
+                smoking_duration = st.number_input("How many years have you been smoking?", min_value=1, max_value=50)
+            with rr3:
+                cigarettes_per_day = st.number_input("How many cigarettes do you smoke per day?", min_value=1, max_value=50)
+        r1r0,r1r1, r1r2, r1r3 = st.columns([2.5,1.5,3,3])
+        with r1r0:
+            st.subheader("Alcohol Consumption")
+        with r1r1:
+            alcoholic = st.selectbox("Do you consume alcohol?", ["Yes", "No"])
         if alcoholic == "Yes":
-            drinking_duration = st.number_input("How many years have you been drinking?", min_value=1, max_value=50)
-            drinking_frequency = st.radio("How often do you drink?", ["Occasional", "Daily", "Weekly"])
-            if drinking_frequency == "Daily":
-                daily_quantity = st.text_input("Daily consumption (e.g., 'quarter a day')")
-
-        # Paan, Betel Chewing Section
-        st.subheader("Paan/Betel Chewing")
-        chewer = st.selectbox("Do you chew paan or betel?", ["Yes", "No"])
-        if chewer == "Yes":
-            chewing_duration = st.number_input("How many years have you been chewing?", min_value=1, max_value=50)
-
-        # Display radio buttons for dietary preferences
-        pure_veg = st.radio(
+            with r1r2:
+                drinking_duration = st.number_input("How many years have you been drinking?", min_value=1, max_value=50)
+            with r1r3:
+                drinking_frequency = st.selectbox("How often do you drink?", ["Occasional", "Daily", "Weekly"])
+                if drinking_frequency == "Daily":
+                    daily_quantity = st.text_input("Daily consumption (e.g., 'quarter a day')")
+        r1r0,r1r1, r1r2, r1r3, r1r4 = st.columns([2, 2,2, 1,1.5])
+        with r1r0:
+            st.subheader("Paan/Betel Chewing")
+        with r1r1:
+            chewer = st.selectbox("Do you chew paan or betel?", ["Yes", "No"])
+        if alcoholic == "Yes":
+            with r1r2:
+                if chewer == "Yes":
+                    chewing_duration = st.number_input("Years of chewing?", min_value=1, max_value=50)
+        with r1r3:
+            st.subheader("Diet")
+        with r1r4:
+            pure_veg = st.selectbox(
             "Dietary Preference",
-            options=["Pure Veg", "Eggetarian", "Mixed Diet"],
-            index=0,  # Default selection
-            help="Select your dietary preference."
+            options=["Pure Veg", "Eggetarian", "Mixed Diet"]
         )
 
         # Append data to the personal history
         st.session_state.form_data["PersonalHistory"] = [{"Habit": "Diet", "Details": pure_veg}]
-
-
-        # Personal Medical History Section
-        st.markdown("<h4 style='margin-left:30px;'> Medical History </h4>", unsafe_allow_html=True)
-
-        # List of conditions
-        conditions = [
-            "HTN", "DM", "Epileptic", "Hyper thyroid", "Hypo thyroid", "Asthma",
-            "CVS", "CNS", "RS", "GIT", "KUB", "CANCER", 
-            "Defective Colour Vision", "OTHERS"
-        ]
-
-        # Data structure to store medical history
+        st.write("\n")
+        st.write("\n")
+        st.write("\n")
+        st.write("\n")
+        st.write("\n")
+        
+        st.header("Medical History")
+        rr0,rr1, rr2 = st.columns([2,4,4])
         personal_medical_history = []
-
-        # Input fields for each condition
-        for condition in conditions:
-            st.markdown(f"### {condition}")
-            detail = st.text_input(f"Detail for {condition}", key=f"{condition}_detail", placeholder="E.g., 10 years")
-            comments = st.text_area(f"Comments for {condition}", key=f"{condition}_comments", placeholder="E.g., On Ayurvedic medicines")
-            personal_medical_history.append({
-                "Condition": condition,
-                "Detail": detail,
-                "Comments": comments
+        with rr0:
+        # List of conditions
+            cond_opt = st.selectbox("Select condition",[
+                "HTN", "DM", "Epileptic", "Hyper thyroid", "Hypo thyroid", "Asthma",
+                "CVS", "CNS", "RS", "GIT", "KUB", "CANCER", 
+                "Defective Colour Vision", "OTHERS"
+            ])
+        with rr1:
+            detail = st.text_input(f"Detail for {cond_opt}", key=f"{cond_opt}_detail", placeholder="E.g., 10 years")
+        with rr2:
+                comments = st.text_area(f"Comments for {cond_opt}", key=f"{cond_opt}_comments", placeholder="E.g., On Ayurvedic medicines")
+        personal_medical_history.append({
+            "Condition": cond_opt,
+            "Detail": detail,
+            "Comments": comments
             })
-
+        with rr0:
         # Additional fields for female workers
-        st.markdown("<h5 style='margin-left:30px;'> Female Workers </h5>", unsafe_allow_html=True)
-
-        female_history = {
-            "Obstetric": st.text_area(
+            st.write("\n")
+            st.write("\n")
+            st.write("\n")
+            st.write("\n")
+            st.subheader("Female Worker")
+        with rr1:
+            st.write("\n")
+            st.write("\n")
+            st.write("\n")
+            st.write("\n")
+            obsteric = st.text_area(
                 "Obstetric History", key="obstetric_history", 
                 placeholder="E.g., G3 P1 L1 A1; P2 L1 A1"
-            ),
-            "Gynec": st.text_area(
+            )
+        with rr2:
+            gynec = st.text_area(
                 "Gynaecological History", key="gynec_history",
                 placeholder="Add any gynecological details"
             )
+        female_history = {
+            "Obstetric": obsteric,
+            "Gynec": gynec
         }
-
-        # Save the data in session state
         st.session_state.form_data["PersonalMedicalHistory"] = personal_medical_history
         st.session_state.form_data["FemaleHistory"] = female_history
 
-
+        st.write("\n")
+        st.write("\n")
+        st.write("\n")
+        st.write("\n")
+        st.write("\n")
 
         # Surgical History Section
         st.header("Surgical History")
@@ -2951,7 +3158,7 @@ def Form(visitreason,select, select1, connection, cursor,accessLevel):
 
                 try:
                     insert_medical_history = ("INSERT INTO medicalpersonalhist(emp_no, entry_date, personal_history, medical_history, father, mother) VALUES(%s, %s, %s, %s, %s, %s)")
-                    medical_history_values = (i.get('Employee ID'), i.get("Visit Date"), json.dumps(i.get("Personal History")), json.dumps(i.get("Medical History")), i.get("Father"), i.get("Mother"))
+                    medical_history_values = (i.get('Employee ID'), i.get("Visit Date"), json.dumps(i.get("Personal History")), json.dumps(i.get("Medical/Surgical/Personal History")), i.get("Father"), i.get("Mother"))
                     cursor.execute(insert_medical_history, medical_history_values)
                     connection.commit()
                     st.write("Medical History Inserted")
@@ -3210,7 +3417,7 @@ def New_Visit(connection,cursor, accessLevel):
                 df = cursor.fetchall()
                 if len(df)!=0: 
                     st.session_state.form_data["Personal History"] = df[0][3]
-                    st.session_state.form_data["Medical History"] = df[0][4]
+                    st.session_state.form_data["Medical/Surgical/Personal History"] = df[0][4]
                     st.session_state.form_data["Surgical History"] = df[0][5]
                     st.session_state.form_data["Father"] = df[-1][6]
                     st.session_state.form_data["Mother"] = df[-1][7]
@@ -3533,7 +3740,7 @@ def New_Visit(connection,cursor, accessLevel):
                     )
         with r0c1:
             if select1 == "Preventive":
-                if selected == "Pre employment" or selected == "Pre Employment (Food Handler)" or selected == "Pre Placement" or selected == "Annual / Periodical" or selected == "Periodical (Food Handler)" or selected == "Camps (Mandatory)" or selected == "Camps (Optional)":
+                if selected == "Pre Employment" or selected == "Pre Employment (Food Handler)" or selected == "Pre Placement" or selected == "Annual / Periodical" or selected == "Periodical (Food Handler)" or selected == "Camps (Mandatory)" or selected == "Camps (Optional)":
                     select2 = "Medical Examination"
                     st.text_input("Select Purpose", value = select2)
                 elif selected == "Special Work Fitness" or selected == "Special Work Fitness (Renewal)":

@@ -11,53 +11,31 @@ def Appointment(connection, accessLevel):
         st.session_state.emp_no = None
     if accessLevel == "doctor":
         if st.session_state.open_modal == False:
-            st.header("Doctor > Appointments")
-            st.markdown("""
-        <style>
-            .stButton>button {
-                background-color: #22384F; 
-                color: white;
-                border-radius: 5px;
-                font-size: 15px;
-                height: 10px;
-            }
-            .stButton>button:hover {
-                background-color: #1B2D3A; 
-            }
-        </style>""", unsafe_allow_html=True)
-            
-            cursor = connection.cursor()
-            cursor = connection.cursor()
-            with st.container( border=1):
-                rc1, rc2 = st.columns([6,4])
-                with rc1:
-                    with st.container(border=1):
-                        rrc1, rrc2, rrc3, rrc4, rrc5 = st.columns([1,4,0.5,4,2])
-                        with rrc1:
-                            st.write("From")
-                        with rrc2:
-                            st.date_input("from_date", label_visibility='collapsed')
-                        with rrc3:
-                            st.write("To")
-                        with rrc4:
-                            st.date_input("to_date", label_visibility='collapsed')
-                        with rrc5:
-                            st.button("Apply", type='primary')
-                with rc2:
-                    with st.container(border=1):
-                        rrc1, rrc2 = st.columns([10,4])
-                        with rrc1:
-                            st.text_input("search", label_visibility='collapsed', placeholder="Search")
-                        with rrc2:
-                            st.button("Search", type='primary')
-                r1c1, r1c2 = st.columns([3,10])
-                with r1c1:
-                    opt = option_menu(menu_title=None, menu_icon='./src/assets/Folder.png', icons=['folder','folder','folder','folder','folder','folder','folder','folder','folder'], options=['Pre Employment', 'Pre Placement', 'Annual/Periodical', 'Camps', 'Fitness After Medical Leave','Illness', 'Injury', 'Followup Visit', 'Special Work Fitness'])
-                if opt == 'Pre Employment':
-                    cursor.execute("SELECT * FROM appointments where visit_reason = 'Pre Employment'")
-                    emp = pd.DataFrame(cursor.fetchall(), columns=[desc[0] for desc in cursor.description])
-                    
-                    with r1c2:
+                cursor = connection.cursor()
+                with st.container( border=1):
+                    rc1, rc2 = st.columns([4,6])
+                    with rc1:
+                        with st.container(border=1):
+                            rrc1, rrc2, rrc3 = st.columns([1,4,2])
+                            with rrc1:
+                                st.write("From")
+                                st.write("To")
+                            with rrc2:
+                                st.date_input("from_date", label_visibility='collapsed')
+                                st.date_input("to_date", label_visibility='collapsed')
+                            with rrc3:
+                                st.button("Apply", type='primary')
+                    with rc2:
+                        with st.container(border=1):
+                            opt = st.selectbox("Options", options=['Pre Employment', 'Pre Placement', 'Annual/Periodical', 'Camps', 'Fitness After Medical Leave','Illness', 'Injury', 'Followup Visit', 'Special Work Fitness'], label_visibility='collapsed')
+                            rrc1, rrc2 = st.columns([10,4])
+                            with rrc1:
+                                st.text_input("search", label_visibility='collapsed', placeholder="Search by Emplyee ID")
+                            with rrc2:
+                                st.button("Search", type='primary')
+                    if opt == 'Pre Employment':
+                        cursor.execute("SELECT * FROM appointments where visit_reason = 'Pre Employment'")
+                        emp = pd.DataFrame(cursor.fetchall(), columns=[desc[0] for desc in cursor.description])
                         with st.container(height=600):
                             if emp.empty:
                                 st.error("No records found")
@@ -97,10 +75,9 @@ def Appointment(connection, accessLevel):
                                             st.session_state.open_modal = True
                                             st.rerun()
 
-                elif opt == 'Pre Placement':
-                    cursor.execute("SELECT * FROM appointments where visit_reason = 'Pre Placement'")
-                    emp = pd.DataFrame(cursor.fetchall(), columns=[desc[0] for desc in cursor.description])
-                    with r1c2:
+                    elif opt == 'Pre Placement':
+                        cursor.execute("SELECT * FROM appointments where visit_reason = 'Pre Placement'")
+                        emp = pd.DataFrame(cursor.fetchall(), columns=[desc[0] for desc in cursor.description])
                         with st.container(height=600):
                             if emp.empty:
                                 st.error("No records found")
@@ -139,11 +116,9 @@ def Appointment(connection, accessLevel):
                                             st.session_state.open_modal = True
                                             st.rerun()
 
-                elif opt == 'Annual/Periodical':
-                    cursor.execute("SELECT * FROM appointments where visit_reason = 'Annual/Periodical'")
-                    emp = pd.DataFrame(cursor.fetchall(), columns=[desc[0] for desc in cursor.description])
-                    
-                    with r1c2:
+                    elif opt == 'Annual/Periodical':
+                        cursor.execute("SELECT * FROM appointments where visit_reason = 'Annual/Periodical'")
+                        emp = pd.DataFrame(cursor.fetchall(), columns=[desc[0] for desc in cursor.description])
                         with st.container(height=600):
                             if emp.empty:
                                 st.error("No records found")
@@ -184,11 +159,9 @@ def Appointment(connection, accessLevel):
                                             st.rerun()
 
 
-                elif opt == 'Camps':
-                    cursor.execute("SELECT * FROM appointments where visit_reason = 'Camps'")
-                    emp = pd.DataFrame(cursor.fetchall(), columns=[desc[0] for desc in cursor.description])
-                    
-                    with r1c2:
+                    elif opt == 'Camps':
+                        cursor.execute("SELECT * FROM appointments where visit_reason = 'Camps'")
+                        emp = pd.DataFrame(cursor.fetchall(), columns=[desc[0] for desc in cursor.description])
                         with st.container(height=600):
                             if emp.empty:
                                 st.error("No records found")
@@ -228,11 +201,9 @@ def Appointment(connection, accessLevel):
                                             st.session_state.open_modal = True
                                             st.rerun()
 
-                elif opt == 'Fitness After Medical Leave':
-                    cursor.execute("SELECT * FROM appointments where visit_reason = 'Fitness After Medical Leave'")
-                    emp = pd.DataFrame(cursor.fetchall(), columns=[desc[0] for desc in cursor.description])
-                    
-                    with r1c2:
+                    elif opt == 'Fitness After Medical Leave':
+                        cursor.execute("SELECT * FROM appointments where visit_reason = 'Fitness After Medical Leave'")
+                        emp = pd.DataFrame(cursor.fetchall(), columns=[desc[0] for desc in cursor.description])
                         with st.container(height=600):
                             if emp.empty:
                                 st.error("No records found")
@@ -273,11 +244,9 @@ def Appointment(connection, accessLevel):
                                             st.rerun()
 
 
-                elif opt == 'Illness':
-                    cursor.execute("SELECT * FROM appointments where visit_reason = 'Illness'")
-                    emp = pd.DataFrame(cursor.fetchall(), columns=[desc[0] for desc in cursor.description])
-                    
-                    with r1c2:
+                    elif opt == 'Illness':
+                        cursor.execute("SELECT * FROM appointments where visit_reason = 'Illness'")
+                        emp = pd.DataFrame(cursor.fetchall(), columns=[desc[0] for desc in cursor.description])
                         with st.container(height=600):
                             if emp.empty:
                                 st.error("No records found")
@@ -317,11 +286,9 @@ def Appointment(connection, accessLevel):
                                             st.rerun()
 
 
-                elif opt == 'Injury':
-                    cursor.execute("SELECT * FROM appointments where visit_reason = 'Injury'")
-                    emp = pd.DataFrame(cursor.fetchall(), columns=[desc[0] for desc in cursor.description])
-                    
-                    with r1c2:
+                    elif opt == 'Injury':
+                        cursor.execute("SELECT * FROM appointments where visit_reason = 'Injury'")
+                        emp = pd.DataFrame(cursor.fetchall(), columns=[desc[0] for desc in cursor.description])
                         with st.container(height=600):
                             if emp.empty:
                                 st.error("No records found")
@@ -362,11 +329,9 @@ def Appointment(connection, accessLevel):
                                             st.session_state.open_modal = True
                                             st.rerun()
 
-                elif opt == 'Followup Visit':
-                    cursor.execute("SELECT * FROM appointments where visit_reason = 'Followup Visit'")
-                    emp = pd.DataFrame(cursor.fetchall(), columns=[desc[0] for desc in cursor.description])
-                    
-                    with r1c2:
+                    elif opt == 'Followup Visit':
+                        cursor.execute("SELECT * FROM appointments where visit_reason = 'Followup Visit'")
+                        emp = pd.DataFrame(cursor.fetchall(), columns=[desc[0] for desc in cursor.description])
                         with st.container(height=600):
                             if emp.empty:
                                 st.error("No records found")
@@ -406,12 +371,10 @@ def Appointment(connection, accessLevel):
                                         if st.button('View', key=f'view_followup_{val}', type='primary'):
                                             st.session_state.open_modal = True
                                             st.rerun()
-
-                elif opt == 'Special Work Fitness':
-                    cursor.execute("SELECT * FROM appointments where visit_reason = 'Special Work Fitness'")
-                    emp = pd.DataFrame(cursor.fetchall(), columns=[desc[0] for desc in cursor.description])
-                    
-                    with r1c2:
+    
+                    elif opt == 'Special Work Fitness':
+                        cursor.execute("SELECT * FROM appointments where visit_reason = 'Special Work Fitness'")
+                        emp = pd.DataFrame(cursor.fetchall(), columns=[desc[0] for desc in cursor.description])
                         with st.container(height=600):
                             if emp.empty:
                                 st.error("No records found")
@@ -676,428 +639,406 @@ def Appointment(connection, accessLevel):
             if st.session_state.open_modal == False:
                 cursor = connection.cursor()
                 with st.container( border=1):
-                    rc1, rc2 = st.columns([6,4])
+                    rc1, rc2 = st.columns([4,6])
                     with rc1:
                         with st.container(border=1):
-                            rrc1, rrc2, rrc3, rrc4, rrc5 = st.columns([1,4,0.5,4,2])
+                            rrc1, rrc2, rrc3 = st.columns([1,4,2])
                             with rrc1:
                                 st.write("From")
+                                st.write("To")
                             with rrc2:
                                 st.date_input("from_date", label_visibility='collapsed')
-                            with rrc3:
-                                st.write("To")
-                            with rrc4:
                                 st.date_input("to_date", label_visibility='collapsed')
-                            with rrc5:
+                            with rrc3:
                                 st.button("Apply", type='primary')
                     with rc2:
                         with st.container(border=1):
+                            opt = st.selectbox("Options", options=['Pre Employment', 'Pre Placement', 'Annual/Periodical', 'Camps', 'Fitness After Medical Leave','Illness', 'Injury', 'Followup Visit', 'Special Work Fitness'], label_visibility='collapsed')
                             rrc1, rrc2 = st.columns([10,4])
                             with rrc1:
-                                st.text_input("search", label_visibility='collapsed', placeholder="Search")
+                                st.text_input("search", label_visibility='collapsed', placeholder="Search by Emplyee ID")
                             with rrc2:
                                 st.button("Search", type='primary')
-                    r1c1, r1c2 = st.columns([3,10])
-                    with r1c1:
-                        opt = option_menu(menu_title=None, menu_icon='./src/assets/Folder.png', icons=['folder','folder','folder','folder','folder','folder','folder','folder','folder'], options=['Pre Employment', 'Pre Placement', 'Annual/Periodical', 'Camps', 'Fitness After Medical Leave','Illness', 'Injury', 'Followup Visit', 'Special Work Fitness'])
                     if opt == 'Pre Employment':
                         cursor.execute("SELECT * FROM appointments where visit_reason = 'Pre Employment'")
                         emp = pd.DataFrame(cursor.fetchall(), columns=[desc[0] for desc in cursor.description])
-                        
-                        with r1c2:
-                            with st.container(height=600):
-                                if emp.empty:
-                                    st.error("No records found")
-                                else:
-                                    r2c2, r2c3, r2c4, r2c5, r2c6 = st.columns([1,2,1,2,1])
-                                    
-                                    
-                                    # Column 2: PID
-                                    with r2c2:
-                                        st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>PID</b></p>', unsafe_allow_html=True)
-                                        for i, val in enumerate(emp['height']):
-                                            st.text_input(label= "PID", value=val, label_visibility="collapsed", key=f"pid_{i}")
-                                    
-                                    # Column 3: Employee Names
-                                    with r2c3:
-                                        st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Name</b></p>', unsafe_allow_html=True)
-                                        for i, val in enumerate(emp['emp_name']):
-                                            st.text_input(label= "Name", value=val, label_visibility="collapsed", key=f"name_{i}")
-                                    
-                                    # Column 4: Gender
-                                    with r2c4:
-                                        st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Gender</b></p>', unsafe_allow_html=True)
-                                        for i, val in enumerate(emp['gender']):
-                                            st.text_input(label= "Gender", value=val, label_visibility="collapsed", key=f"gender_{i}")
-                                    
-                                    # Column 5: Appointment Dates
-                                    with r2c5:
-                                        st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Appointments</b></p>', unsafe_allow_html=True)
-                                        for i, val in enumerate(emp['appoint_date']):
-                                            st.text_input(label= "Appointment", value=val, label_visibility="collapsed", key=f"appointment_{i}")
-                                    
-                                    # Column 6: View Details Button
-                                    with r2c6:
-                                        st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Details</b></p>', unsafe_allow_html=True)
-                                        for i, val in enumerate(emp['emp_no']):
-                                            if st.button('View', key=f'view_{val}', type='primary'):
-                                                st.session_state.open_modal = True
-                                                st.rerun()
+                        with st.container(height=600):
+                            if emp.empty:
+                                st.error("No records found")
+                            else:
+                                r2c2, r2c3, r2c4, r2c5, r2c6 = st.columns([1,2,1,2,1])
+                                
+                                
+                                # Column 2: PID
+                                with r2c2:
+                                    st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>PID</b></p>', unsafe_allow_html=True)
+                                    for i, val in enumerate(emp['height']):
+                                        st.text_input(label= "PID", value=val, label_visibility="collapsed", key=f"pid_{i}")
+                                
+                                # Column 3: Employee Names
+                                with r2c3:
+                                    st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Name</b></p>', unsafe_allow_html=True)
+                                    for i, val in enumerate(emp['emp_name']):
+                                        st.text_input(label= "Name", value=val, label_visibility="collapsed", key=f"name_{i}")
+                                
+                                # Column 4: Gender
+                                with r2c4:
+                                    st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Gender</b></p>', unsafe_allow_html=True)
+                                    for i, val in enumerate(emp['gender']):
+                                        st.text_input(label= "Gender", value=val, label_visibility="collapsed", key=f"gender_{i}")
+                                
+                                # Column 5: Appointment Dates
+                                with r2c5:
+                                    st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Appointments</b></p>', unsafe_allow_html=True)
+                                    for i, val in enumerate(emp['appoint_date']):
+                                        st.text_input(label= "Appointment", value=val, label_visibility="collapsed", key=f"appointment_{i}")
+                                
+                                # Column 6: View Details Button
+                                with r2c6:
+                                    st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Details</b></p>', unsafe_allow_html=True)
+                                    for i, val in enumerate(emp['emp_no']):
+                                        if st.button('View', key=f'view_{val}', type='primary'):
+                                            st.session_state.open_modal = True
+                                            st.rerun()
 
                     elif opt == 'Pre Placement':
                         cursor.execute("SELECT * FROM appointments where visit_reason = 'Pre Placement'")
                         emp = pd.DataFrame(cursor.fetchall(), columns=[desc[0] for desc in cursor.description])
-                        with r1c2:
-                            with st.container(height=600):
-                                if emp.empty:
-                                    st.error("No records found")
-                                else:
-                                    r2c2, r2c3, r2c4, r2c5, r2c6 = st.columns([1,2,1,2,1])
-                                            
-                                    # Column 2: PID
-                                    with r2c2:
-                                        st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>PID</b></p>', unsafe_allow_html=True)
-                                        for i, val in enumerate(emp['height']):
-                                            st.text_input("1", value=val, label_visibility="collapsed", key=f"pid_{i}")
-                                    
-                                    # Column 3: Employee Names
-                                    with r2c3:
-                                        st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Name</b></p>', unsafe_allow_html=True)
-                                        for i, val in enumerate(emp['emp_name']):
-                                            st.text_input("1", value=val, label_visibility="collapsed", key=f"name_{i}")
-                                    
-                                    # Column 4: Gender
-                                    with r2c4:
-                                        st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Gender</b></p>', unsafe_allow_html=True)
-                                        for i, val in enumerate(emp['gender']):
-                                            st.text_input("1", value=val, label_visibility="collapsed", key=f"gender_{i}")
-                                    
-                                    # Column 5: Appointment Date
-                                    with r2c5:
-                                        st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Appointments</b></p>', unsafe_allow_html=True)
-                                        for i, val in enumerate(emp['appoint_date']):
-                                            st.text_input("1", value=val, label_visibility="collapsed", key=f"appointment_{i}")
-                                    
-                                    # Column 6: View Details Button
-                                    with r2c6:
-                                        st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Details</b></p>', unsafe_allow_html=True)
-                                        for i, val in enumerate(emp['emp_no']):
-                                            if st.button('View', key=f'view_{val}', type='primary'):
-                                                st.session_state.open_modal = True
-                                                st.rerun()
+                        with st.container(height=600):
+                            if emp.empty:
+                                st.error("No records found")
+                            else:
+                                r2c2, r2c3, r2c4, r2c5, r2c6 = st.columns([1,2,1,2,1])
+                                        
+                                # Column 2: PID
+                                with r2c2:
+                                    st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>PID</b></p>', unsafe_allow_html=True)
+                                    for i, val in enumerate(emp['height']):
+                                        st.text_input("1", value=val, label_visibility="collapsed", key=f"pid_{i}")
+                                
+                                # Column 3: Employee Names
+                                with r2c3:
+                                    st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Name</b></p>', unsafe_allow_html=True)
+                                    for i, val in enumerate(emp['emp_name']):
+                                        st.text_input("1", value=val, label_visibility="collapsed", key=f"name_{i}")
+                                
+                                # Column 4: Gender
+                                with r2c4:
+                                    st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Gender</b></p>', unsafe_allow_html=True)
+                                    for i, val in enumerate(emp['gender']):
+                                        st.text_input("1", value=val, label_visibility="collapsed", key=f"gender_{i}")
+                                
+                                # Column 5: Appointment Date
+                                with r2c5:
+                                    st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Appointments</b></p>', unsafe_allow_html=True)
+                                    for i, val in enumerate(emp['appoint_date']):
+                                        st.text_input("1", value=val, label_visibility="collapsed", key=f"appointment_{i}")
+                                
+                                # Column 6: View Details Button
+                                with r2c6:
+                                    st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Details</b></p>', unsafe_allow_html=True)
+                                    for i, val in enumerate(emp['emp_no']):
+                                        if st.button('View', key=f'view_{val}', type='primary'):
+                                            st.session_state.open_modal = True
+                                            st.rerun()
 
                     elif opt == 'Annual/Periodical':
                         cursor.execute("SELECT * FROM appointments where visit_reason = 'Annual/Periodical'")
                         emp = pd.DataFrame(cursor.fetchall(), columns=[desc[0] for desc in cursor.description])
-                        
-                        with r1c2:
-                            with st.container(height=600):
-                                if emp.empty:
-                                    st.error("No records found")
-                                else:
-                                    r2c2, r2c3, r2c4, r2c5, r2c6 = st.columns([1, 2, 1, 2, 1])
-                                    
-                                    
-                                    # Column 2: PID
-                                    with r2c2:
-                                        st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>PID</b></p>', unsafe_allow_html=True)
-                                        for i, val in enumerate(emp['height']):
-                                            st.text_input("PID", value=val, label_visibility="collapsed", key=f"pid_{i}")
-                                    
-                                    # Column 3: Employee Names
-                                    with r2c3:
-                                        st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Name</b></p>', unsafe_allow_html=True)
-                                        for i, val in enumerate(emp['emp_name']):
-                                            st.text_input("Name", value=val, label_visibility="collapsed", key=f"name_{i}")
-                                    
-                                    # Column 4: Gender
-                                    with r2c4:
-                                        st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Gender</b></p>', unsafe_allow_html=True)
-                                        for i, val in enumerate(emp['gender']):
-                                            st.text_input("Gender", value=val, label_visibility="collapsed", key=f"gender_{i}")
-                                    
-                                    # Column 5: Appointment Dates
-                                    with r2c5:
-                                        st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Appointments</b></p>', unsafe_allow_html=True)
-                                        for i, val in enumerate(emp['appoint_date']):
-                                            st.text_input("Appointment", value=val, label_visibility="collapsed", key=f"appointment_{i}")
-                                    
-                                    # Column 6: View Details Button
-                                    with r2c6:
-                                        st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Details</b></p>', unsafe_allow_html=True)
-                                        for i, val in enumerate(emp['emp_no']):
-                                            if st.button('View', key=f'view_{val}', type='primary'):
-                                                st.session_state.open_modal = True
-                                                st.rerun()
+                        with st.container(height=600):
+                            if emp.empty:
+                                st.error("No records found")
+                            else:
+                                r2c2, r2c3, r2c4, r2c5, r2c6 = st.columns([1, 2, 1, 2, 1])
+                                
+                                
+                                # Column 2: PID
+                                with r2c2:
+                                    st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>PID</b></p>', unsafe_allow_html=True)
+                                    for i, val in enumerate(emp['height']):
+                                        st.text_input("PID", value=val, label_visibility="collapsed", key=f"pid_{i}")
+                                
+                                # Column 3: Employee Names
+                                with r2c3:
+                                    st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Name</b></p>', unsafe_allow_html=True)
+                                    for i, val in enumerate(emp['emp_name']):
+                                        st.text_input("Name", value=val, label_visibility="collapsed", key=f"name_{i}")
+                                
+                                # Column 4: Gender
+                                with r2c4:
+                                    st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Gender</b></p>', unsafe_allow_html=True)
+                                    for i, val in enumerate(emp['gender']):
+                                        st.text_input("Gender", value=val, label_visibility="collapsed", key=f"gender_{i}")
+                                
+                                # Column 5: Appointment Dates
+                                with r2c5:
+                                    st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Appointments</b></p>', unsafe_allow_html=True)
+                                    for i, val in enumerate(emp['appoint_date']):
+                                        st.text_input("Appointment", value=val, label_visibility="collapsed", key=f"appointment_{i}")
+                                
+                                # Column 6: View Details Button
+                                with r2c6:
+                                    st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Details</b></p>', unsafe_allow_html=True)
+                                    for i, val in enumerate(emp['emp_no']):
+                                        if st.button('View', key=f'view_{val}', type='primary'):
+                                            st.session_state.open_modal = True
+                                            st.rerun()
 
 
                     elif opt == 'Camps':
                         cursor.execute("SELECT * FROM appointments where visit_reason = 'Camps'")
                         emp = pd.DataFrame(cursor.fetchall(), columns=[desc[0] for desc in cursor.description])
-                        
-                        with r1c2:
-                            with st.container(height=600):
-                                if emp.empty:
-                                    st.error("No records found")
-                                else:
-                                    r2c2, r2c3, r2c4, r2c5, r2c6 = st.columns([1, 2, 1, 2, 1])
-                                    
-                                    
-                                    # Column 2: PID
-                                    with r2c2:
-                                        st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>PID</b></p>', unsafe_allow_html=True)
-                                        for i, val in enumerate(emp['height']):
-                                            st.text_input("PID", value=val, label_visibility="collapsed", key=f"pid_camps_{i}")
-                                    
-                                    # Column 3: Employee Names
-                                    with r2c3:
-                                        st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Name</b></p>', unsafe_allow_html=True)
-                                        for i, val in enumerate(emp['emp_name']):
-                                            st.text_input("Name", value=val, label_visibility="collapsed", key=f"name_camps_{i}")
-                                    
-                                    # Column 4: Gender
-                                    with r2c4:
-                                        st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Gender</b></p>', unsafe_allow_html=True)
-                                        for i, val in enumerate(emp['gender']):
-                                            st.text_input("Gender", value=val, label_visibility="collapsed", key=f"gender_camps_{i}")
-                                    
-                                    # Column 5: Appointment Dates
-                                    with r2c5:
-                                        st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Appointments</b></p>', unsafe_allow_html=True)
-                                        for i, val in enumerate(emp['appoint_date']):
-                                            st.text_input("Appointment", value=val, label_visibility="collapsed", key=f"appointment_camps_{i}")
-                                    
-                                    # Column 6: View Details Button
-                                    with r2c6:
-                                        st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Details</b></p>', unsafe_allow_html=True)
-                                        for i, val in enumerate(emp['emp_no']):
-                                            if st.button('View', key=f'view_camps_{val}', type='primary'):
-                                                st.session_state.open_modal = True
-                                                st.rerun()
+                        with st.container(height=600):
+                            if emp.empty:
+                                st.error("No records found")
+                            else:
+                                r2c2, r2c3, r2c4, r2c5, r2c6 = st.columns([1, 2, 1, 2, 1])
+                                
+                                
+                                # Column 2: PID
+                                with r2c2:
+                                    st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>PID</b></p>', unsafe_allow_html=True)
+                                    for i, val in enumerate(emp['height']):
+                                        st.text_input("PID", value=val, label_visibility="collapsed", key=f"pid_camps_{i}")
+                                
+                                # Column 3: Employee Names
+                                with r2c3:
+                                    st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Name</b></p>', unsafe_allow_html=True)
+                                    for i, val in enumerate(emp['emp_name']):
+                                        st.text_input("Name", value=val, label_visibility="collapsed", key=f"name_camps_{i}")
+                                
+                                # Column 4: Gender
+                                with r2c4:
+                                    st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Gender</b></p>', unsafe_allow_html=True)
+                                    for i, val in enumerate(emp['gender']):
+                                        st.text_input("Gender", value=val, label_visibility="collapsed", key=f"gender_camps_{i}")
+                                
+                                # Column 5: Appointment Dates
+                                with r2c5:
+                                    st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Appointments</b></p>', unsafe_allow_html=True)
+                                    for i, val in enumerate(emp['appoint_date']):
+                                        st.text_input("Appointment", value=val, label_visibility="collapsed", key=f"appointment_camps_{i}")
+                                
+                                # Column 6: View Details Button
+                                with r2c6:
+                                    st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Details</b></p>', unsafe_allow_html=True)
+                                    for i, val in enumerate(emp['emp_no']):
+                                        if st.button('View', key=f'view_camps_{val}', type='primary'):
+                                            st.session_state.open_modal = True
+                                            st.rerun()
 
                     elif opt == 'Fitness After Medical Leave':
                         cursor.execute("SELECT * FROM appointments where visit_reason = 'Fitness After Medical Leave'")
                         emp = pd.DataFrame(cursor.fetchall(), columns=[desc[0] for desc in cursor.description])
-                        
-                        with r1c2:
-                            with st.container(height=600):
-                                if emp.empty:
-                                    st.error("No records found")
-                                else:
-                                    r2c2, r2c3, r2c4, r2c5, r2c6 = st.columns([1, 2, 1, 2, 1])
-                                    
-                                    
-                                    # Column 2: PID
-                                    with r2c2:
-                                        st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>PID</b></p>', unsafe_allow_html=True)
-                                        for i, val in enumerate(emp['height']):
-                                            st.text_input("PID", value=val, label_visibility="collapsed", key=f"pid_fitness_{i}")
-                                    
-                                    # Column 3: Employee Names
-                                    with r2c3:
-                                        st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Name</b></p>', unsafe_allow_html=True)
-                                        for i, val in enumerate(emp['emp_name']):
-                                            st.text_input("Name", value=val, label_visibility="collapsed", key=f"name_fitness_{i}")
-                                    
-                                    # Column 4: Gender
-                                    with r2c4:
-                                        st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Gender</b></p>', unsafe_allow_html=True)
-                                        for i, val in enumerate(emp['gender']):
-                                            st.text_input("Gender", value=val, label_visibility="collapsed", key=f"gender_fitness_{i}")
-                                    
-                                    # Column 5: Appointment Dates
-                                    with r2c5:
-                                        st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Appointments</b></p>', unsafe_allow_html=True)
-                                        for i, val in enumerate(emp['appoint_date']):
-                                            st.text_input("Appointment", value=val, label_visibility="collapsed", key=f"appointment_fitness_{i}")
-                                    
-                                    # Column 6: View Details Button
-                                    with r2c6:
-                                        st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Details</b></p>', unsafe_allow_html=True)
-                                        for i, val in enumerate(emp['emp_no']):
-                                            if st.button('View', key=f'view_fitness_{val}', type='primary'):
-                                                st.session_state.open_modal = True
-                                                st.rerun()
+                        with st.container(height=600):
+                            if emp.empty:
+                                st.error("No records found")
+                            else:
+                                r2c2, r2c3, r2c4, r2c5, r2c6 = st.columns([1, 2, 1, 2, 1])
+                                
+                                
+                                # Column 2: PID
+                                with r2c2:
+                                    st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>PID</b></p>', unsafe_allow_html=True)
+                                    for i, val in enumerate(emp['height']):
+                                        st.text_input("PID", value=val, label_visibility="collapsed", key=f"pid_fitness_{i}")
+                                
+                                # Column 3: Employee Names
+                                with r2c3:
+                                    st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Name</b></p>', unsafe_allow_html=True)
+                                    for i, val in enumerate(emp['emp_name']):
+                                        st.text_input("Name", value=val, label_visibility="collapsed", key=f"name_fitness_{i}")
+                                
+                                # Column 4: Gender
+                                with r2c4:
+                                    st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Gender</b></p>', unsafe_allow_html=True)
+                                    for i, val in enumerate(emp['gender']):
+                                        st.text_input("Gender", value=val, label_visibility="collapsed", key=f"gender_fitness_{i}")
+                                
+                                # Column 5: Appointment Dates
+                                with r2c5:
+                                    st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Appointments</b></p>', unsafe_allow_html=True)
+                                    for i, val in enumerate(emp['appoint_date']):
+                                        st.text_input("Appointment", value=val, label_visibility="collapsed", key=f"appointment_fitness_{i}")
+                                
+                                # Column 6: View Details Button
+                                with r2c6:
+                                    st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Details</b></p>', unsafe_allow_html=True)
+                                    for i, val in enumerate(emp['emp_no']):
+                                        if st.button('View', key=f'view_fitness_{val}', type='primary'):
+                                            st.session_state.open_modal = True
+                                            st.rerun()
 
 
                     elif opt == 'Illness':
                         cursor.execute("SELECT * FROM appointments where visit_reason = 'Illness'")
                         emp = pd.DataFrame(cursor.fetchall(), columns=[desc[0] for desc in cursor.description])
-                        
-                        with r1c2:
-                            with st.container(height=600):
-                                if emp.empty:
-                                    st.error("No records found")
-                                else:
-                                    r2c2, r2c3, r2c4, r2c5, r2c6 = st.columns([1, 2, 1, 2, 1])
-                                    
-                                    # Column 2: PID
-                                    with r2c2:
-                                        st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>PID</b></p>', unsafe_allow_html=True)
-                                        for i, val in enumerate(emp['height']):
-                                            st.text_input("PID", value=val, label_visibility="collapsed", key=f"pid_illness_{i}")
-                                    
-                                    # Column 3: Employee Names
-                                    with r2c3:
-                                        st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Name</b></p>', unsafe_allow_html=True)
-                                        for i, val in enumerate(emp['emp_name']):
-                                            st.text_input("Name", value=val, label_visibility="collapsed", key=f"name_illness_{i}")
-                                    
-                                    # Column 4: Gender
-                                    with r2c4:
-                                        st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Gender</b></p>', unsafe_allow_html=True)
-                                        for i, val in enumerate(emp['gender']):
-                                            st.text_input("Gender", value=val, label_visibility="collapsed", key=f"gender_illness_{i}")
-                                    
-                                    # Column 5: Appointment Dates
-                                    with r2c5:
-                                        st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Appointments</b></p>', unsafe_allow_html=True)
-                                        for i, val in enumerate(emp['appoint_date']):
-                                            st.text_input("Appointment", value=val, label_visibility="collapsed", key=f"appointment_illness_{i}")
-                                    
-                                    # Column 6: View Details Button
-                                    with r2c6:
-                                        st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Details</b></p>', unsafe_allow_html=True)
-                                        for i, val in enumerate(emp['emp_no']):
-                                            if st.button('View', key=f'view_illness_{val}', type='primary'):
-                                                st.session_state.open_modal = True
-                                                st.rerun()
+                        with st.container(height=600):
+                            if emp.empty:
+                                st.error("No records found")
+                            else:
+                                r2c2, r2c3, r2c4, r2c5, r2c6 = st.columns([1, 2, 1, 2, 1])
+                                
+                                # Column 2: PID
+                                with r2c2:
+                                    st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>PID</b></p>', unsafe_allow_html=True)
+                                    for i, val in enumerate(emp['height']):
+                                        st.text_input("PID", value=val, label_visibility="collapsed", key=f"pid_illness_{i}")
+                                
+                                # Column 3: Employee Names
+                                with r2c3:
+                                    st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Name</b></p>', unsafe_allow_html=True)
+                                    for i, val in enumerate(emp['emp_name']):
+                                        st.text_input("Name", value=val, label_visibility="collapsed", key=f"name_illness_{i}")
+                                
+                                # Column 4: Gender
+                                with r2c4:
+                                    st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Gender</b></p>', unsafe_allow_html=True)
+                                    for i, val in enumerate(emp['gender']):
+                                        st.text_input("Gender", value=val, label_visibility="collapsed", key=f"gender_illness_{i}")
+                                
+                                # Column 5: Appointment Dates
+                                with r2c5:
+                                    st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Appointments</b></p>', unsafe_allow_html=True)
+                                    for i, val in enumerate(emp['appoint_date']):
+                                        st.text_input("Appointment", value=val, label_visibility="collapsed", key=f"appointment_illness_{i}")
+                                
+                                # Column 6: View Details Button
+                                with r2c6:
+                                    st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Details</b></p>', unsafe_allow_html=True)
+                                    for i, val in enumerate(emp['emp_no']):
+                                        if st.button('View', key=f'view_illness_{val}', type='primary'):
+                                            st.session_state.open_modal = True
+                                            st.rerun()
 
 
                     elif opt == 'Injury':
                         cursor.execute("SELECT * FROM appointments where visit_reason = 'Injury'")
                         emp = pd.DataFrame(cursor.fetchall(), columns=[desc[0] for desc in cursor.description])
-                        
-                        with r1c2:
-                            with st.container(height=600):
-                                if emp.empty:
-                                    st.error("No records found")
-                                else:
-                                    r2c2, r2c3, r2c4, r2c5, r2c6 = st.columns([1, 2, 1, 2, 1])
-                                    
-                                    
-                                    
-                                    # Column 2: PID
-                                    with r2c2:
-                                        st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>PID</b></p>', unsafe_allow_html=True)
-                                        for i, val in enumerate(emp['height']):
-                                            st.text_input("PID", value=val, label_visibility="collapsed", key=f"pid_injury_{i}")
-                                    
-                                    # Column 3: Employee Names
-                                    with r2c3:
-                                        st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Name</b></p>', unsafe_allow_html=True)
-                                        for i, val in enumerate(emp['emp_name']):
-                                            st.text_input("Name", value=val, label_visibility="collapsed", key=f"name_injury_{i}")
-                                    
-                                    # Column 4: Gender
-                                    with r2c4:
-                                        st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Gender</b></p>', unsafe_allow_html=True)
-                                        for i, val in enumerate(emp['gender']):
-                                            st.text_input("Gender", value=val, label_visibility="collapsed", key=f"gender_injury_{i}")
-                                    
-                                    # Column 5: Appointment Dates
-                                    with r2c5:
-                                        st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Appointments</b></p>', unsafe_allow_html=True)
-                                        for i, val in enumerate(emp['appoint_date']):
-                                            st.text_input("Appointment", value=val, label_visibility="collapsed", key=f"appointment_injury_{i}")
-                                    
-                                    # Column 6: View Details Button
-                                    with r2c6:
-                                        st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Details</b></p>', unsafe_allow_html=True)
-                                        for i, val in enumerate(emp['emp_no']):
-                                            if st.button('View', key=f'view_injury_{val}', type='primary'):
-                                                st.session_state.open_modal = True
-                                                st.rerun()
+                        with st.container(height=600):
+                            if emp.empty:
+                                st.error("No records found")
+                            else:
+                                r2c2, r2c3, r2c4, r2c5, r2c6 = st.columns([1, 2, 1, 2, 1])
+                                
+                                
+                                
+                                # Column 2: PID
+                                with r2c2:
+                                    st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>PID</b></p>', unsafe_allow_html=True)
+                                    for i, val in enumerate(emp['height']):
+                                        st.text_input("PID", value=val, label_visibility="collapsed", key=f"pid_injury_{i}")
+                                
+                                # Column 3: Employee Names
+                                with r2c3:
+                                    st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Name</b></p>', unsafe_allow_html=True)
+                                    for i, val in enumerate(emp['emp_name']):
+                                        st.text_input("Name", value=val, label_visibility="collapsed", key=f"name_injury_{i}")
+                                
+                                # Column 4: Gender
+                                with r2c4:
+                                    st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Gender</b></p>', unsafe_allow_html=True)
+                                    for i, val in enumerate(emp['gender']):
+                                        st.text_input("Gender", value=val, label_visibility="collapsed", key=f"gender_injury_{i}")
+                                
+                                # Column 5: Appointment Dates
+                                with r2c5:
+                                    st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Appointments</b></p>', unsafe_allow_html=True)
+                                    for i, val in enumerate(emp['appoint_date']):
+                                        st.text_input("Appointment", value=val, label_visibility="collapsed", key=f"appointment_injury_{i}")
+                                
+                                # Column 6: View Details Button
+                                with r2c6:
+                                    st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Details</b></p>', unsafe_allow_html=True)
+                                    for i, val in enumerate(emp['emp_no']):
+                                        if st.button('View', key=f'view_injury_{val}', type='primary'):
+                                            st.session_state.open_modal = True
+                                            st.rerun()
 
                     elif opt == 'Followup Visit':
                         cursor.execute("SELECT * FROM appointments where visit_reason = 'Followup Visit'")
                         emp = pd.DataFrame(cursor.fetchall(), columns=[desc[0] for desc in cursor.description])
-                        
-                        with r1c2:
-                            with st.container(height=600):
-                                if emp.empty:
-                                    st.error("No records found")
-                                else:
-                                    r2c2, r2c3, r2c4, r2c5, r2c6 = st.columns([ 1, 2, 1, 2, 1])
-                                    
-                                    
-                                    
-                                    # Column 2: PID
-                                    with r2c2:
-                                        st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>PID</b></p>', unsafe_allow_html=True)
-                                        for i, val in enumerate(emp['height']):
-                                            st.text_input("PID", value=val, label_visibility="collapsed", key=f"pid_followup_{i}")
-                                    
-                                    # Column 3: Employee Names
-                                    with r2c3:
-                                        st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Name</b></p>', unsafe_allow_html=True)
-                                        for i, val in enumerate(emp['emp_name']):
-                                            st.text_input("Name", value=val, label_visibility="collapsed", key=f"name_followup_{i}")
-                                    
-                                    # Column 4: Gender
-                                    with r2c4:
-                                        st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Gender</b></p>', unsafe_allow_html=True)
-                                        for i, val in enumerate(emp['gender']):
-                                            st.text_input("Gender", value=val, label_visibility="collapsed", key=f"gender_followup_{i}")
-                                    
-                                    # Column 5: Appointment Dates
-                                    with r2c5:
-                                        st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Appointments</b></p>', unsafe_allow_html=True)
-                                        for i, val in enumerate(emp['appoint_date']):
-                                            st.text_input("Appointment", value=val, label_visibility="collapsed", key=f"appointment_followup_{i}")
-                                    
-                                    # Column 6: View Details Button
-                                    with r2c6:
-                                        st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Details</b></p>', unsafe_allow_html=True)
-                                        for i, val in enumerate(emp['emp_no']):
-                                            if st.button('View', key=f'view_followup_{val}', type='primary'):
-                                                st.session_state.open_modal = True
-                                                st.rerun()
+                        with st.container(height=600):
+                            if emp.empty:
+                                st.error("No records found")
+                            else:
+                                r2c2, r2c3, r2c4, r2c5, r2c6 = st.columns([ 1, 2, 1, 2, 1])
+                                
+                                
+                                
+                                # Column 2: PID
+                                with r2c2:
+                                    st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>PID</b></p>', unsafe_allow_html=True)
+                                    for i, val in enumerate(emp['height']):
+                                        st.text_input("PID", value=val, label_visibility="collapsed", key=f"pid_followup_{i}")
+                                
+                                # Column 3: Employee Names
+                                with r2c3:
+                                    st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Name</b></p>', unsafe_allow_html=True)
+                                    for i, val in enumerate(emp['emp_name']):
+                                        st.text_input("Name", value=val, label_visibility="collapsed", key=f"name_followup_{i}")
+                                
+                                # Column 4: Gender
+                                with r2c4:
+                                    st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Gender</b></p>', unsafe_allow_html=True)
+                                    for i, val in enumerate(emp['gender']):
+                                        st.text_input("Gender", value=val, label_visibility="collapsed", key=f"gender_followup_{i}")
+                                
+                                # Column 5: Appointment Dates
+                                with r2c5:
+                                    st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Appointments</b></p>', unsafe_allow_html=True)
+                                    for i, val in enumerate(emp['appoint_date']):
+                                        st.text_input("Appointment", value=val, label_visibility="collapsed", key=f"appointment_followup_{i}")
+                                
+                                # Column 6: View Details Button
+                                with r2c6:
+                                    st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Details</b></p>', unsafe_allow_html=True)
+                                    for i, val in enumerate(emp['emp_no']):
+                                        if st.button('View', key=f'view_followup_{val}', type='primary'):
+                                            st.session_state.open_modal = True
+                                            st.rerun()
     
                     elif opt == 'Special Work Fitness':
                         cursor.execute("SELECT * FROM appointments where visit_reason = 'Special Work Fitness'")
                         emp = pd.DataFrame(cursor.fetchall(), columns=[desc[0] for desc in cursor.description])
-                        
-                        with r1c2:
-                            with st.container(height=600):
-                                if emp.empty:
-                                    st.error("No records found")
-                                else:
-                                    r2c2, r2c3, r2c4, r2c5, r2c6 = st.columns([1, 2, 1, 2, 1])
-                                    
-                                    # Column 2: PID
-                                    with r2c2:
-                                        st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>PID</b></p>', unsafe_allow_html=True)
-                                        for i, val in enumerate(emp['height']):
-                                            st.text_input("PID", value=val, label_visibility="collapsed", key=f"pid_special_work_{i}")
-                                    
-                                    # Column 3: Employee Names
-                                    with r2c3:
-                                        st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Name</b></p>', unsafe_allow_html=True)
-                                        for i, val in enumerate(emp['emp_name']):
-                                            st.text_input("Name", value=val, label_visibility="collapsed", key=f"name_special_work_{i}")
-                                    
-                                    # Column 4: Gender
-                                    with r2c4:
-                                        st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Gender</b></p>', unsafe_allow_html=True)
-                                        for i, val in enumerate(emp['gender']):
-                                            st.text_input("Gender", value=val, label_visibility="collapsed", key=f"gender_special_work_{i}")
-                                    
-                                    # Column 5: Appointment Dates
-                                    with r2c5:
-                                        st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Appointments</b></p>', unsafe_allow_html=True)
-                                        for i, val in enumerate(emp['appoint_date']):
-                                            st.text_input("Appointment", value=val, label_visibility="collapsed", key=f"appointment_special_work_{i}")
-                                    
-                                    # Column 6: View Details Button
-                                    with r2c6:
-                                        st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Details</b></p>', unsafe_allow_html=True)
-                                        for i, val in enumerate(emp['emp_no']):
-                                            if st.button('View', key=f'view_special_work_{val}', type='primary'):
-                                                st.session_state.open_modal = True
-                                                st.rerun()
+                        with st.container(height=600):
+                            if emp.empty:
+                                st.error("No records found")
+                            else:
+                                r2c2, r2c3, r2c4, r2c5, r2c6 = st.columns([1, 2, 1, 2, 1])
+                                
+                                # Column 2: PID
+                                with r2c2:
+                                    st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>PID</b></p>', unsafe_allow_html=True)
+                                    for i, val in enumerate(emp['height']):
+                                        st.text_input("PID", value=val, label_visibility="collapsed", key=f"pid_special_work_{i}")
+                                
+                                # Column 3: Employee Names
+                                with r2c3:
+                                    st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Name</b></p>', unsafe_allow_html=True)
+                                    for i, val in enumerate(emp['emp_name']):
+                                        st.text_input("Name", value=val, label_visibility="collapsed", key=f"name_special_work_{i}")
+                                
+                                # Column 4: Gender
+                                with r2c4:
+                                    st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Gender</b></p>', unsafe_allow_html=True)
+                                    for i, val in enumerate(emp['gender']):
+                                        st.text_input("Gender", value=val, label_visibility="collapsed", key=f"gender_special_work_{i}")
+                                
+                                # Column 5: Appointment Dates
+                                with r2c5:
+                                    st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Appointments</b></p>', unsafe_allow_html=True)
+                                    for i, val in enumerate(emp['appoint_date']):
+                                        st.text_input("Appointment", value=val, label_visibility="collapsed", key=f"appointment_special_work_{i}")
+                                
+                                # Column 6: View Details Button
+                                with r2c6:
+                                    st.markdown(f'<p style="color: #22384F; fontSize: 15px"><b>Details</b></p>', unsafe_allow_html=True)
+                                    for i, val in enumerate(emp['emp_no']):
+                                        if st.button('View', key=f'view_special_work_{val}', type='primary'):
+                                            st.session_state.open_modal = True
+                                            st.rerun()
             else:
-                
                 r0c1, r0c2,r0c3 = st.columns([5,4,1])
                 with r0c1:
                     st.subheader('Appointments')
